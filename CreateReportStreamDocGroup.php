@@ -3,7 +3,7 @@ session_start();
 set_time_limit(180);
 // This functions copies exactly the code in function CreaTimeline, and replaces the code for the injection of timeline elements with the code for injection of "Reports Stream" html elements from the type desired
 // Please look for string marked as ***** CODE VARIATION FROM CREATIMELINE ***** to find the replacements
-
+// Please don't get too upset 
 $ElementDOM = $_GET['ElementDOM'];
 $EntryTypegroup = $_GET['EntryTypegroup'];
 $Usuario = $_GET['Usuario'];
