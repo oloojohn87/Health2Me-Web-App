@@ -1,0 +1,47 @@
+<html>
+    <head>
+    <title>Simple Ajax Example</title>
+    <script language="Javascript">
+    function postRequest(strURL) {
+	var xmlHttp;
+          if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+		 var xmlHttp = new XMLHttpRequest();
+	    }else if (window.ActiveXObject) { // IE
+		var xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+	      }
+	    xmlHttp.open('POST', strURL, true);
+	    xmlHttp.setRequestHeader
+              ('Content-Type', 'application/x-www-form-urlencoded');
+		xmlHttp.onreadystatechange = function() {
+	if (xmlHttp.readyState == 4) {
+	       updatepage(xmlHttp.responseText);
+	      }
+	   }
+	 xmlHttp.send(strURL);
+        }
+     function updatepage(str){
+	document.getElementById("result").innerHTML = 
+            "<font color='red' size='5'>" + str + "</font>";;
+        }
+   function SayHello(){
+	var usr=window.document.f1.username.value;
+	var rnd = Math.random();
+	var url="http://beta.health2.me/sayhello.php?id="+rnd +"&usr="+usr;
+	postRequest(url);
+        }
+  </script>
+  </head>
+  <body>
+   <h1 align="center"><font color="#000080">Simple Ajax Example</font></h1>
+   <p  align="center"><font color="#000080">Enter your name and then press 
+   "Say Hello Button"</font></p>
+ <form name="f1">
+       <p align="center"><font color="#000080">&nbsp;
+		Enter your name: <input type="text" name="username" id="username">
+		<input value="Say Hello" type="button" 
+       onclick='JavaScript:SayHello()' name="showdate"></font></p>
+       <div id="result" align="center"></div>
+     </form>
+ <div id=result></div>
+</body>
+</html>

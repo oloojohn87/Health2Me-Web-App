@@ -1,0 +1,207 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/jquery-ui.min.js"></script>
+<script src="/js/moment-with-locales.js"></script>
+<!--<script src="/js/h2m_clinicaltimeline.js"></script>-->
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap-popover.js"></script>
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="/css/bootstrap.css" rel="stylesheet">
+<link href="/css/bootstrap-responsive.css" rel="stylesheet">
+ 
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<!--[if lt IE 9]>
+  <script type="text/javascript" src="/js/excanvas/excanvas.js"></script>
+<![endif]-->
+<script type="text/javascript" src="/js/spinners.min.js"></script>
+<script type="text/javascript" src="/js/tipped.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/css/tipped.css"/>      
+      
+<style>
+  body {
+    margin: 0px;
+    padding: 0px;
+  }
+</style>
+</head>
+
+<body>
+  
+<div class="content">
+<div class="grid" class="grid span4" style="width:1000px; height:2400px; margin: 0 auto; margin-top:30px; padding-top:30px; border: 1px solid #cacaca; padding: 10px;">
+
+    
+<label style="margin-right: 30px; float: left; margin-top: 5px;">Resource: </label>
+<select id="resource_select" style="float: left;">
+    <option value="Bruno Lima" selected>Bruno Lima</option>
+    <option value="Kyle Austin" selected>Kyle Austin</option>
+    <option value="Lori Smith" selected>Lori Smith</option>
+    <option value="Debraj Maity" selected>Debraj Maity</option>
+    <option value="Pallab Hazarika" selected>Pallab Hazarika</option>
+    <option value="Hwasung Kim" selected>Hwasung Kim</option>
+</select>
+
+<input type="text" class="form-control" id="inputdays" placeholder="Days" style="margin-left: 10px; width: 30px;">
+</br>
+</br>
+</br>
+    
+<table id="mytable" class="table table-bordered table-striped" style="margin: 0px auto;">
+    <thead>
+    <tr>
+        <th data-field="id">Id</th>
+        <th data-field="resource">Resource</th>
+        <th data-field="task_name">Name</th>
+        <th data-field="original_estimate">Original</th>
+        <th data-field="actual_duration">Actual</th>
+        <th data-field="remaining_estimate">Remaining</th>
+        <th data-field="overcost">Overcost</th>
+        <th data-field="status">Status</th>
+    </tr>
+    </thead>
+</table>
+    
+</div>    
+</div>    
+    
+<script>
+  
+$(document).ready(function() {
+
+//Tipped.create('#mytable', 'some tooltip text');    
+    
+  var log_array = new Array();
+  
+  Table_Resource('Hwasung Kim','ALL');
+  
+    
+    
+    
+  $('#resource_select').change(function() {
+        console.log($(this).val())
+        Table_Resource($(this).val(),'SINGLE');
+      
+        var range_days = $('#inputdays').val();
+        if (range_days < 1) range_days = 1;
+      
+        console.log('Range days: '+range_days);
+        
+        grand_total_work = 0;
+      
+        var longit = Object.keys(Projects).length;	 
+        console.log ('Number of projects: '+longit);      
+        console.log('Name of project 0: '+Projects[0].task_name);
+        $('#mytable').html('');
+        $('#mytable').append('<tr><th data-field="id">Id</th>\
+                             <th >Resource</th>\
+                             <th >Name</th>\
+                             <th >Original</th>\
+                             <th >Actual</th>\
+                             <th >Remaining</th>\
+                             <th >Overcost</th>\
+                             <th >Last '+range_days+' days</th>\
+                             <th >Status</th></tr>');
+
+        
+        for (var i = 0; i < longit; i++)
+        {
+            log_array.length = 0;
+            total_worked = 0;
+            log_array = Get_logs($(this).val(),Projects[i].id,'SINGLE');
+            var num_entries = Object.keys(log_array).length;	
+            for (var j=0; j < num_entries; j++)
+            {
+                var a = moment(new Date(log_array[j].date));
+                var b = moment(new Date());
+                var days_span = b.diff(a, 'days'); 
+                if (days_span <= range_days) total_worked = total_worked + parseInt(log_array[j].logged);
+                //console.log(log_array[j].date+' '+days_span);
+            }
+            
+            grand_total_work = grand_total_work + total_worked;
+            if (total_worked > 0)
+            {
+            $('#mytable').append('<tr>    \
+                <td>'+Projects[i].id+'</td> \
+                <td>'+Projects[i].resource+'</td> \
+                <td>'+Projects[i].task_name+'</td> \
+                <td>'+Projects[i].original_estimate+'</td> \
+                <td>'+Projects[i].actual_duration+'</td> \
+                <td>'+Projects[i].remaining_estimate+'</td> \
+                <td>'+Projects[i].overcost+'</td> \
+                <td>'+total_worked+' ('+(total_worked/60).toFixed(0)+' h.)</td> \
+                <td>'+Projects[i].status+'</td> \
+                                              </tr>');
+            }
+            //console.log('   --------- Log Array ------------');
+            //console.log(log_array);
+        }
+        $('#mytable').append('<tr>    \
+        <td></td> \
+        <td></td> \
+        <td></td> \
+        <td></td> \
+        <td></td> \
+        <td></td> \
+        <td></td> \
+        <td style="font-weight:bold;">'+grand_total_work+' ('+(grand_total_work/60).toFixed(0)+' h.)</td> \
+        <td></td> \
+                                      </tr>');
+
+  });
+    
+});
+ 
+function Table_Resource(resource,query_type)
+{
+    var resource_name = resource;
+    var selectUrl = "/get_resource_data.php?resource_name="+resource_name+"&type="+query_type;
+    
+    $.ajax(
+    {
+        url: selectUrl ,
+        dataType: "json",
+        async: false,
+        success: function(data)
+        {
+            Projects='';
+            Projects = data.items;
+        }
+    });
+    
+    console.log(Projects);
+
+}
+
+function Get_logs(resource,id_project,query_type)
+{
+    var resource_name = resource;
+    var selectUrl = "/get_project_logs.php?resource_name="+resource_name+"&type="+query_type+"&id_project="+id_project;
+    
+    $.ajax(
+    {
+        url: selectUrl ,
+        dataType: "json",
+        async: false,
+        success: function(data)
+        {
+            Logs='';
+            Logs = data.items;
+        }
+    });
+    
+    //console.log(' ********** Logs **********');
+    //console.log(Logs);
+    
+    return(Logs);
+
+}
+    
+</script>
+    
+  </body>
+</html>

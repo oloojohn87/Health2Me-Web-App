@@ -1,0 +1,27 @@
+<?php
+session_start();
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+ 
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$userid = $_SESSION['MEDID'];
+//$userid = 28;
+$title=$_GET['title'];
+$day_start=$_GET['day_start'];
+$day_end=$_GET['day_end'];
+$start = $_GET['start'];
+$end = $_GET['end'];
+$type = $_GET['type'];
+
+$query = "insert into user_time_config(userid,title,day_start,day_end,start,end,type) values(".$userid.",'".$title."',".$day_start.",".$day_end.",'".$start."','".$end."',".$type.")";
+//echo $query;
+mysql_query($query);
+
+
+?>

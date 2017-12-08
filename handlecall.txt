@@ -1,0 +1,1 @@
+Result = Resource id #6\nResult = Resource id #7\n************* NEW ENTRY Today = July 3, 2013, 8:14 pm\nResult = Resource id #7\nCountA = 1\n$IdEntry = 85\nUpdate Query = 1\n************* NEW ENTRY Today = July 3, 2013, 8:21 pm\nResult = Resource id #7\nCountA = 1\n$IdEntry = 88\nUpdate Query = 1\n

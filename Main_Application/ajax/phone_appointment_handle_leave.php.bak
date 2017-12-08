@@ -1,0 +1,16 @@
+<?php echo '<?xml version="1.0" encoding="UTF-8" ?>' ?>
+<?php
+    require("environment_detail.php");
+ $dbhost = $env_var_db["dbhost"];
+ $dbname = $env_var_db["dbname"];
+ $dbuser = $env_var_db["dbuser"];
+ $dbpass = $env_var_db["dbpass"];
+ $link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+if(isset($_GET['id']))
+{
+    $doc_id = $_GET['id'];
+    mysql_query("UPDATE doctors SET in_consultation=0,telemed_type=0 WHERE id=".$doc_id);
+}
+echo '<Response><Hangup/></Response>';
+?>

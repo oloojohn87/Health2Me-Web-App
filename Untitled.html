@@ -1,0 +1,44 @@
+Line 1170
+
+		  // Labels Section
+		  /*
+		  var side = 'Left';
+		  var orderside = 1;
+		  var maxside = 6;
+		  var XBoxSize = 70;
+		  var YBoxSize = 20;
+		  */
+		  var divisor = y / (maxside+1);
+		  
+		  if (side='Left') var XBox = 10 ; else var XBox = ((x/2) - (radius/2) + 20);
+		  var YBox = divisor * orderside;
+		  
+	      // Virtual Box for the Label
+		  /*
+	      context.beginPath();
+	      context.fillStyle = '#cacaca';
+	      context.fillRect(XBox,YBox,XBoxSize,YBoxSize);
+	      context.stroke();
+		  */
+		  
+		  // Label Text
+		  context.font = "10px Arial";
+	      context.fillStyle = 'black';
+		  context.fillText("Family",XBox,YBox);
+	      context.fillText("History",XBox,YBox+10);
+	      context.stroke();
+	      
+	      // Divisory Line
+	      context.beginPath();
+		  context.lineWidth = 3;
+		  context.strokeStyle = '#22aeff';
+		  context.lineCap = 'round';
+ 	      context.moveTo(XBox +35, YBox);
+	      context.lineTo(XBox +35, YBox+20);
+	      context.stroke();
+
+		  // Section Percentage
+		  context.font = "bold 12px Arial";
+	      context.fillStyle = 'grey';
+		  context.fillText("89%",XBox+40,YBox+3);
+	      context.stroke();

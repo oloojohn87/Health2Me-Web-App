@@ -1,0 +1,111 @@
+<?php
+ 
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="doctors"; // Table name
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }			
+
+$queUsu = $_GET['Doctor'];
+$date = '';
+if (isset($_GET['Date']))
+{
+    $date = $_GET['Date'];
+}
+
+$cadena = '';
+
+$query = $con->prepare("SELECT * FROM doctorsgroups WHERE idDoctor=?");
+$query->bindValue(1, $queUsu, PDO::PARAM_INT);
+$result = $query->execute();
+
+$counter1 = 0 ;
+while ($row2 = $query->fetch(PDO::FETCH_ASSOC)) {
+	$Group[$counter1] = $row2['idGroup'];
+	$counter1++;
+}
+
+if ($counter1>0) $MyGroup = $Group[0];
+else $MyGroup = 0;
+
+
+if ($counter1>0) {
+if (strlen($date) == 0){
+$query = $con->prepare("SELECT * FROM deck WHERE IdDr IN (SELECT iddoctor from doctorsgroups where idgroup = ?)");
+$query->bindValue(1, $MyGroup, PDO::PARAM_INT);
+}else{
+$query = $con->prepare("SELECT * FROM deck WHERE IdDr IN (SELECT iddoctor from doctorsgroups where idgroup = ?) AND Date LIKE ?");
+$query->bindValue(1, $MyGroup, PDO::PARAM_INT);
+$query->bindValue(2, $date."%", PDO::PARAM_STR);
+}
+}else{
+if (strlen($date) == 0){
+$query = $con->prepare("SELECT * FROM deck WHERE IdDr  = ?");
+$query->bindValue(1, $queUsu, PDO::PARAM_INT);
+}else{
+$query = $con->prepare("SELECT * FROM deck WHERE IdDr  = ? AND Date LIKE ?");
+$query->bindValue(1, $queUsu, PDO::PARAM_INT);
+$query->bindValue(2, $date."%", PDO::PARAM_STR);
+}
+}
+//if (strlen($date) > 0)
+//{
+//    $query .= " AND Date LIKE '".$date."%'";
+//}
+
+$result = $query->execute();
+$count = $query->rowCount();
+$counter1 = 0 ;
+while ($row2 = $result->fetch(PDO::FETCH_ASSOC)) {
+	$PatId[$counter1] = $row2['IdPatient'];
+	$PatName[$counter1] = $row2['NamePatient'];
+	$DrId[$counter1] = $row2['IdDr'];
+	$PatType[$counter1] = $row2['Type'];
+	$PatAlert[$counter1] = $row2['Alert'];
+	$PatTime[$counter1] = $row2['Time'];
+
+	$whatDr = $DrId[$counter1];
+	$query2 = $con->prepare("SELECT Role,Name,Surname FROM doctors WHERE id=? ");
+	$query2->bindValue(1, $whatDr, PDO::PARAM_INT);
+	$resultD = $query2->execute();
+	
+	while ($rowD = $query2->fetch(PDO::FETCH_ASSOC)) {
+		$NameDr=$rowD['Name'];
+		$SurnameDr=$rowD['Surname'];
+	}
+	$DoctorName = $NameDr.' '.$SurnameDr;
+	
+	if ($counter1>0) $cadena.=',';    
+	$cadena.='
+    {
+        "PatId":"'.$PatId[$counter1].'",
+        "name":"'.$PatName[$counter1].'",
+        "drname":"'.$DoctorName.'",
+        "type":"'.$PatType[$counter1].'",
+        "alert":"'.$PatAlert[$counter1].'",
+        "time":"'.$PatTime[$counter1].'"
+        }';    
+
+	$counter1++;
+}
+
+$encode = json_encode($cadena);
+echo '{"items":['.($cadena).']}'; 
+
+function SanDate($entrydate)
+{
+	$newDate = date("m/d/Y H:i:s", strtotime($entrydate));
+	return $newDate;
+}
+
+?>

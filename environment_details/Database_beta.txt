@@ -1,0 +1,4 @@
+dbhost="beta.health2.me";
+dbname="monimed";
+dbuser="monimed";
+dbpass="ardiLLA98";

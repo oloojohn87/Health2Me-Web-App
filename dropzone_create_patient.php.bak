@@ -1,0 +1,42 @@
+<?php
+session_start();
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+ 
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$idcreator = $_SESSION['MEDID'];
+//$userid = 28;
+$idusfixed = $_GET['idusfixed'];
+$idusfixedname = $_GET['idusfixedname'];
+$name = $_GET['name'];
+$surname = $_GET['surname'];
+$initial = $_GET['initial'];
+
+$query = "insert into usuarios(idcreator,idusfixed,idusfixedname,alias,name,surname,mi) values(".$idcreator.",".$idusfixed.",'".$idusfixedname."','".$idusfixedname."','".$name."','".$surname."','".$initial."')";
+//echo $query;
+if(mysql_query($query))
+{
+
+	$query = "select max(identif) as idusu from usuarios";
+	$result = mysql_query($query);
+	$row = mysql_fetch_array($result);
+	echo $row['idusu'];
+	
+	$query = "insert into doctorslinkusers(idmed,idus,fecha,idpin,estado,confirm,tipo) values(".$idcreator.",".$row['idusu'].",now(),NULL,2,'Created by Dr., Id= ".$idcreator."',1)";
+	file_put_contents("ip.txt", $query, FILE_APPEND);
+	$result = mysql_query($query);
+	
+	return;
+	
+	
+}
+echo 'failure';
+
+
+?>

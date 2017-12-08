@@ -1,0 +1,117 @@
+<?php
+ session_start();
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }	
+
+
+ 
+ 
+$idpatient = $_SESSION['UserID'];
+$iddoctor = $_SESSION['MEDID'];
+if ($iddoctor == $idpatient) $idauthor = -1; else $idauthor = $iddoctor;
+
+$insurance = $_GET['insurance'];
+$address = $_GET['address'];
+$city = $_GET['city'];
+$zip = $_GET['zip'];
+$telefono = cleanPhoneNumber($_GET['phone']);
+$email = $_GET['email'];
+$sexo  = $_GET['gender'];
+$blood_type = $_GET['blood_type'];
+$weight = strval($_GET['weight']);
+$weight_type = intval($_GET['weight_type']);
+$height1 = intval($_GET['height1']);
+$height2 = intval($_GET['height2']);
+$height_type = intval($_GET['height_type']);
+if($sexo == 'Male')
+{
+    $sexo = 1;
+}
+else
+{
+    $sexo = 0;
+}
+
+$dob = $_GET['dob'].' 00:00:00';
+
+
+/*
+if($_SESSION['isPatient']==1)
+{
+	$edited=0;
+}
+else
+{
+	$edited = $_SESSION['MEDID'];
+}
+*/
+
+$queryText = $con->prepare("Update basicemrdata SET insurance=?, address=?,City=?,zip=?,latest_update=NOW(),doctor_signed=?,DOB=?,bloodType=?,weight=?,weightType=?,height1=?,height2=?,heightType=?  where IdPatient=? ");
+$queryText->bindValue(1, $insurance, PDO::PARAM_STR);
+$queryText->bindValue(2, $address, PDO::PARAM_STR);
+$queryText->bindValue(3, $city, PDO::PARAM_STR);
+$queryText->bindValue(4, $zip, PDO::PARAM_STR);
+$queryText->bindValue(5, $idauthor, PDO::PARAM_INT);
+$queryText->bindValue(6, $dob, PDO::PARAM_STR);
+$queryText->bindValue(7, $blood_type, PDO::PARAM_STR);
+$queryText->bindValue(8, $weight, PDO::PARAM_STR);
+$queryText->bindValue(9, $weight_type, PDO::PARAM_INT);
+$queryText->bindValue(10, $height1, PDO::PARAM_INT);
+$queryText->bindValue(11, $height2, PDO::PARAM_INT);
+$queryText->bindValue(12, $height_type, PDO::PARAM_INT);
+$queryText->bindValue(13, $idpatient, PDO::PARAM_INT);
+$result = $queryText->execute();
+
+
+if (!$queryText || $queryText->rowCount() == 0) 
+	{ 
+//		  $error = "MySQL error ".mysql_errno().": ".mysql_error()."\n<br>When executing:<br>\n$queryText\n<br>"; 
+//		  echo $error;
+		  $queryText = $con->prepare("INSERT INTO basicemrdata SET IdPatient=?,insurance=?,address=?,City=?,zip=?,latest_update=NOW(),doctor_signed=?");
+		  $queryText->bindValue(1, $idpatient, PDO::PARAM_INT);
+		  $queryText->bindValue(2, $insurance, PDO::PARAM_STR);
+		  $queryText->bindValue(3, $address, PDO::PARAM_STR);
+		  $queryText->bindValue(4, $city, PDO::PARAM_STR);
+		  $queryText->bindValue(5, $zip, PDO::PARAM_STR);
+		  $queryText->bindValue(6, $idauthor, PDO::PARAM_INT);
+		  
+		  //echo 'query 2:' .$queryText;
+		  $result = $queryText->execute();
+	} 
+
+$queryText = $con->prepare("Update usuarios SET telefono=?, email=?, Sexo=? where identif=? ");
+$queryText->bindValue(1, $telefono, PDO::PARAM_STR);
+$queryText->bindValue(2, $email, PDO::PARAM_STR);
+$queryText->bindValue(3, $sexo, PDO::PARAM_INT);
+$queryText->bindValue(4, $idpatient, PDO::PARAM_INT);
+
+$result = $queryText->execute();
+
+if (!$queryText) 
+	{ 
+		  $error = "MySQL error \n<br>When executing:<br>\n$queryText\n<br>"; 
+		  echo $error;
+	} 
+
+
+
+
+function cleanPhoneNumber($phone)
+{
+	return preg_replace("/[^0-9]/", "",$phone);
+}
+
+?>

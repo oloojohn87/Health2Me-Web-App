@@ -1,0 +1,37 @@
+<?php
+define('INCLUDE_CHECK',1);
+require "logger.php";
+ 
+
+$CodigoBusca = $_GET['token'];
+
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+$tbl_name="doctors"; // Table name
+					
+// Connect to server and select databse.
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$ip = $_SERVER['REMOTE_ADDR'];
+echo "<br> Your IP address : " . $ip;
+echo "<br> Your hostname : " . GetHostByName($ip);
+
+
+$q = mysql_query("UPDATE usuarios SET FechaVer = NOW(), Verificado=1 ,confirmcode ='********', IPVALID='$ip' WHERE confirmcode='$CodigoBusca' ");
+
+
+echo 'CODIGO = ';
+echo $CodigoBusca;
+echo "CONFIRMATION";
+
+
+$salto='location:SignInUser.html';
+
+header($salto);
+    
+
+?>

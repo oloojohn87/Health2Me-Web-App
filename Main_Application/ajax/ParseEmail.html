@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>New MediBANK 2012</title>
+    
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    
+    <script type="text/javascript">
+	  $(document).ready(function() {
+		      var activo = 0;
+		      var rounds = 0;
+		      
+		      $('#START').click(function () {
+		      		var d = new Date();
+		      		var time = d.toLocaleTimeString();
+			  		activo = 1;			
+			  		$('#Live').css("color","green");
+			  		$('#Live').html("SYSTEM ACTIVE");
+			  		$('#HoraIni').html(time);
+			  		$('#NumEmails').html("");
+			  		$('#NumValids').html("");
+			  		$('#NumRounds').html("");
+			  		
+			  		
+			  		
+			      });
+			      
+		      $('#STOP').click(function () {
+		      		var d = new Date();
+		      		var time = d.toLocaleTimeString();
+			  		activo = 0;			
+			  		$('#Live').css("color","red");
+			  		$('#Live').html("SYSTEM OFF-LINE");
+			  		});			 
+			 
+			 setInterval(function() {
+				 	if (activo==1){
+				 	d2 = new Date();
+				 	time2 = d2.toLocaleTimeString();
+				 	$('#HoraNow').html(time2);
+				 		}
+				 		}, 1000);      
+			  		
+			 setInterval(function() {
+					if (activo==1){
+	  		
+						var cadena = 'http://192.168.1.120/newmb.php';
+						//alert (cadena);
+	                  var RecTipo = 'Temporal';
+	                  $.ajax(
+               	          {
+                	         url: cadena,
+                	         dataType: "html",
+                	         async: false,
+                	         complete: function(){ //alert('Completed'); 
+              					//$('#NumRounds').html("OK COMPLETED");
+              					},
+              					success: function(data)
+              					{
+	              					if (typeof data == "string") {
+		              					RecTipo = data;
+		              					$('#Consola').append("<strong>"+rounds+"</strong>"); 
+		              					$('#Consola').append("<br>");
+		              					$('#Consola').append(RecTipo); 
+		              					$('#Consola').append("<strong>-------------------------</strong><br>");
+		              					rounds++;
+             					 		$('#NumRounds').html(rounds);
+			 
+		              					} 	
+		              			}
+		              			
+		              	  });
+		          		//$('#Consola').html(RecTipo); 
+     					//alert(RecTipo);	   	
+                        
+                        
+                        } 	
+   				 		}, 10000);      
+
+			  		     
+       });
+	</script>
+	    
+    </head>
+	
+	<body>
+		<div style="height:150px; background-color:blue;">
+			<p style="margin-left:20%; margin-top:; font-size:24px; font-family:Verdana; ">
+		       <span style="color:white;">New MediBANK</span>
+	    	</p>
+     	</div>
+		
+		<div style="height:500px; margin-left:auto; margin-right:auto; margin-top:10px;">
+		<div style="width:40%; height:480px; margin-left:auto; margin-right:auto;  margin-top:10px; float:left; ">
+		
+		<p style="margin-left:20%; margin-top:20px;font-size:18px; ">
+		  <span id="Live" style="color:red;">SYSTEM OFF-LINE</span>
+		</p>
+		<p style="margin-left:20%; margin-top:20px;font-size:16px; ">
+			Start at <span id="HoraIni">00:00 AM</span>
+		</p>
+		<p style="margin-left:20%; margin-top:10px;font-size:16px; ">
+			Actual: <span id="HoraNow">00:00 AM</span>
+		</p>
+		<p style="margin-left:20%; margin-top:20px;  font-size:16px; ">
+			Reviewed: <span id="NumEmails"> x</span>
+		</p>
+		<p style="margin-left:20%; margin-top:20px;  font-size:16px; ">
+			Valid: <span id="NumValids"> x </span>
+		</p>
+		<p style="margin-left:20%; margin-top:20px;  font-size:14px; ">
+			Number of rounds: <span id="NumRounds"> xxx </span>
+		</p>
+		<input type=button value="Start" id="START" style="height:50px; width:100px; margin-left:40%; margin-top:30px;">
+		<input type=button value="Stop" id="STOP" style="height:50px; width:100px; margin-left:40%; margin-top:30px;">
+		
+		</div>
+		<div style="height:480px; width:50%; background-color:grey; overflow:scroll; color:white; margin-top:10px; margin-left:20px; float:right;">
+			<p id="Consola" style="margin-left:10%; margin-top:; font-size:12px; font-family:Verdana; ">
+
+	    	</p>
+     	</div>
+     		
+		</div>	
+      	<div style="height:150px; background-color:blue; overflow:scroll; color:white; margin-top:10px;">
+			<p  style="margin-left:20%; margin-top:; font-size:12px; font-family:Verdana; ">
+
+	    	</p>
+     	</div>
+	</body>
+</html>

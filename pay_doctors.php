@@ -1,0 +1,71 @@
+<?php
+
+require_once('stripe/stripe/lib/Stripe.php');
+require("environment_detail.php");
+$dbhost = $env_var_db["dbhost"];
+$dbname = $env_var_db["dbname"];
+$dbuser = $env_var_db["dbuser"];
+$dbpass = $env_var_db["dbpass"];
+
+//KYLE$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+ 
+$stripe = array(
+  "secret_key"      => "sk_test_hJg0Ij3YDmTvpWMenFHf3MLn",
+  "publishable_key" => "pk_test_YBtrxG7xwZU9RO1VY8SeaEe9"
+);
+
+Stripe::setApiKey($stripe['secret_key']);
+
+$month = intval(date("m"));
+$year = intval(date("Y"));
+$prev_month = $month - 1;
+$prev_year = $year;
+if($prev_month == 0)
+{
+    $prev_month = 12;
+    $prev_year -= 1;
+}
+$start_date = $prev_year."-";
+if($prev_month < 10)
+{
+    $start_date .= "0";
+}
+$start_date .= $prev_month."-01 00:00:00";
+
+$end_date = $year."-";
+if($month < 10)
+{
+    $$end_date .= "0";
+}
+$end_date .= $month."-01 00:00:00";
+
+$res = mysql_query("SELECT id,idMEDEmail,stripe_id FROM doctors WHERE stripe_id is not null");
+while($row = mysql_fetch_assoc($res))
+{
+    $check = mysql_query("SELECT * FROM doctors_payments WHERE doc_id=".$row['id']." AND date = '".$start_date."'");
+    if(mysql_num_rows($check) == 0)
+    {
+        $cost = 0;
+        
+        $consults = mysql_query("SELECT * FROM consults WHERE Doctor=".$row['id']." AND DateTime >= '".$start_date."' AND DateTime < '".$end_date."'");
+        while($consult = mysql_fetch_assoc($consults))
+        {
+            $cost += intval($consult['Cost']);
+            
+        }
+        
+        $to_pay = floor($cost * 0.7);
+        
+        Stripe_Transfer::create(array(
+            "amount" => $to_pay,
+            "currency" => "usd",
+            "recipient" => $row['stripe_id'],
+            "description" => "Payment for doctor id: ".$row['id']." for the month of ".$prev_month."-".$prev_year
+        ));
+        
+        mysql_query("INSERT INTO doctors_payments SET doc_id=".$row['id'].", date='".$start_date."', amount=".$to_pay);
+    }
+}
+
+?>

@@ -1,0 +1,167 @@
+<?php
+
+ini_set('max_execution_time', 300);
+
+$pat_phone = '';
+$doc_phone = '';
+$pat_id = '';
+$doc_id = '';
+$pat_name = '';
+$doc_name = '';
+
+require "Services/Twilio.php";
+require("environment_detail.php");
+$dbhost = $env_var_db["dbhost"];
+$dbname = $env_var_db["dbname"];
+$dbuser = $env_var_db["dbuser"];
+$dbpass = $env_var_db["dbpass"];
+
+if(isset($_POST['pat_phone']))
+{
+    $pat_phone = "+".$_POST["pat_phone"];
+    $doc_phone = "+".$_POST["doc_phone"];
+    
+    $pat_id = $_POST['pat_id'];
+    $doc_id = $_POST['doc_id'];
+    
+    $pat_name = $_POST['pat_name'];
+    $doc_name = $_POST['doc_name'];
+}
+else
+{
+
+    
+    $pat_id = $argv[1];
+    $doc_id = $argv[2];
+    
+    $name = explode("_", $argv[3]);
+    $pat_name = $name[0]." ".$name[1];
+    $name = explode("_", $argv[4]);
+    $doc_name = $name[0]." ".$name[1];
+    
+    $pat_phone = "+".$argv[5];
+    $doc_phone = "+".$argv[6];
+    
+    $dbhost = "localhost";
+}
+
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }	
+
+
+$result = $con->prepare("SELECT in_consultation FROM doctors WHERE id=?");
+$result->bindValue(1, $doc_id, PDO::PARAM_INT);
+$result->execute();
+
+$row = $result->fetch(PDO::FETCH_ASSOC);
+if($row['in_consultation'] != 1)
+{
+    $date = date_create();
+    $timestamp = date_timestamp_get($date);
+    $result = $con->prepare("UPDATE doctors SET cons_req_time=?, consultation_pat=? WHERE id=?");
+	$result->bindValue(1, $timestamp, PDO::PARAM_STR);
+	$result->bindValue(2, $pat_id, PDO::PARAM_INT);
+	$result->bindValue(3, $doc_id, PDO::PARAM_INT);
+	$result->execute();
+	
+    
+    $API_VERSION = '2010-04-01';
+    $AccountSid = "AC109c7554cf28cdfe596e4811c03495bd";
+    $AuthToken = "26b187fb3258d199a6d6edeb7256ecc1";
+    // Instantiate a new Twilio Rest Client
+    $client = new Services_Twilio($AccountSid, $AuthToken);
+    
+    //$results = $con->prepare("insert into ameridoc_calls (patientId,doctorId,startDate,startTime) values(?,?,curdate(),curtime())");
+	//$results->bindValue(1, $pat_id, PDO::PARAM_INT);
+	//$results->bindValue(2, $doc_id, PDO::PARAM_INT);
+	//$results->execute();
+    $initial = substr($pat_phone,3);
+    $contract = "";
+    if($initial == '+57')
+    {
+        $contract = 'HTI-COL';
+    }
+    else
+    {
+        $contract = 'HTI-AAR';
+    }
+    $doc_names = explode(" ", $doc_name);
+    $pat_names = explode(" ", $pat_name);
+    $doc_firstname = $doc_names[0];
+    $pat_firstname = $pat_names[0];
+    $doc_lastname = $doc_names[1];
+    for($i = 2; $i < count($doc_names); $i++)
+    {
+        $doc_lastname .= " ".$doc_names[$i];
+    }
+    $pat_lastname = $pat_names[1];
+    for($i = 2; $i < count($pat_names); $i++)
+    {
+        $pat_lastname .= " ".$pat_names[$i];
+    }
+    $results = $con->prepare("INSERT INTO consults(contract,DateTime,status,type,Patient,Doctor,doctorName,doctorSurname,patientName,patientSurname) values(?,NOW(),'In Progress','phone',?,?,?,?,?,?)");
+    $results->bindValue(1, $contract, PDO::PARAM_STR);
+    $results->bindValue(2, $pat_id, PDO::PARAM_INT);
+    $results->bindValue(3, $doc_id, PDO::PARAM_INT);
+    $results->bindValue(4, $doc_firstname, PDO::PARAM_STR);
+    $results->bindValue(5, $doc_lastname, PDO::PARAM_STR);
+    $results->bindValue(6, $pat_firstname, PDO::PARAM_STR);
+    $results->bindValue(7, $pat_lastname, PDO::PARAM_STR);
+    $results->execute();
+	
+    $recent_id = $con->lastInsertId(); 
+    
+    $conference_id = $doc_id."_".$pat_id;
+    $xml = '<?php echo \'<?xml version="1.0" encoding="UTF-8" ?>\'; ?><Response><?php if(isset($_REQUEST["Digits"])){require("../environment_detail.php");$dbhost = $env_var_db["dbhost"];$dbname = $env_var_db["dbname"];$dbuser = $env_var_db["dbuser"];$dbpass = $env_var_db["dbpass"];$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");mysql_select_db("$dbname")or die("cannot select DB");$result = mysql_query("SELECT in_consultation FROM doctors where id='.$doc_id.'");$row = mysql_fetch_array($result);$count = $row["in_consultation"];if($count == "2"){$result = mysql_query("UPDATE doctors SET in_consultation=3 WHERE id='.$doc_id.'");$result = mysql_query("SELECT most_recent_doc FROM usuarios WHERE Identif='.$pat_id.'");$row = mysql_fetch_assoc($result);$str = $row["most_recent_doc"];$res = "";if(strlen($str) > 0){$str = str_replace(array("[", "]"), "", $str);$ids = explode(",", $str);$found = false;for($i = 0; $i < count($ids); $i++){if($ids[$i] == '.$doc_id.'){$found = true;}}if(!$found){array_unshift($ids , '.$doc_id.');while(count($ids) > 5){$doc = array_pop($ids);}}$res = implode(",", $ids);}else{$res = '.$doc_id.';}$new_ids = "[".$res."]";$result = mysql_query("UPDATE usuarios SET most_recent_doc=".$new_ids." WHERE Identif='.$pat_id.'");}else{$result = mysql_query("UPDATE doctors SET in_consultation=2 WHERE id='.$doc_id.'");} echo \'<Dial action="../phone_appointment_handle_leave.php?id='.$doc_id.'" method="GET"><Conference record="record-from-start" maxParticipants="2" endConferenceOnExit="true" eventCallbackUrl="../phone_appointment_callback.php?info='.$doc_id.'_'.$pat_id.'_'.$recent_id.'">'.$doc_id.'_'.$pat_id.'</Conference></Dial>\';} else {echo \'<Hangup/>\';} ?></Response><?php unlink(__FILE__); ?>';
+    file_put_contents('twiML_temp/'.$conference_id.'.php', $xml);
+    
+    $doc_url = 'http://'.$_SERVER['HTTP_HOST'].'/phone_appointment_ask.php?pat_name='.str_replace(" ", "%20", $pat_name).'&conference_id='.$conference_id;
+    $pat_url = 'http://'.$_SERVER['HTTP_HOST'].'/phone_appointment_wait.php?doc_id='.$doc_id.'&doc_name='.str_replace(" ", "%20",$doc_name).'&conference_id='.$conference_id.'&pat_id='.$pat_id.'&recent_id='.$recent_id;
+    str_replace("-", "", $doc_phone);
+    str_replace("-", "", $pat_phone);
+    $client->account->calls->create('+19034018888', $doc_phone, $doc_url);
+    $call = $client->account->calls->create('+19034018888', $pat_phone, $pat_url);
+    $sid = $call->sid;
+    
+    $results = $con->prepare("SELECT id FROM doctorslinkusers WHERE IdMED = ? AND IdUs = ?");
+    $results->bindValue(1, $doc_id, PDO::PARAM_INT);
+    $results->bindValue(2, $pat_id, PDO::PARAM_INT);
+    $results->execute();
+    $rowCount = $results->rowCount();
+    if($rowCount == 0)
+    {
+        $results = $con->prepare("insert into doctorslinkusers (IdMED,IdUs,Fecha,IdPIN,estado) values(?,?,NOW(),null,2)");
+        $results->bindValue(1, $doc_id, PDO::PARAM_INT);
+        $results->bindValue(2, $pat_id, PDO::PARAM_INT);
+        $results->execute();
+    }
+    
+    /*sleep(50);
+    $result = $con->prepare("SELECT in_consultation FROM doctors WHERE id=?");
+	$result->bindValue(1, $doc_id, PDO::PARAM_INT);
+	$result->execute();
+	
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    if($row['in_consultation'] != 3)
+    {
+        $result = $con->prepare("UPDATE doctors SET in_consultation=0,telemed_type=0 WHERE id=?");
+		$result->bindValue(1, $doc_id, PDO::PARAM_INT);
+		$result->execute();
+		
+    }*/
+    echo $sid;
+}
+else
+{
+    echo '0';
+}
+
+?>
+
+

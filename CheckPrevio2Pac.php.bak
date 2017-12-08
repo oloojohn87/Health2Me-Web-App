@@ -1,0 +1,30 @@
+<?php
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="usuarios"; // Table name
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$valor = $_GET['valor'];
+$queTipo = $_GET['queTipo'];
+
+$result = mysql_query("SELECT * FROM usuarios WHERE email='$valor'  ");
+$count=mysql_num_rows($result);
+$row = mysql_fetch_array($result);
+
+echo $count;
+echo '#';
+echo $row['IdUsFIXED'];
+echo '#';
+echo $row['IdUsFIXEDNAME'];
+echo '#';
+echo $row['IdUsRESERV'];
+echo '#';
+//return $count;
+
+?>

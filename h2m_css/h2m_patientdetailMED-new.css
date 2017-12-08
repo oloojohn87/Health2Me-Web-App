@@ -1,0 +1,38 @@
+#telemedicine_start{
+    width: 90%;
+    background-color: #FAFAFA;
+    border: 1px dashed #DDD;
+    border-radius: 7px;
+    color: #666;
+    text-align: center;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 20px;
+}
+#telemedicine_start h2{
+    color: #54bc00; 
+    font-size: 16px;
+    margin: 0px;
+}
+#telemedicine_start h4{
+    color: #666; 
+    font-size: 12px;
+    margin: 0px;
+    margin-top: 10px;
+}
+#telemedicine_user_notes{
+    color: #888;
+    font-style: italic;
+}
+#start_telemedicine{
+    width: 120px;
+    height: 25px;
+    background-color: #54bc00;
+    color: #FFF;
+    border-width: 0px;
+    border-radius: 5px;
+    outline: none;
+    margin-top: 15px;
+}

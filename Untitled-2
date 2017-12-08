@@ -1,0 +1,82 @@
+http://jsfiddle.net/qP8DY/24/
+
+CSS
+
+.ui-widget.success-dialog {
+    font-family: Verdana,Arial,sans-serif;
+    font-size: .8em;
+    height:200px;
+    -webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);  
+    -moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); 
+}
+
+.ui-widget-content.success-dialog {
+    background: #F9F9F9;
+    border: 1px solid #cacaca;
+    border-radius:5px;    
+    color: #222222;
+    height:200px;    
+}
+
+.ui-dialog.success-dialog {
+    left: 0;
+    outline: 0 none;
+    padding: 0 !important;
+    position: absolute;
+    top: 0;
+    height:200px;
+}
+
+.ui-dialog.success-dialog .ui-dialog-content {
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    overflow: auto;
+    position: relative;
+    padding: 0 !important;
+    margin: 0;
+    height:200px;
+}
+
+.ui-dialog.success-dialog .ui-widget-header {
+    background: #b0de78;
+    border: 0;
+    color: #fff;
+    font-weight: normal;
+}
+
+.ui-dialog.success-dialog .ui-dialog-titlebar {
+    padding: 0.1em .5em;
+    position: relative;
+    background-color: #54bc00;
+    border-radius:0px;
+    font-size: 1em;
+    display:none;
+}
+
+JQUERY
+
+//$("#success").append("<div style=""width:20px; height:20px; float:left; background:black;></div>");
+
+$('#success').dialog({
+	height: 200,
+	width: 350,
+	modal: true,
+    draggable: true,
+    resizable: false,
+	dialogClass: 'no-close success-dialog'
+});
+
+$('#success').dialog({draggable: false}).parent().draggable();
+
+
+HTML
+
+	<div id="success" title="Name of Disease" style="font-family:Lato;" >
+        <div class="episode_edit_bar" style="font-family:Lato; height:40px; color:white; background:#54bc00; line-height:40px; padding-left:20px;">
+            <div style="float:left; width:65px; height:20px; line-height:20px; left: 5px; top:5px; position: absolute;">J09.34</div>
+            <div style="float:left; width:65px; height:10px; line-height:10px; left: 5px; top:20px; position: absolute; font-size:10px;">Jun 1990</div>
+            <div style="float:left; width:65px; height:40px; line-height:40px; left: 75px; top:0px; position: absolute; font-size:18px;">Measles</div>
+        </div>
+        <div class="episode_edit_content" style="height:120px; width:100%;">asjdhaac</div>
+       <button style="float:right; margin:5px; background-color:#22aeff; color:white; border:0px; box-shadow:none;">Done</button>
+	</div>

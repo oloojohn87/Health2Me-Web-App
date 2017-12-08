@@ -1,0 +1,333 @@
+<html>
+    <head>
+        <title>Send Referral</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src='../js/sweet-alert.min.js'></script>
+    <link rel='stylesheet' type='text/css' href='../css/sweet-alert.css'>
+      <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+      <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <link rel="stylesheet" href="../css/toggle.css" />
+        <style>
+            .send_referral_container{
+                width: 600px;
+                height: 486px;
+                border: 1px solid #CCC;
+                border-radius: 5px;
+                font-family: Helvetica, sans-serif;
+            }
+            .send_referral_container input[type="text"]{
+                width: 200px;
+                height: 40px;
+                padding: 10px;
+                border-radius: 5px;
+                margin: 5px;
+                float: left;
+                border: 1px solid #DDD;
+                font-size: 14px;
+                outline: none;
+                color: #777;
+            }
+            .send_referral_header{
+                width: 96%;
+                padding-left: 2%;
+                padding-right: 2%;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                height: 100px;
+                border-bottom: 1px solid #CCC;
+            }
+            .send_referral_reports{
+                width: 96%;
+                padding-left: 2%;
+                padding-right: 2%;
+                height: 120px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #CCC;
+            }
+            .send_referral_data{
+                width: 96%;
+                padding-left: 2%;
+                padding-right: 2%;
+                height: 150px;
+                padding-top: 10px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #CCC;
+            }
+            
+            .send_referral_button{
+                width: 120px;
+                height: 25px;
+                padding: 5px;
+                padding-top: 3px;
+                border-radius: 5px;
+                border: 0px solid #FFF;
+                outline: none;
+                color: #FFF;
+                font-weight: bold;
+                cursor: pointer;
+            }
+            
+            .send_referral_patient_photo{
+                width: 80px;
+                height: 80px;
+                background-color: #AAA;
+                border: 2px dashed #DDD;
+                border-radius: 10px;
+                float: left;
+            }
+            
+            .send_referral_patient_name{
+                width: 300px;
+                height: 20px;
+                float: left;
+                margin-top: 10px;
+                font-size: 18px;
+                margin-left: 10px;
+            }
+            
+            .send_referral_step_container{
+                width: 100px; 
+                height: 120px;
+                text-align: center;
+                color: #22AEFF;
+                font-weight: bold;
+                float: left;
+            }
+            .send_referral_step{
+                width: 80px;
+                height: 64px;
+                border-radius: 80px;
+                background-color: #22AEFF;
+                color: #FFF;
+                text-align: center;
+                font-size: 36px;
+                padding-top: 16px;
+                margin: auto;
+                margin-bottom: 10px;
+            }
+            
+            .send_referral_upload{
+                width: 200px;
+                height: 80px;
+                background-color: #EEE;
+                border: 2px dashed #AAA;
+                border-radius: 10px;
+                float: left;
+                margin-left: 40px;
+                text-align: center;
+                padding-top: 20px;
+                padding-bottom: 10px;
+                cursor: pointer;
+            }
+            
+            .send_referral_share{
+                width: 200px;
+                height: 80px;
+                border: 2px dashed #AAA;
+                background-color: #EEE;
+                border-radius: 10px;
+                margin-left: 20px;
+                text-align: center;
+                float: left;
+                padding-top: 20px;
+                padding-bottom: 10px;
+                cursor: pointer;
+            }
+            
+            .referral_data{
+                width: 420px;
+                height: 120px;
+                margin-left: 40px;
+                float: left;
+            }
+            
+            .send_referral_urgent_container{
+                text-align:center;       
+            }
+            
+            .send_referral_urgent{
+                width: 180px;
+                height: 40px;
+                padding: 10px;
+                margin: 5px;
+                float: left;
+                font-size: 14px;
+                color: #777;
+            } 
+            
+            .send_referral_urgent_toggle{
+                width: 100px; 
+                height: 30px;
+                float: right;
+                margin-top: -7px;
+            }
+            #overlay {
+                position: fixed; 
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #000;
+                opacity: 0.5;
+                filter: alpha(opacity=50);
+            }
+            #modal {
+                position:absolute;
+                z-index: 50;
+            }
+
+            #content {
+                background: transparent;
+                display: inline-block;
+            }
+            #close {
+                position:absolute;
+                background: transparent url(../images/close.png) 0 0 no-repeat;
+                width:24px;
+                height:27px;
+                display:block;
+                text-indent:-9999px;
+                top:-7px;
+                right:12px;
+                z-index: 300;
+                opacity: 0;
+            }
+            #left-arrow {
+                background:url(../images/ui-pagination-arrow-left@2x.png) 0 0 no-repeat;
+                float: left;
+                cursor: pointer;
+                width: 55px;
+                height: 120px;
+                opacity: 0.4;
+            }
+            #right-arrow {
+                background:url(../images/ui-pagination-arrow-right@2x.png) 0 0 no-repeat;
+                float: left;
+                cursor: pointer;
+                width: 60px;
+                height: 120px;
+                opacity: 0.4;
+            }
+            #delete_report {
+                margin: 0 20px 0 10px;
+                float: right;
+                cursor: pointer;
+            }
+            #page_indicator {
+                display: inline;
+                margin-left: 95px;
+                width: 70px;
+            }
+            #header {
+                text-align: center;
+                color: whitesmoke;
+                font-weight: bold;
+                background:rgba(0,0,0,0.4);
+                width: 93%;
+                height: 50px;
+                border-radius:14px;
+                padding:8px;
+                z-index: 300;
+                position: relative;
+                margin: 0 0 -70px 16px;
+                opacity: 0;
+            }
+            #category_indicator {
+                width: 100px;
+                float: left;
+            }
+            .referral_info_bottom {
+                float: right;
+                margin: 55px 10px 0 0;
+                vertical-align: bottom;
+            }
+            #num_of_files {
+                color: #22AEFF;
+            }
+            .ui-autocomplete-loading {
+                background: white url("../images/indicator.gif") right center no-repeat;
+                background-size: 25px 25px;
+            }
+            .ui-autocomplete {
+                max-height: 300px;
+                overflow-y: auto;
+                /* prevent horizontal scrollbar */
+                overflow-x: hidden;
+              }
+            </style>
+    </head>
+    
+    <body>
+        <div class="send_referral_container">
+            <div class="send_referral_header">
+                <div style="float: right; font-weight: bold;">Transition Of Care</div>
+                <div class="send_referral_patient_photo">
+                    <img src="../PatientImage/2660.jpg" alt="referraldummy Kim" width="100%" height="100%"/>
+                </div>
+                <div class="send_referral_patient_name">
+                    referraldummy Kim
+                </div>
+                <div class="referral_info_bottom">Total <span id="num_of_files"><i class="fa fa-refresh fa-spin"></i></span> Reports</div>
+            </div>
+            <div class="send_referral_reports">
+                <div class="send_referral_step_container">
+                    <div class="send_referral_step">
+                        1
+                    </div>
+                    Reports
+                </div>
+                <div class="send_referral_upload" ondrop="onDropButton(event)" ondragover="allowDrop(event)">
+                    <form id="upload_zone" method="post">
+                        <i class="fa fa-cloud-upload" style="color:#22AEFF; font-size: 48px;"></i><br>
+                        Uploaded <span id="num_of_uploaded_files" style="color: #22AEFF;">0</span> Reports
+                    </form>
+                </div>
+                <div class="send_referral_share">
+                    <i class="fa fa-eye" style="color:#54BC00; font-size: 48px;"></i>
+                    <br>
+                    Highlighted <span id="num_of_highlighting_files" style="color: #54BC00;">0</span> Reports
+                    <!--br/><br/>
+                        <button class="send_referral_button" style="background-color: #22AEFF;"><i class="fa fa-pencil"></i>&nbsp;&nbsp;Edit</button-->
+                </div>
+            </div>
+            <div class="send_referral_data">
+                <div class="send_referral_step_container">
+                    <div class="send_referral_step">
+                        2
+                    </div>
+                    Referral Data
+                </div>
+                <div class="referral_data">
+                    <input type="text" id="ref_doc_name" placeholder="Referral Name / Email" />
+                    <input type="text" id="ref_doc_phone" placeholder="Referral Phone Number" />
+                    <input type="text" id="ref_doc_fax" placeholder="Referral Fax Number" />
+                    <input type="text" id="ins_email" placeholder="Insurance Email" />
+                
+                    <div class="send_referral_urgent">
+                        <div class="send_referral_urgent_toggle">
+                            <input id="send_referral_toggle" class="h2m-toggle h2m-toggle-round" type="checkbox">
+                            <label id="srt" for="send_referral_toggle" data-on="Yes" data-off="No" style="float: left; opacity: 1;"></label>
+                            
+                        </div>
+                        Urgent?
+                    </div>
+                </div>
+            </div>
+            <div style="width: 130px; height: 30px; margin: auto; margin-top: 15px;">
+                <button class="send_referral_button " style="background-color: #54BC00;"><i class="fa fa-send"></i>&nbsp;&nbsp;Send</button>
+            </div>
+        </div>
+        <div id="DZdialog" title="Report Dropzone" style="display:none;">
+            <div id="theDZdialog"></div>  
+        </div>
+        <div id="SHdialog" title="Report Share" style="display:none;">
+            <div id="theSHdialog" style="text-align:center; height:490px;">
+                <i class="fa fa-refresh fa-spin" id="SH_Spin" style="margin:160px auto; color: gray; font-size:140px; vertical-align:middle;"></i>
+            </div>  
+        </div>
+    </body>
+    <script src="send_referral.js"></script>
+    <script src="edit_report.js"></script>
+</html>

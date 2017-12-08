@@ -1,0 +1,25 @@
+<?php
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass']; 
+
+// Connect to server and select databse.
+ $link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+ mysql_select_db("$dbname")or die("cannot select DB");
+
+$filename = $_GET['filename'];
+
+$file = "$filename";
+
+$query = mysql_query("select max(idpin) as maxId from lifepin where orig_filename = '$filename'");
+$row = mysql_fetch_array($query);
+$idpin = $row['maxId'];
+
+$query1 = mysql_query("delete from lifepin where orig_filename = '$filename' and idpin = $idpin");
+
+unlink("C:\\xampp\\htdocs\\dropzone_uploads\\temporaryForFilePreview\\$file");
+
+
+?>

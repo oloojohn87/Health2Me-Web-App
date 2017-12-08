@@ -1,0 +1,65 @@
+<?php
+require("environment_detail.php");
+$dbhost = $env_var_db["dbhost"];
+$dbname = $env_var_db["dbname"];
+$dbuser = $env_var_db["dbuser"];
+$dbpass = $env_var_db["dbpass"];
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }		
+
+$id = $_POST['id'];
+$specific_time = "";
+if(isset($_POST['specific_time']))
+{
+    $time = $_POST['specific_time'];
+    if($time == 'n' || $time == 'null' || $time == null || strlen($time) == 0)
+    {
+        $specific_time = 'null';
+    }
+    else
+    {
+        $time_exp = explode(":", $time);
+        $hour = intval($time_exp[0]);
+        $minute = substr($time_exp[1], 0, 2);
+        $meridiem = substr($time_exp[1], 2, 2);
+        
+        if($meridiem == 'pm' && $hour < 12)
+        {
+            $hour += 12;
+        }
+        if($hour < 10)
+        {
+            $specific_time = "0";
+        }
+        else
+        {
+            $specific_time = "";
+        }
+        $specific_time .= $hour.":".$minute.":00";
+    }
+}
+
+echo $specific_time;
+
+if($specific_time == 'null')
+{
+    $res = $con->prepare("UPDATE appointments SET specific_time = null WHERE id=?");
+	$res->bindValue(1, $id, PDO::PARAM_INT);
+	$res->execute();
+}
+else if(strlen($specific_time) > 0)
+{
+    $res = $con->prepare("UPDATE appointments SET specific_time=? WHERE id=?");
+	$res->bindValue(1, $specific_time, PDO::PARAM_STR);
+	$res->bindValue(2, $id, PDO::PARAM_INT);
+	$res->execute();
+}
+
+
+?>

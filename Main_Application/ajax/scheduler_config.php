@@ -1,0 +1,687 @@
+<?php
+session_start();
+ require("environment_detail.php");
+ require_once("displayExitClass.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$NombreEnt = $_SESSION['Nombre'];
+$PasswordEnt = $_SESSION['Password'];
+$MEDID = $_SESSION['MEDID'];
+$Acceso = $_SESSION['Acceso'];
+if ($Acceso != '23432')
+{
+$exit_display = new displayExitClass();
+
+$exit_display->displayFunction(1);
+die;
+}
+
+					// Connect to server and select databse.
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }		
+
+$result = $con->prepare("SELECT * FROM doctors where id=?");
+$result->bindValue(1, $MEDID, PDO::PARAM_INT);
+$result->execute();
+
+$count=$result->rowCount();
+$row = $result->fetch(PDO::FETCH_ASSOC);
+$success ='NO';
+if($count==1){
+	$success ='SI';
+	$MedID = $row['id'];
+	$MedUserEmail= $row['IdMEDEmail'];
+	$MedUserName = $row['Name'];
+	$MedUserSurname = $row['Surname'];
+	$MedUserLogo = $row['ImageLogo'];
+	$IdMedFIXED = $row['IdMEDFIXED'];
+	$IdMedFIXEDNAME = $row['IdMEDFIXEDNAME'];
+	
+}
+else
+{
+$exit_display = new displayExitClass();
+
+$exit_display->displayFunction(2);
+die;
+}
+?>
+
+
+<html lang="en" style="background: #F9F9F9;">
+	<head>
+    <meta charset="utf-8">
+    <title>Inmers - Center Management Console</title>
+    <link rel="icon" type="image/ico" href="favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/jquery.timepicker.css" />
+    <link rel="stylesheet" href="css/jquery-ui-1.8.16.custom.css" media="screen"  />
+    <link rel="stylesheet" href="css/fullcalendar.css" media="screen"  />
+    <link rel="stylesheet" href="css/chosen.css" media="screen"  />
+    <link rel="stylesheet" href="css/datepicker.css" >
+    <link rel="stylesheet" href="css/colorpicker.css">
+    <link rel="stylesheet" href="css/glisse.css?1.css">
+    <link rel="stylesheet" href="css/jquery.jgrowl.css">
+    <link rel="stylesheet" href="js/elfinder/css/elfinder.css" media="screen" />
+    <link rel="stylesheet" href="css/jquery.tagsinput.css" />
+    <link rel="stylesheet" href="css/demo_table.css" >
+    <link rel="stylesheet" href="css/jquery.jscrollpane.css" >
+    <link rel="stylesheet" href="css/validationEngine.jquery.css">
+    <link rel="stylesheet" href="css/jquery.stepy.css" />
+    
+	<link rel="stylesheet" href="css/icon/font-awesome.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.css">
+	<link rel="stylesheet" href="css/toggle-switch.css">
+
+	<link href='css/jquery-ui.css' rel='stylesheet' />	
+	<script src='js/jquery-1.9.1.js'></script>
+	<script src='js/jquery-ui.js'></script>
+	<link href='css/fullcalendar.css' rel='stylesheet' />
+	<script src='js/jquery-1.9.1.min.js'></script>
+	<script src='js/jquery-ui-1.10.2.custom.min.js'></script>
+	<script src='js/fullcalendar.min.js'></script>
+	 <script type="text/javascript" src="js/jquery.timepicker.js"></script>  
+    <link rel="stylesheet" media="screen" type="text/css" href="css/colorpicker2.css" />
+	<script type="text/javascript" src="js/colorpicker.js"></script>
+	<script type="text/javascript" src="jscolor/jscolor.js"></script>
+    <script type="text/javascript">
+	var predefined_events = 0;
+	var recurring_events_count=0;
+	
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37863944-1']);
+  _gaq.push(['_setDomainName', 'health2.me']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+  
+
+	function get_user_config(serviceURL) 
+	{
+		$.ajax(
+		{
+			url: serviceURL,
+			dataType: "json",
+			async: false,
+			success: function(data)
+			{
+				config = data.items;
+						
+			}
+		});
+	}   
+
+	function get_user_event_config(serviceURL) 
+	{
+		$.ajax(
+		{
+			url: serviceURL,
+			dataType: "json",
+			async: false,
+			success: function(data)
+			{
+				event_config = data.items;
+						
+			}
+		});
+	}
+	
+	function LanzaAjax (DirURL)
+		{
+		var RecTipo = 'SIN MODIFICACIÓN';
+	    $.ajax(
+           {
+           url: DirURL,
+           dataType: "html",
+           async: false,
+           complete: function(){ //alert('Completed');
+                    },
+           success: function(data) {
+                    if (typeof data == "string") {
+                                RecTipo = data;
+                                }
+                     }
+            });
+		return RecTipo;
+		}
+		
+		function add_visit_types()
+		{
+			add_event_config(predefined_events,'',0,0,'ffffff');
+			//predefined_events++;
+		}
+		
+		function add_event_config(i,title,hours,minutes,colour)
+		{
+			var grandfather = document.getElementById("CLICK");
+			//alert('Found GrandFather '+grandfather);
+			
+			var father = document.createElement("div");
+				father.setAttribute("class","formRow");
+					
+					
+					father.innerHTML = "Type : ";
+					var title_child = document.createElement("input");
+					title_child.setAttribute("type","text");
+					title_child.setAttribute("id","event"+i);
+					title_child.setAttribute("name","event"+i);
+					title_child.setAttribute("value",title);
+					title_child.style.width = '15em'
+					father.appendChild(title_child);
+				
+					father.innerHTML += "  Hours : ";
+					var hours_child = document.createElement("select");
+					hours_child.setAttribute("id","hours"+i);
+					hours_child.setAttribute("name","hours"+i);
+					hours_child.style.width = '8em'
+					for(var j=0;j<25;j++)
+					{
+						hours_child.options[hours_child.options.length]= new Option(j, j);
+					}
+					hours_child.options[parseInt(hours)].setAttribute('selected',true)
+					
+					father.appendChild(hours_child);
+					
+					father.innerHTML += "  Minutes : ";
+					var minutes_child = document.createElement("select");
+					minutes_child.setAttribute("id","minutes"+i);
+					minutes_child.setAttribute("name","minutes"+i);
+					minutes_child.style.width = '8em'
+					for(var j=0;j<61;j++)
+					{
+						minutes_child.options[minutes_child.options.length]= new Option(j, j);
+					}
+					minutes_child.options[parseInt(minutes)].setAttribute('selected',true)
+					father.appendChild(minutes_child);
+					
+					father.innerHTML += "  Pick Colour: ";
+			/*		var color_child = document.createElement("select");
+					color_child.class = "color";
+					color_child.value = "ffffff";
+					father.appendChild(color_child);*/
+					
+					var input = document.createElement('INPUT');
+					input.style.width = '5em';
+					input.setAttribute("id","colour"+i);
+					input.setAttribute("name","colour"+i);
+					// bind jscolor
+					var col = new jscolor.color(input);
+					//col.fromHSV(6/event_config.length*i, 1, 1);
+					col.fromString(colour);
+					father.appendChild(input);
+			grandfather.appendChild(father);
+			predefined_events++;
+		
+		}
+		
+		function add_more_recurring_event()
+		{
+			add_recurring_events(recurring_events_count,'',2,6,'09:00:00','18:00:00');
+			//recurring_events_count++;
+		}
+		
+		function add_recurring_events(i,title,start_day,end_day,start_time,end_time)
+		{
+			var grandfather = document.getElementById("CLICK1");
+			
+			var father1 = document.createElement("div");
+				father1.setAttribute("class","formRow");
+					
+				father1.innerHTML = "Title : ";
+				var title_child = document.createElement("input");
+				title_child.setAttribute("type","text");
+				title_child.setAttribute("id","title"+i);
+				title_child.setAttribute("name","title"+i);
+				title_child.setAttribute("value",title);
+				father1.appendChild(title_child);
+				
+			grandfather.appendChild(father1);
+			
+			var father2 = document.createElement("div");
+				father2.setAttribute("class","formRow");
+					
+				father2.innerHTML = "Day : ";
+				var day_start = document.createElement("select");
+					day_start.setAttribute("id","day_start"+i);
+					day_start.setAttribute("name","day_start"+i);
+				
+				var day_end = document.createElement("select");
+					day_end.setAttribute("id","day_end"+i);
+					day_end.setAttribute("name","day_end"+i);
+					
+					day_start.options[day_start.options.length]= new Option("Sunday",0);
+					day_end.options[day_end.options.length]= new Option("Sunday",0);			
+					
+					day_start.options[day_start.options.length]= new Option("Monday",1);
+					day_end.options[day_end.options.length]= new Option("Monday",1);
+						
+					day_start.options[day_start.options.length]= new Option("Tuesday",2);
+					day_end.options[day_end.options.length]= new Option("Tuesday",2);
+					
+					day_start.options[day_start.options.length]= new Option("Wednesday",3);
+					day_end.options[day_end.options.length]= new Option("Wednesday",3);
+					
+					day_start.options[day_start.options.length]= new Option("Thursday",4);
+					day_end.options[day_end.options.length]= new Option("Thursday",4);	
+					
+					day_start.options[day_start.options.length]= new Option("Friday",5);
+					day_end.options[day_end.options.length]= new Option("Friday",5);
+					
+					day_start.options[day_start.options.length]= new Option("Saturday",6);
+					day_end.options[day_end.options.length]= new Option("Saturday",6);
+					
+					
+					var index;
+					index=start_day-1;
+					day_start.options[index].setAttribute('selected',true);
+					index=end_day-1;
+					
+					day_end.options[parseInt(end_day)-1].setAttribute('selected',true);
+					
+					father2.appendChild(day_start);
+					father2.innerHTML += "  To  ";
+					father2.appendChild(day_end);
+					grandfather.appendChild(father2);
+			
+			var father3 = document.createElement("div");
+				father3.setAttribute("class","formRow");
+					
+				father3.innerHTML = "Time : ";
+				var time_start = document.createElement("input");
+					time_start.setAttribute("type","text");
+					time_start.setAttribute("id","time_start"+i);
+					time_start.setAttribute("name","time_start"+i);
+					time_start.setAttribute("value",start_time);
+					
+				var time_end = document.createElement("input");
+					time_end.setAttribute("type","text");
+					time_end.setAttribute("id","time_end"+i);
+					time_end.setAttribute("name","time_end"+i);
+					time_end.setAttribute("value",end_time);
+					
+				
+					father3.appendChild(time_start);
+					father3.innerHTML += "  To  ";
+					father3.appendChild(time_end);
+					grandfather.appendChild(father3);
+			
+				recurring_events_count++;
+		}
+		
+		
+  
+   $(document).ready(function() {
+		get_user_event_config('getusereventconfig.php');
+		//predefined_events = event_config.length;
+		for(var i=0;i<event_config.length;i++)
+		{
+			add_event_config(i,event_config[i].title,event_config[i].hours,event_config[i].minutes,event_config[i].colour)
+		}
+   
+		get_user_config('getuserconfig.php?userid=<?php echo $_SESSION['MEDID'];?>');
+		//alert(config.length);
+		var count=0;
+		for(var i=0;i<config.length;i++)
+		{
+			//alert(parseInt(config[i].type));
+			switch(parseInt(config[i].type))
+			{
+				case 1 ://alert("here"); 
+						switch(parseInt(config[i].day_start))
+						 {
+						 
+							case 1:	$('#sundaystart').val(config[i].start);
+									$('#sundayend').val(config[i].end);
+									break;
+							case 2:$('#mondaystart').val(config[i].start);
+									$('#mondayend').val(config[i].end);
+									break;
+							case 3:$('#tuesdaystart').val(config[i].start);
+									$('#tuesdayend').val(config[i].end);
+									break;
+							case 4:$('#wednesdaystart').val(config[i].start);
+									$('#wednesdayend').val(config[i].end);
+									break;
+							case 5:$('#thursdaystart').val(config[i].start);
+									$('#thursdayend').val(config[i].end);
+									break;
+							case 6:$('#fridaystart').val(config[i].start);
+									$('#fridayend').val(config[i].end);
+									break;
+							case 7:$('#saturdaystart').val(config[i].start);
+									$('#saturdayend').val(config[i].end);
+									break;
+						 
+						 }
+						break;
+				 case 2 : add_recurring_events(count,config[i].title,config[i].day_start,config[i].day_end,config[i].start,config[i].end);
+						  count++;
+						  break;
+				
+			}
+		}
+		//recurring_events_count = count;
+  });
+	
+ 
+function saveSchedulerConfig()
+{
+	//perform validation here
+	//check if both start and end specified ... or both not specified at all
+
+	
+	//alert('Clicked');
+	var serviceURL = 'clear_scheduler_data.php';
+	var RecTipo = LanzaAjax(serviceURL);
+	//alert(RecTipo);
+	//alert('here');
+	/*
+	//Sunday
+	serviceURL = "create_scheduler_config_entry.php?title=Working Hours&day_start=1&day_end=1&type=1&start="+$('#sundaystart').val()+"&end="+$('#sundayend').val();
+	//alert(serviceURL);
+	RecTipo = LanzaAjax(serviceURL);
+		
+	//Monday
+	serviceURL = "create_scheduler_config_entry.php?title=Working Hours&day_start=2&day_end=2&type=1&start="+$('#mondaystart').val()+"&end="+$('#mondayend').val();
+	RecTipo = LanzaAjax(serviceURL);
+	
+	//Tuesday
+	serviceURL = "create_scheduler_config_entry.php?title=Working Hours&day_start=3&day_end=3&type=1&start="+$('#tuesdaystart').val()+"&end="+$('#tuesdayend').val();
+	RecTipo = LanzaAjax(serviceURL);
+	
+	//Wednesday
+	serviceURL = "create_scheduler_config_entry.php?title=Working Hours&day_start=4&day_end=4&type=1&start="+$('#wednesdaystart').val()+"&end="+$('#wednesdayend').val();
+	RecTipo = LanzaAjax(serviceURL);
+	
+	//Thursday
+	serviceURL = "create_scheduler_config_entry.php?title=Working Hours&day_start=5&day_end=5&type=1&start="+$('#thursdaystart').val()+"&end="+$('#thursdayend').val();
+	RecTipo = LanzaAjax(serviceURL);
+	
+	//Friday
+	serviceURL = "create_scheduler_config_entry.php?title=Working Hours&day_start=6&day_end=6&type=1&start="+$('#fridaystart').val()+"&end="+$('#fridayend').val();
+	RecTipo = LanzaAjax(serviceURL);
+	
+	//Saturday
+	serviceURL = "create_scheduler_config_entry.php?title=Working Hours&day_start=7&day_end=7&type=1&start="+$('#saturdaystart').val()+"&end="+$('#saturdayend').val();
+	RecTipo = LanzaAjax(serviceURL);
+	*/
+	//alert(predefined_events);
+	//alert(predefined_events);
+	for(var j=0;j<predefined_events;j++)
+	{
+		var title = $('#event'+j).val();
+		var hours = $('#hours'+j).val();
+		var minutes = $('#minutes'+j).val();
+		var colour = $('#colour'+j).val();
+		//alert(title + '  ' + hours + '  ' + minutes);
+		var url = 'create_type_config_entry.php?title='+title+'&hours='+hours+'&minutes='+minutes+' &colour='+colour;
+		//alert(url);
+		var RecTipo = LanzaAjax(url);
+		//alert(RecTipo);
+	}
+	/*
+	//alert(recurring_events_count);
+	for(var j=0;j<recurring_events_count;j++)
+	{
+		var title = $('#title'+j).val();
+		
+		var e = document.getElementById("day_start"+j);
+		var day_start = parseInt(e.options[e.selectedIndex].value) + 1;
+		
+		var e1 = document.getElementById("day_end"+j);
+		var day_end = parseInt(e1.options[e1.selectedIndex].value) + 1;
+
+		var time_start = $('#time_start'+j).val();
+		var time_end = $('#time_end'+j).val();
+		
+		//alert(title + '  ' + day_start + '   ' + day_end + '  ' + time_start + '   ' + time_end);
+		
+		var url = 'create_recurring_event_entry.php?title='+title+'&day_start='+day_start+'&day_end='+day_end+'&time_start='+time_start+'&time_end='+time_end;
+		LanzaAjax(url);
+		//alert(url);
+		
+		
+	
+	}
+	
+	*/
+	//alert('Updated Successfully');
+	window.location.replace("<?php echo $domain;?>/scheduler.php");
+	
+	
+}
+
+  
+
+</script>
+</head>
+
+<body style="background: #F9F9F9;">
+
+	<input type="hidden" id="NombreEnt" value="<?php echo $NombreEnt; ?>">
+	<input type="hidden" id="PasswordEnt" value="<?php echo $PasswordEnt; ?>">
+	<input type="hidden" id="UserHidden">
+
+	<!--Header Start-->
+	<div class="header" >
+     	<input type="hidden" id="USERDID" Value="<?php echo $USERID; ?>">	
+    	<input type="hidden" id="MEDID" Value="<?php echo $MedID; ?>">	
+    	<input type="hidden" id="IdMEDEmail" Value="<?php echo $MedUserEmail; ?>">	
+    	<input type="hidden" id="IdMEDName" Value="<?php echo $MedUserName; ?>">	
+    	<input type="hidden" id="IdMEDSurname" Value="<?php echo $MedUserSurname; ?>">	
+    	<input type="hidden" id="IdMEDLogo" Value="<?php echo $MedUserLogo; ?>">	
+		<input type="hidden" id="start">	
+		<input type="hidden" id="end">	
+  		<input type="hidden" id="eventid">	
+        <a href="index.html" class="logo"><h1>Health2me</h1></a>
+           
+        <div class="pull-right">
+           
+            
+           <!--Button User Start-->
+		   <div class="btn-group pull-right" >
+           
+				<a class="btn btn-profile dropdown-toggle" id="button-profile" data-toggle="dropdown" href="#">
+					<span class="name-user"><strong>Welcome</strong> Dr, <?php echo $MedUserName.' '.$MedUserSurname; ?></span> 
+					<?php 
+						$hash = md5( strtolower( trim( $MedUserEmail ) ) );
+						$avat = 'identicon.php?size=29&hash='.$hash;
+					?>	
+					<span class="avatar" style="background-color:WHITE;"><img src="<?php echo $avat; ?>" alt="" ></span> 
+					<span class="caret"></span>
+				</a>
+				<div class="dropdown-menu" id="prof_dropdown">
+					<div class="item_m"><span class="caret"></span></div>
+					<ul class="clear_ul" >
+						<li><a href="dashboard.php"><i class="icon-globe"></i> Home</a></li>
+						<li><a href="medicalConfiguration.php"><i class="icon-cog"></i> Settings</a></li>
+						<li><a href="logout.php"><i class="icon-off"></i> Sign Out</a></li>
+					</ul>
+				</div>
+          </div>
+          <!--Button User END-->  
+          
+          </div>
+    </div>
+    <!--Header END-->
+    
+    <!--Content Start-->
+	<div id="content" style="background: #F9F9F9; padding-left:0px;">
+    
+    	    
+		<!--SpeedBar Start--->
+		<div class="speedbar">
+			<div class="speedbar-content">
+				<ul class="menu-speedbar">
+					<li><a href="dashboard.php" >Dashboard</a></li>
+					<li><a href="patients.php" class="act_link">Patients</a></li>
+					<li><a href="medicalConnections.php" >Doctor Connections</a></li>
+					<li><a href="PatientNetwork.php" >Patient Network</a></li>
+					<li><a href="medicalConfiguration.php">Configuration</a></li>
+					<li><a href="logout.php" style="color:yellow;">Sign Out</a></li>
+				</ul>
+			</div>
+		</div>
+     <!--SpeedBar END-->
+     
+     
+     
+		<!--CONTENT MAIN START-->
+		<div class="content">
+			
+	 
+			<div class="grid" style="width:1000px; margin: 0 auto; margin-top:30px; padding-top:30px;">
+				<span class="label label-info" style="left:0px; margin-left:30px; font-size:30px;">Calendar Configuration</span>  
+				<div class="clearfix"></div>
+                 </br>
+         <!--        <span style="font: bold 18px Arial, Helvetica, sans-serif; color: #3D93E0; cursor: auto; margin-left:20px; ">Office Hours</span>
+				 <br><br>
+				 <center>
+				<table>
+						<tr>
+							<td>Monday :  </td>
+							<td><input type = "text" id="mondaystart">
+							<td>  To  </td>
+							<td><input type = "text" id="mondayend">
+						</tr>
+						<tr>
+							<td>Tuesday :  </td>
+							<td><input type = "text" id="tuesdaystart">
+							<td>  To  </td>
+							<td><input type = "text" id="tuesdayend">
+						</tr>
+						<tr>
+							<td>Wednesday :  </td>
+							<td><input type = "text" id="wednesdaystart">
+							<td>  To  </td>
+							<td><input type = "text" id="wednesdayend">
+						</tr>
+						<tr>
+							<td>Thursday :  </td>
+							<td><input type = "text" id="thursdaystart">
+							<td>  To  </td>
+							<td><input type = "text" id="thursdayend">
+						</tr>
+						<tr>
+							<td>Friday :  </td>
+							<td><input type = "text" id="fridaystart">
+							<td>  To  </td>
+							<td><input type = "text" id="fridayend">
+						</tr>
+						<tr>
+							<td>Saturday :  </td>
+							<td><input type = "text" id="saturdaystart">
+							<td>  To  </td>
+							<td><input type = "text" id="saturdayend">
+						</tr>
+						<tr>
+							<td>Sunday :  </td>
+							<td><input type = "text" id="sundaystart">
+							<td>  To  </td>
+							<td><input type = "text" id="sundayend">
+						</tr>
+					</table>	-->
+					<hr>
+					<center>
+					<span style="font: bold 18px Arial, Helvetica, sans-serif; color: #3D93E0; cursor: auto; margin-left:20px; ">Visit Types : </span>
+					<center>
+					<div id="CLICK">
+					
+					</div>
+					</center>
+					<input type="button" value="Add more Visit Types" onClick="add_visit_types();" align="right">
+				 <div class="clearfix"></div>
+					</center>
+		<!--			<div class="clearfix"></div>
+                 
+                 <hr>
+					
+                 <span style="font: bold 18px Arial, Helvetica, sans-serif; color: #3D93E0; cursor: auto; margin-left:20px; ">Additional Recurring Events</span>
+					<center>
+						<div id="CLICK1">
+					
+					</div>
+						
+					</center>
+	
+					<input type="button" value="Add more Recurring Events" onClick="add_more_recurring_event();" align="right">
+                        </div>-->
+				 </br></br> </br>
+				 
+                 <input type="button" class="btn btn-large btn-primary" onClick="saveSchedulerConfig();"value="UPDATE" style="width:200px;">
+			</div>
+		</div>
+	
+	<script type="text/javascript" >
+	$('#mondaystart').timepicker({ 'timeFormat': 'H:i:s' });
+		$('#mondayend').timepicker({ 'timeFormat': 'H:i:s' });
+		$('#tuesdaystart').timepicker({ 'timeFormat': 'H:i:s' });
+		$('#tuesdayend').timepicker({ 'timeFormat': 'H:i:s' });
+		$('#wednesdaystart').timepicker({ 'timeFormat': 'H:i:s' });
+		$('#wednesdayend').timepicker({ 'timeFormat': 'H:i:s' });
+		$('#thursdaystart').timepicker({ 'timeFormat': 'H:i:s' });
+		$('#thursdayend').timepicker({ 'timeFormat': 'H:i:s' });
+		$('#fridaystart').timepicker({ 'timeFormat': 'H:i:s' });
+		$('#fridayend').timepicker({ 'timeFormat': 'H:i:s' });
+		$('#saturdaystart').timepicker({ 'timeFormat': 'H:i:s' });
+		$('#saturdayend').timepicker({ 'timeFormat': 'H:i:s' });
+		$('#sundaystart').timepicker({ 'timeFormat': 'H:i:s' });
+		$('#sundayend').timepicker({ 'timeFormat': 'H:i:s' });
+	 		
+	</script>
+	<!--<script src="js/bootstrap.min.js"></script>
+    <!-- <script src="/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script> -->
+	<script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/bootstrap-colorpicker.js"></script>
+	<script src="js/bootstrap-modal.js"></script>
+	<script src="js/bootstrap-dropdown.js"></script>
+    <script src="js/google-code-prettify/prettify.js"></script>
+   
+    <script src="js/jquery.flot.min.js"></script>
+    <script src="js/jquery.flot.pie.js"></script>
+    <script src="js/jquery.flot.orderBars.js"></script>
+    <script src="js/jquery.flot.resize.js"></script>
+    <script src="js/graphtable.js"></script>
+    <script src="js/fullcalendar.min.js"></script>
+    <script src="js/chosen.jquery.min.js"></script>
+    <script src="js/autoresize.jquery.min.js"></script>
+    <script src="js/jquery.tagsinput.min.js"></script>
+    <script src="js/jquery.autotab.js"></script>
+    <script src="js/elfinder/js/elfinder.min.js" charset="utf-8"></script>
+	<script src="js/tiny_mce/tiny_mce.js"></script>
+    <script src="js/validation/languages/jquery.validationEngine-en.js" charset="utf-8"></script>
+	<script src="js/validation/jquery.validationEngine.js" charset="utf-8"></script>
+    <script src="js/jquery.jgrowl_minimized.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/jquery.mousewheel.js"></script>
+    <script src="js/jquery.jscrollpane.min.js"></script>
+    <script src="js/jquery.stepy.min.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/raphael.2.1.0.min.js"></script>
+    <script src="js/justgage.1.0.1.min.js"></script>
+	<script src="js/glisse.js"></script>
+    
+	<script src="js/application.js"></script>
+
+	
+	
+</body>
+</html>

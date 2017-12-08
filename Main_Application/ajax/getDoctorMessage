@@ -1,0 +1,57 @@
+<?php
+ //   echo '<table><tr><td>TEST</td></tr></table>';
+//require "identicon.php";
+ 
+ require("environment_detail.php");
+ 
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="MESSAGES"; // Table name
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$msg_id= $_GET['msgid'];
+$delete=empty($_GET['delete']) ? 0 : 1;
+
+if($delete){
+$result = mysql_query("delete from message_infrastructureUSER where message_id='$msg_id'");
+}else{
+$result = mysql_query("Update message_infrastructureUSER set status='read' where message_id='$msg_id'");
+}
+/*
+while ($row = mysql_fetch_array($result)) {
+
+$id=$row['message_id'];
+$subject=$row['Subject'];
+$content=$row['content'];
+$senderid=$row['sender_id'];
+$getname = mysql_query("select IdMEDFIXEDNAME from doctors where id='$senderid'");
+$row11 = mysql_fetch_array($getname);
+$senderid=$row11['IdMEDFIXEDNAME'];
+//$date=$row['fecha'];
+$rep_date = substr($row['fecha'],0,10);
+$year=strtok($rep_date,"-");
+$month=strtok("-");
+$day = strtok("-");
+$rep_date = $month."-".$day."-".$year;
+
+echo '<tr class="CFILA" id="'.$id.'">';
+echo '<td class="chex-table"><input type="checkbox" name="numbers[]" class="mc" value="0" id="checkcol'.$id.'"/><label for="checkcol'.$id.'"><span></span></label></td>';
+//echo '<td class="min-width"><a href="javascript:void(0)"><i class="icon-star"></i></a></td>';
+echo '<td id="'.$id.'"><span class="label label-success" style="margin-right:20px ;font-size:10px;">new</span><a href="javascript:void(0)"> <b>'.$subject.'</b></a><span id="'.$id.'" style="display:none">'.$content.'</span></td>';
+echo '<td>'.$senderid.'</td>';
+echo '<td>'.$rep_date.'</td>';
+echo '</tr>';
+
+}
+
+echo '</tbody>';   */ 
+    
+
+?>
+
+

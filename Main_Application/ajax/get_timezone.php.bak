@@ -1,0 +1,55 @@
+<?php 
+//session_start();
+require("environment_detail.php");
+require("PasswordHash.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+
+//$UserID = $_SESSION['UserID'];
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$timezone = "-05:00:00";
+$type = "user";
+if (isset($_GET['timezone'])) {
+     $timezone = $_GET['timezone'];  
+     $email = $_GET['email'];
+    if (isset($_GET['type'])) {
+        $type = $_GET['type'];
+    }    
+}
+
+    echo $type."\n";
+    echo $timezone."\n";
+    echo $email."\n";
+ 
+    if ($type == "doctor"){
+        $timezone = $_GET['timezone'];
+        $result = '';
+        if($timezone[0] == '-')
+        {
+            $result = '-';
+        }
+        if(abs(floatval($timezone)) < 10.0)
+        {
+            $result .= '0';
+        }
+        $hours = floor(abs(floatval($timezone)));
+        $minutes = intval((abs(floatval($timezone)) - $hours) * 60);
+        $result .= $hours.':';
+        if($minutes < 10)
+        {
+            $result .= '0';
+        }
+        $result .= $minutes.':00';
+        echo "UPDATE doctors SET timezone = '$result' where IdMEDEmail = '$email'";
+	   $q = mysql_query("UPDATE doctors SET timezone = '$result' where IdMEDEmail = '$email' "); 
+    } else {
+       $q = mysql_query("UPDATE usuarios SET timezone = '$timezone' where email = '$email' "); 
+    }    
+
+?>

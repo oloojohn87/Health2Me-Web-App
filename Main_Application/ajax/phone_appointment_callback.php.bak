@@ -1,0 +1,131 @@
+<?php
+    require "environment_detail.php";
+    require "Services/Twilio.php";
+    $version = '2010-04-01';
+    require_once('/realtime-notifications/pusherlib/lib/Pusher.php');
+    $dbhost = $env_var_db['dbhost'];
+    $dbname = $env_var_db['dbname'];
+    $dbuser = $env_var_db['dbuser'];
+    $dbpass = $env_var_db['dbpass'];
+    $link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+    mysql_select_db("$dbname")or die("cannot select DB");
+
+    $app_key = 'd869a07d8f17a76448ed';
+    $app_secret = '92f67fb5b104260bbc02';
+    $app_id = '51379';
+    $pusher = new Pusher($app_key, $app_secret, $app_id);
+
+    
+    $rec_url = $_POST['RecordingUrl'];
+    $file = "recordings/".basename($rec_url);
+
+    if(isset($_GET['info']))
+    {
+        
+        $info = explode("_", $_GET['info']);
+        $doc_id = $info[0];
+        $pat_id = $info[1];
+        $recent_id;
+        $callStatus;
+        
+        //Start of updating the ameridoc_calls table - Pallab
+        if(count($info) > 2)
+        {
+            //$file = fopen("test.txt","w");
+            //echo fwrite($file,"Hello World. Testing!");
+            //fclose($file);
+        
+            //$recent_id = $info[2];
+            
+            $callSID = $info[3];
+            
+            
+            // Set Twilio AccountSid and AuthToken
+            $sid = "AC109c7554cf28cdfe596e4811c03495bd";
+            $token = "26b187fb3258d199a6d6edeb7256ecc1";
+            $client = new Services_Twilio($sid, $token);
+            $call = $client->account->calls->get($callSID);
+            $callStatus = $call->status;
+            
+            //mysql_query("update ameridoc_calls set endTime = curtime(), endDate = curdate() where consultationId = $recent_id and patientId =".$pat_id." and doctorId =".$doc_id);
+        }
+        
+        //End of updating the ameridoc_calls table - Pallab
+        
+        //finding the length/duration of the just ended consulation 
+        
+        //$query = mysql_query("select startTime,endTime from ameridoc_calls where consultationId =".$recent_id);
+        //$result = mysql_fetch_array($query);
+        
+        $result = mysql_query("SELECT * FROM consults WHERE Doctor = ".$doc_id." AND Patient = ".$pat_id." ORDER BY DateTime DESC");
+        $row = mysql_fetch_assoc($result);
+        
+        $recent_id = $row['consultationId'];
+        
+        $consultation_start_time = explode(" ", $row['DateTime']);
+        $startTime = strtotime($consultation_start_time[1]);//strtotime($result['startTime']);
+        $result = mysql_query("SELECT CURTIME() as time");
+        $row = mysql_fetch_assoc($result);
+        $endTime = strtotime($row['time']);//strtotime($result['endTime']);
+        $timeDiff = $endTime - $startTime;
+        
+        //updating the consults table
+        mysql_query("update consults set length = ".$timeDiff.", status ='Completed', Recorded_File='".$file."' where consultationId = ".$recent_id);
+        
+        //finding whether any new report created by the doctor
+        $query = mysql_query("select count(*) as count from lifepin where idcreator =".$doc);
+        $result = mysql_fetch_array($query);
+        $countOfReportsInLifePin = $result['count'];
+        $query = mysql_query("select reportsCreated from doctors_calls where id =".$doc_id);
+        $result = mysql_fetch_array($query);
+        $currentCountOfReports = $result['reportsCreated'];
+        $diff = $countOfReportsInLifePin - $currentCountOfReports;
+        if($diff > 0)
+        {
+          $currentCountOfReports = $countOfReportsInLifePin; 
+        }
+        
+        //Updating the doctors_calls table
+        $query = mysql_query("select * from doctors_calls where id =".$doc_id);
+        $result = mysql_num_rows($query);
+        if($result > 0)
+        {
+              
+              mysql_query("update doctors_calls set reportsCreated  =".$currentCountOfReports.",numberOfConsultations = numberOfConsultations + 1 where id =".$doc_id);
+        }
+        
+        else
+        {
+            $query = mysql_query("select name,surname from doctors where id =".$doc_id);
+            $result = mysql_fetch_array($query);
+            $doctorName = "'".$result['name']."'";
+            $doctorSurname = "'".$result['surname']."'";
+            $numberOfPatientsConsulted = 1;
+            $numberOfConsultations = 1;
+            mysql_query("insert into doctors_calls (id,name,surname,reportsCreated,numberOfPatientsConsulted,numberOfConsultations) values(".$doc_id.",".$doctorName.",".$doctorName.",".$countOfReportsInLifePin.",".$numberOfPatientsConsulted.",".$numberOfConsultations.")");
+        }
+        
+        //updating the usuarios table
+        mysql_query("update usuarios set numberOfPhoneCalls = numberOfPhoneCalls + 1");
+        
+        
+        $res = mysql_query("SELECT Name,Surname FROM doctors WHERE id=".$doc_id);
+        $row = mysql_fetch_assoc($res);
+        $doc_name = $row['Name'].' '.$row['Surname'];
+        $res = mysql_query("SELECT Name,Surname FROM usuarios WHERE id=".$pat_id);
+        $row = mysql_fetch_assoc($res);
+        $pat_name = $row['Name'].' '.$row['Surname'];
+        $pusher->trigger('Telemedicine', 'ameridoc', 'Consultation Between Doctor '.$doc_name.' and patient '.$pat_name.' ended.');
+        $result = mysql_query("UPDATE doctors SET in_consultation=0,telemed_type=0 WHERE id=".$doc_id);
+    }
+
+    $src = fopen($rec_url, 'r');
+    $dest = fopen($file, 'w');
+    stream_copy_to_stream($src, $dest);
+    
+    $enc_result = mysql_query("select pass from encryption_pass where id = (select max(id) from encryption_pass)");
+    $row_enc = mysql_fetch_array($enc_result);
+    $enc_pass=$row_enc['pass'];
+    $cmd = escapeshellarg(getcwd().'\\Encrypt.bat').' '.escapeshellarg(getcwd().'\\recordings').' '.basename($rec_url).' '.escapeshellarg($enc_pass);
+    exec($cmd);
+?>

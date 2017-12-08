@@ -1,0 +1,52 @@
+<?php
+require "Services/Twilio.php";
+require("environment_detail.php");
+require_once('/realtime-notifications/pusherlib/lib/Pusher.php');
+$dbhost = $env_var_db["dbhost"];
+$dbname = $env_var_db["dbname"];
+$dbuser = $env_var_db["dbuser"];
+$dbpass = $env_var_db["dbpass"];
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$app_key = 'd869a07d8f17a76448ed';
+$app_secret = '92f67fb5b104260bbc02';
+$app_id = '51379';
+$pusher = new Pusher($app_key, $app_secret, $app_id);
+
+$info = explode("_", $_GET['info']);
+$pat_id = $info[1];
+$doc_id = $info[0];
+$recent_id = $info[2];
+$res = mysql_query("SELECT * FROM usuarios WHERE Identif=".$pat_id);
+$row = mysql_fetch_assoc($res);
+$pat_name = $row['Name'].' '.$row['Surname'];
+$res = mysql_query("SELECT * FROM doctors WHERE id=".$doc_id);
+$row = mysql_fetch_assoc($res);
+$doc_name = $row['Name'].' '.$row['Surname'];
+
+
+
+echo '<?xml version="1.0" encoding="UTF-8" ?>';
+
+if(isset($_REQUEST['Digits']) && isset($_REQUEST['CallStatus']) && $_REQUEST['CallStatus'] == 'in-progress' )
+{
+    $pusher->trigger('Telemedicine', 'ameridoc', 'Connecting Doctor '.$doc_name.' to patient '.$pat_name);
+    echo '<Response>';
+
+    echo '<Dial><Conference record="record-from-start" maxParticipants="2" endConferenceOnExit="true" eventCallbackUrl="phone_appointment_callback.php?info='.$info[0].'_'.$info[1].'_'.$recent_id.'">'.$info[0].'_'.$info[1].'</Conference></Dial>';
+
+    echo '</Response>';
+}
+else if(isset($_REQUEST['CallStatus']) && $_REQUEST['CallStatus'] == 'in-progress' )
+{
+    $pusher->trigger('Telemedicine', 'ameridoc', 'Asking Doctor '.$doc_name.' to accept consultation with patient '.$pat_name);
+    echo '<Response>';
+    echo '<Gather action="http://'.$_SERVER['HTTP_HOST'].'/ameridoc_call_doctor.php?info='.$info[0].'_'.$info[1].'_'.$recent_id.'" method="GET" timeout="4" numDigits="1">';
+    echo '<Say language="en">'.$pat_name.' would like to start a phone consultation with you. Would you like to accept? Please press any digit to accept the consultation.</Say>';
+    echo '</Gather>';
+    echo '<Say language="en">Consultation denied. Good bye!</Say>';
+    echo '<Hangup/>';
+    echo '</Response>';
+}
+?>

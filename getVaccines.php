@@ -1,0 +1,60 @@
+<?php
+ session_start();
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }		
+
+$queUsu = $_GET['IdUsu'];
+
+$query = $con->prepare("SELECT * FROM p_immuno WHERE idpatient=?");
+$query->bindValue(1, $queUsu, PDO::PARAM_INT);
+$result = $query->execute();
+
+$count = $query->rowCount();
+$counter1 = 0 ;
+$cadena = '';
+while ($row2 = $query->fetch(PDO::FETCH_ASSOC)) {
+	$Id[$counter1] = $row2['id'];
+	$VaccCode[$counter1] = $row2['VaccCode'];
+	$VaccName[$counter1] = $row2['VaccName'];
+	$AllerCode[$counter1] = $row2['AllerCode'];
+	$AllerName[$counter1] = $row2['AllerName'];
+	$intensity[$counter1] = $row2['intensity'];
+	$dateEvent[$counter1] = $row2['date'];
+	$ageEvent[$counter1] = $row2['ageevent'];
+	$deleted[$counter1] = $row2['deleted'];
+
+	if ($counter1>0) $cadena.=',';    
+	$cadena.='
+    {
+        "id":"'.$Id[$counter1].'",
+        "VaccCode":"'.$VaccCode[$counter1].'",
+        "VaccName":"'.$VaccName[$counter1].'",
+        "AllerCode":"'.$AllerCode[$counter1].'",
+        "AllerName":"'.$AllerName[$counter1].'",
+        "intensity":"'.$intensity[$counter1].'",
+        "dateEvent":"'.$dateEvent[$counter1].'",
+        "ageEvent":"'.$ageEvent[$counter1].'",
+        "deleted":"'.$deleted[$counter1].'"
+        }';    
+
+	$counter1++;
+}
+
+$encode = json_encode($cadena);
+echo '{"items":['.($cadena).']}'; 
+
+
+?>

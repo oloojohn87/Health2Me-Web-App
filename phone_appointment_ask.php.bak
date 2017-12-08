@@ -1,0 +1,8 @@
+<?php echo '<?xml version="1.0" encoding="UTF-8" ?>' ?>
+<Response>
+    <Gather <?php echo 'action="twiML_temp/'.$_GET['conference_id'].'.php"' ; ?> timeout="7" numDigits="1">
+        <Say language="en" voice="woman"><?php echo urldecode($_GET['pat_name']); ?> would like to start a phone consultation with you. Would you like to accept? Please press any digit to accept the consultation.</Say>
+    </Gather>
+    <Say language="en" voice="woman">Consultation denied. Good bye!</Say>
+    <Redirect><?php echo 'twiML_temp/'.$_GET['conference_id'].'.php' ; ?></Redirect>
+</Response>

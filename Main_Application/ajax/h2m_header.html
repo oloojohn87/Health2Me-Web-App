@@ -1,0 +1,82 @@
+<!-- Page Header -->
+	<div class="header" >
+            
+            <!-- Logo -->
+            <a href="index.html" class="logo"><h1>health2.me</h1></a>
+			<!-- Translations -->
+            <div style="margin-top:11px;float:left; margin-left:50px;" class="btn-group">
+            	<button id="lang1" type="button" class="btn btn-default dropdown-toggle addit_button" data-toggle="dropdown">
+                	Language <span class="caret addit_caret"></span>
+            	</button>
+            	<ul class="dropdown-menu" role="menu">
+                	<li><a href="#en" onclick="setCookie('lang', 'en', 30); return false;">English</a></li>
+                	<li><a href="#sp" onclick="setCookie('lang', 'th', 30); return false;">Espa&ntilde;ol</a></li>
+            	</ul>
+        	</div>
+		
+            <!-- Right Menu Dropdown -->
+            <div class="pull-right">
+                <div class="btn-group pull-right" >
+                    <a class="btn btn-profile dropdown-toggle" id="button-profile" data-toggle="dropdown" href="#">
+                        <span class="name-user"><strong lang="en">Welcome</strong> Dr. {{userCtrl.user.first_name}} {{userCtrl.user.last_name}}</span> 
+                        <span class="avatar" style="background-color: #FFF;"><img ng-src="{{userCtrl.user.identicon}}" alt="" ></span> 
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" id="prof_dropdown" role="menu">
+                        <div class="item_m"><span class="caret"></span></div>
+                        <ul class="clear_ul">
+                            <li><a href="MainDashboard.php"><i ng-class="icon-globe" lang="en"></i> Home</a></li>
+                            <li><a href="medicalConfiguration.php"><i ng-class="icon-cog" lang="en"></i> Settings</a></li>
+                            <li><a href="logout.php"><i ng-class="icon-off" lang="en"></i> Sign Out</a></li>
+
+                        </ul>
+                    </div>
+                </div> 
+            </div>
+
+		
+	</div>
+        <!--SpeedBar Start--->
+        <div class="speedbar" ng-controller='HeaderController'>
+            <div class="speedbar-content">
+                <ul class="menu-speedbar">
+					<li ng-repeat="link in links"><a href="{{link.url}}" lang="en">{{link.name}}</a></li>
+						
+                </ul>
+
+    <!-- Right Menu Dropdown -->
+    <div class="pull-right">
+        <div class="btn-group pull-right" >
+            <a class="btn btn-profile dropdown-toggle" id="button-profile" data-toggle="dropdown" href="#">
+                <span class="name-user"><strong lang="en">Welcome</strong> Dr. {{userCtrl.user.first_name}} {{userCtrl.user.last_name}}</span> 
+                <span class="avatar" style="background-color: #FFF;"><img ng-src="{{userCtrl.user.identicon}}" alt="" ></span> 
+                <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu" id="prof_dropdown" role="menu">
+                <div class="item_m"><span class="caret"></span></div>
+                <ul class="clear_ul">
+                    <li><a href="MainDashboard.php"><i class="icon-globe" lang="en"></i> Home</a></li>
+                    <li><a href="medicalConfiguration.php"><i class="icon-cog" lang="en"></i> Settings</a></li>
+                    <li><a href="logout.php"><i class="icon-off" lang="en"></i> Sign Out</a></li>
+
+                </ul>
+            </div>
+        </div> 
+    </div>
+
+</div>
+
+<!-- Main Menu -->
+<div class="speedbar">
+    <div class="speedbar-content">
+        <ul class="menu-speedbar">
+            <li><a href="MainDashboard.php" lang="en">Home</a></li>
+            <li ng-show="userCtrl.user.canAccessDashboard"><a lang="en" href="dashboard.php"  lang="en">Dashboard</a></li>
+            <li><a href="patients.php" class="act_link"  lang="en" >Members</a></li>
+            <li ng-show="userCtrl.user.privilege == 1"><a href="medicalConnections.php"  lang="en">Doctor Connections</a></li>
+            <li ng-show="userCtrl.user.privilege == 1"><a href="PatientNetwork.php"  lang="en">Member Network</a></li>
+            <li><a href="medicalConfiguration.php" lang="en">Configuration</a></li>
+            <li><a href="logout.php" style="color:yellow;" lang="en">Sign Out</a></li>
+        </ul>
+    </div>
+</div>

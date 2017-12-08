@@ -1,0 +1,166 @@
+<html>
+    <head>
+        <style>
+            #header{
+                width: 93%;
+                padding: 1%;
+                padding-left: 6%;
+                height: 30px;
+                font-family: Calibri, sans-serif;
+                font-size: 24px;
+                color: #FFF;
+                background-color: #EE3423;
+                margin-bottom: 50px;
+                border-radius: 4px;
+            }
+            
+            #action_plan, .trifold_item{
+                width: 500px;
+                margin: auto;
+                margin-top: 40px;
+                margin-bottom: 40px;
+            }
+            
+            #action_plan_header{
+                width: 93%;
+                padding: 1%;
+                padding-left: 6%;
+                height: 20px;
+                font-family: Calibri, sans-serif;
+                font-size: 18px;
+                color: #FFF;
+                background-color: #EE3423;
+                border-radius: 4px;
+            }
+            
+            #action_plan_body{
+                width: 100%;
+                margin: auto;
+                margin-top: 10px;
+            }
+            
+            .trifold_item_check{
+                width: 40px;
+                height: 40px;
+                margin-top: -9px;
+                margin-left: -12px;
+                margin-right: 4px;
+                float: left;
+            }
+            
+            .trifold_item_header{
+                width: 98%;
+                padding: 1%;
+                height: 20px;
+                font-family: Calibri, sans-serif;
+                font-size: 18px;
+                color: #FFF;
+                background-color: #EE3423;
+                border-radius: 4px;
+            }
+            
+            .trifold_item_body{
+                width: 91%;
+                padding: 1%;
+                font-family: Calibri, sans-serif;
+                font-size: 14px;
+                color: #555;
+                margin: auto;
+                margin-top: 10px;
+            }
+            
+            h2{
+                font-family: Calibri, sans-serif;
+                font-size: 24px;
+                color: #444;
+                padding-left: 6%;
+            }
+            
+            ul{
+                font-family: Calibri, sans-serif;
+                font-size: 18px;
+                color: #555;
+                line-height: 150%;
+            }
+            
+            @page{ 
+                @bottom-left{
+                    content: flow(footer);
+                }
+            }
+            
+            #footer{
+              width: 100%;
+              padding:0;
+              flow: static(footer);
+            }
+        </style>
+    
+    </head>
+    <body>
+        <div id="header">
+            Personal Health Report
+        </div>
+        
+        <div id="action_plan">
+            <div id="action_plan_header">
+                Action Plan
+            </div>
+            <div id="action_plan_body">
+                <ul>
+                    <li>Discuss abnormal cholesterol results with your doctor.</li>
+                    <li>Monitor your blood pressure as directed.<br/>&nbsp;&nbsp;&nbsp;Contact your doctor if > 140/90.</li>
+                    <li>Increase your physical activity.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="trifold_item">
+            <div class="trifold_item_header">
+                <div class="trifold_item_check"><img src="http://dev.health2.me/images/trifold_circle.png" style="width: 38px; height: 38px;" /></div>
+                Blood Pressure
+            </div>
+            <div class="trifold_item_body">
+                The systolic (or top) value, which is also the higher of the two
+                numbers, measures the pressure in the arteries when the
+                heart beats (when the heart muscle contracts). The diastolic
+                (or bottom) value, which is also the lower of the two numbers,
+                measures the pressure in the arteries between heartbeats
+                (when the heart muscle is resting between beats and refilling
+                with blood).<br/><br/>
+                Risk factors for hypertension include family history of high
+                blood pressure, advanced age, lack of physical activity,
+                poor diet including high salt consumption, obesity, excessive
+                alcohol intake, tobacco use and stress.<br/><br/>
+                Ways to improve your BP include losing weight, reducing
+                salt intake, increasing exercise, cutting back on alcohol
+                and following the DASH diet.
+            </div>
+        </div>
+        
+        <div class="trifold_item">
+            <div class="trifold_item_header">
+                <div class="trifold_item_check"><img src="http://dev.health2.me/images/trifold_circle.png" style="width: 38px; height: 38px;" /></div>
+                LDL Cholesterol
+            </div>
+            <div class="trifold_item_body">
+                LDL cholesterol is considered the <q>bad</q> cholesterol because
+                it contributes to plaque, a thick, hard deposit that can clog
+                arteries and make them less flexible. This condition is known
+                as atherosclerosis. If a clot forms and blocks a narrowed
+                artery, heart attack or stroke can result. In general, the lower
+                your LDL cholesterol level is, the better. Ways to improve your
+                LDL include cutting back on animal fats (replace red meats with
+                fish, turkey or chicken; decrease cheese and dairy products),
+                eating oatmeal five times a week, increasing the amount of fiber
+                in your diet, and increasing your exercise.
+            </div>
+            
+            
+        </div>
+        
+        <div id="footer">
+                <img src="http://dev.health2.me/images/CATAHealth.png" style="width: 240px; height: 80px;" />
+            </div>
+    </body>
+</html>

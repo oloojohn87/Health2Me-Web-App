@@ -1,0 +1,191 @@
+<?php
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="doctors"; // Table name
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+																								
+/////////////////////////////THIS IS FOR CALCULATING CORRECT TOTAL PATIENTS////////////////////////////////
+$MedID = $_POST['Doctor'];
+$resultDOC = $con->prepare("SELECT * FROM lifepin WHERE IdMed=?");
+		  $resultDOC->bindValue(1, $MedID, PDO::PARAM_INT);
+		  $resultDOC->execute();
+		  
+		  $countDOC=$resultDOC->rowCount();
+		  $r=0;
+		  $EstadCanal = array(0,0,0,0,0,0,0,0,0,0);
+		  $EstadCanalValid = array(0,0,0,0,0,0,0,0,0,0);
+		  $EstadCanalNOValid = array(0,0,0,0,0,0,0,0,0,0);
+		  $ValidationStatus = array(0,0,0,0,0,0,0,0,0,0,0);
+		  while ($rowDOC = $resultDOC->fetch(PDO::FETCH_ASSOC))
+		  {
+		  	$Valid = $rowDOC['ValidationStatus'];
+		  	$esvalido=0;
+			//Add changes for null exception
+		  	if (is_numeric($Valid)) {$ValidationStatus[$Valid] ++; $esvalido=1;}
+
+		  	$Canal = $rowDOC['CANAL'];
+		  	if (is_numeric($Canal)){
+		  		$EstadCanal[$Canal] ++;
+		  		if ($Valid==0 && $esvalido==1) {$EstadCanalValid[$Canal] ++;} else {$EstadCanalNOValid[$Canal] ++;}
+		  		}
+
+		  	$r++;  
+		  	
+		  }	
+		  /*$countDOC=mysql_num_rows($resultDOC);
+		  $r=0;
+		  $EstadCanal = array(0,0,0,0,0,0,0,0);
+		  $EstadCanalValid = array(0,0,0,0,0,0,0,0);
+		  $EstadCanalNOValid = array(0,0,0,0,0,0,0,0);
+		  $ValidationStatus = array(0,0,0,0,0,0,0,0,0,0,0);
+		  while ($rowDOC = mysql_fetch_array($resultDOC))
+		  {
+		  	$Valid = $rowDOC['ValidationStatus'];
+		  	$esvalido=0;
+		  	if (is_numeric($Valid)) {$ValidationStatus[$Valid] ++; $esvalido=1;}
+
+		  	$Canal = $rowDOC['CANAL'];
+		  	if (is_numeric($Canal)){
+		  		$EstadCanal[$Canal] ++;
+		  		if ($Valid==0 && $esvalido==1) {$EstadCanalValid[$Canal] ++;} else {$EstadCanalNOValid[$Canal] ++;}
+		  		}
+
+		  	$r++;  
+		  }*/
+	
+		  $ArrayPacientes = array();
+		  $numeral=0;
+		  $numeralF=0;
+		  $antiguo = 30;
+		  $NPackets = 0;
+		  
+		  $resultPAC = $con->prepare("SELECT * FROM doctorslinkusers WHERE IdMED=? ");
+		  $resultPAC->bindValue(1, $MedID, PDO::PARAM_INT);
+		  $resultPAC->execute();
+		  
+		  //$countPAC=mysql_num_rows($resultPAC);
+		  while ($rowP1 = $resultPAC->fetch(PDO::FETCH_ASSOC))
+		  {
+		  		$ArrayPacientes[$numeral]=$rowP1['IdUs'];
+		  		$numeral++;
+		  		$antig = time()-strtotime($rowP1['Fecha']);
+		  		$days = floor($antig / (60*60*24));
+		  		if ($days<$antiguo) $numeralF++;
+		  		
+		  		$idEncontrado = $rowP1['IdUs'];
+		  		$resultPIN = $con->prepare("SELECT * FROM lifepin WHERE IdUsu = ? ");
+				$resultPIN->bindValue(1, $idEncontrado, PDO::PARAM_INT);
+				$resultPIN->execute();
+				
+				$countPIN=$resultPIN->rowCount();
+				$NPackets=$NPackets+$countPIN;
+
+		  }
+		  
+		  $NPacketsMIOS = $NPackets;
+		  $MIOS = $numeral;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }	
+
+$queUsu = $_POST['Doctor'];
+$NReports = $_POST['NReports'];
+$daysExplore=empty($_GET['days']) ? 30: $_GET['days'];
+$withGroup = 0;
+if (isset($_POST['Group']))
+{
+    $withGroup = $_POST['Group'];
+}
+
+
+$cadena = '';
+
+$Num_Own_Patients = 0;
+$Num_Group_Patients = 0;
+$Num_Own_Reports = 0;
+$Num_Group_Reports = 0;
+$Num_Active = 0;
+$IdMed = $queUsu;
+
+
+$resultPRE = '';
+if ($withGroup == 1)
+{
+    $resultPRE = $con->prepare("SELECT distinct(IdUs) FROM doctorslinkusers WHERE IdPin IS NULL and (Idmed=? or IdMED IN (Select distinct(idDoctor) from doctorsgroups where idGroup IN (select idGroup from doctorsgroups where idDoctor= ?))) and Estado IN (2,null)");
+	$resultPRE->bindValue(1, $IdMed, PDO::PARAM_INT);
+	$resultPRE->bindValue(2, $IdMed, PDO::PARAM_INT);
+	$resultPRE->execute();
+}
+else
+{
+    $resultPRE = $con->prepare("SELECT distinct(IdUs) FROM doctorslinkusers WHERE IdPin IS NULL and Idmed=? and Estado IN (2,null)");
+	$resultPRE->bindValue(1, $IdMed, PDO::PARAM_INT);
+	$resultPRE->execute();
+}
+$Num_Group_Patients = $resultPRE->rowCount();
+$Num_Active=0;
+if($Num_Group_Patients > 0)
+{
+    while ($rowS = $resultPRE->fetch(PDO::FETCH_ASSOC))
+    {
+        $User_Reports = 0;
+        $IdUsu = $rowS['IdUs'];
+        
+        $checkActive = $con->prepare("SELECT Password FROM usuarios WHERE Identif = ?");
+		$checkActive->bindValue(1, $IdUsu, PDO::PARAM_INT);
+		$checkActive->execute();
+		
+        $rowActive = $checkActive->fetch(PDO::FETCH_ASSOC);
+        if ($rowActive['Password'] >'')
+        {
+            $Num_Active++;
+        }
+    }
+}
+
+
+$query = '';
+if ($withGroup == 1)
+{
+    $result = $con->prepare("SELECT IdGroup FROM doctorsgroups WHERE IdDoctor = ?");
+	$result->bindValue(1, $queUsu, PDO::PARAM_INT);
+	$result->execute();
+	
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $MyGroup = $row['IdGroup'];
+    $query = $con->prepare("SELECT Identif FROM usuarios WHERE (IdCreator = ? OR Identif IN (SELECT IdPac FROM doctorslinkdoctors WHERE IdMED2 = ?)) OR (IdCreator IN (SELECT IdDoctor FROM doctorsgroups WHERE IdGroup = ?)) ORDER BY Surname ASC");
+	$query->bindValue(1, $queUsu, PDO::PARAM_INT);
+	$query->bindValue(2, $queUsu, PDO::PARAM_INT);
+	$query->bindValue(3, $MyGroup, PDO::PARAM_INT);
+	
+}
+else
+{
+    $query = $con->prepare("SELECT Identif FROM usuarios WHERE (IdCreator = ? OR Identif IN (SELECT IdPac FROM doctorslinkdoctors WHERE IdMED2 = ?)) ORDER BY Surname ASC");
+	$query->bindValue(1, $queUsu, PDO::PARAM_INT);
+	$query->bindValue(2, $queUsu, PDO::PARAM_INT);
+}
+$result = $query->execute();
+$count = $query->rowCount();
+if($count > 0)
+{
+    $Num_Own_Patients = $count;
+}
+
+$cadena = array("NPatients" => $MIOS, "NActive" => $Num_Active);
+
+$encode = json_encode($cadena);
+echo $encode; 
+
+
+?>

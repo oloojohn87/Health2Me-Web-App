@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <img id="Admin" src="images/icons/Admin_svg.png" style="display:none;">
+    <img id="History" src="images/icons/history_svg.png" style="display:none;">
+    <img id="Medication" src="images/icons/medication_svg.png" style="display:none;">
+    <img id="Immuno" src="images/icons/immuno_svg.png" style="display:none;">
+    <img id="Family" src="images/icons/family_svg.png" style="display:none;">
+    <img id="Habits" src="images/icons/habits_svg.png" style="display:none;">
+
+    <img id="Imaging" src="images/icons/badge_imaging_svg.png" style="display:none;">
+    <img id="Reports" src="images/icons/badge_document_svg.png" style="display:none;">
+    <img id="Laboratory" src="images/icons/badge_lab_svg.png" style="display:none;">
+
+    <canvas id="myCanvas" width="200" height="200" style="float:left; border:1px solid #cacaca;"></canvas>
+    <canvas id="myCanvas2" width="200" height="200" style="float:left; border:1px solid #cacaca;"></canvas>
+    <script>
+  
+	$(document).ready(function() {
+
+	var timerId = setTimeout(function() { 
+
+	  // SUMMARY GRAPH
+	  var canvas = document.getElementById('myCanvas');
+      var context = canvas.getContext('2d');
+      var x = canvas.width / 2;
+      var y = canvas.height / 2;
+      var radius = 75;
+      var startAngle = 0 - (Math.PI/2);
+      var counterClockwise = false;
+	  
+	  var ColSeg = new Array();
+	  var SizSeg = new Array();
+	  var ImgSeg = new Array();
+	  
+	  ColSeg[1] = '#54bc00';
+	  SizSeg[1] = 10;
+	  ImgSeg[1] = 'Admin';
+	  ColSeg[2] = '#2c3e50';
+	  SizSeg[2] = 40;
+	  ImgSeg[2] = 'History';
+	  ColSeg[3] = '#18bc9c';
+	  SizSeg[3] = 15;
+	  ImgSeg[3] = 'Medication';
+	  ColSeg[4] = '#f39c12';
+	  SizSeg[4] = 10;
+	  ImgSeg[4] = 'Immuno';
+	  ColSeg[5] = '#e74c3c';
+	  SizSeg[5] = 15;
+	  ImgSeg[5] = 'Family';
+	  ColSeg[6] = '#3498db';
+	  SizSeg[6] = 10;
+	  ImgSeg[6] = 'Habits';
+
+	  var SummaryData = 84;
+	  
+      context.lineWidth = 35;
+	  startAngle = 0 - (Math.PI/2);
+	      	    
+	  var n = 1;
+	  while (n < 7)
+	  {
+	      context.beginPath();
+	      ColorRGB = hexToRgb(ColSeg[n]);
+	      // Opacity value reflects how recent data is
+	      var Opac = Math.random();
+	      var Opac = 1;
+	      SegColor = 'rgba('+ColorRGB.r+','+ColorRGB.g+','+ColorRGB.b+','+Opac+')';
+	      
+	      // Draw the segments
+	      context.strokeStyle = SegColor;
+	      endAngle = startAngle + TranslateAngle(SizSeg[n],100);
+	      midAngle = startAngle + (TranslateAngle(SizSeg[n]/2,100));
+		  context.lineWidth = 35;
+	      context.arc(x, y, radius, startAngle, endAngle, counterClockwise);
+	      context.stroke();
+		  
+	      // Draw external border for the segments
+	      /*
+	      context.beginPath();
+	      context.strokeStyle = 'silver';
+		  context.lineWidth = 2;
+	      context.arc(x, y, radius+17, startAngle, endAngle, counterClockwise);
+	      context.stroke();
+	      context.beginPath();
+	      context.arc(x, y, radius-17, startAngle, endAngle, counterClockwise);
+	      context.stroke();
+	      context.beginPath();
+	      var posx = x + ((radius-17) * Math.cos (startAngle));
+	      var posy = y + ((radius-17) * Math.sin (startAngle));
+	      var posx2 = x + ((radius+17) * Math.cos (startAngle));
+	      var posy2 = y + ((radius+17) * Math.sin (startAngle));
+		  context.moveTo(posx,posy);
+	      context.lineTo(posx2,posy2);
+	      context.stroke();
+	      */
+	      // Draw icons into segments
+	      var posx = x + (radius * Math.cos (midAngle)) - 10;
+	      var posy = y + (radius * Math.sin (midAngle)) - 10;
+		  var imageObj=document.getElementById(ImgSeg[n]);
+		  context.drawImage(imageObj, posx, posy,20,20);
+	     
+	     
+	      startAngle = endAngle;
+	      n++;
+	  }
+ 		  // Draw Main Text
+		  var font = '30pt Lucida Sans Unicode';
+		  var message = SummaryData+' %';
+		  context.fillStyle = '#22aeff';
+		  context.textAlign = 'left';
+		  context.textBaseline = 'top'; // important!
+		  context.font = font;
+		  var w = context.measureText(message).width;
+		  var TextH = GetCanvasTextHeight(message,font);
+		  context.fillText(message, x-(w/2), y-(TextH));
+
+
+ 
+ 	  // REPORTS GRAPH
+	  var canvas = document.getElementById('myCanvas2');
+      var context = canvas.getContext('2d');
+      var x = canvas.width / 2;
+      var y = canvas.height / 2;
+      var radius = 85;
+      var widthSegment = 15;
+      var startAngle = 0 - (Math.PI/2);
+      var counterClockwise = false;
+
+ 	  ColSeg.length = 0;
+	  SizSeg.length = 0;
+	  ImgSeg.length = 0;
+	  
+	  ColSeg[1] = '#54bc00';
+	  SizSeg[1] = 2;
+	  ImgSeg[1] = 'Imaging';
+	  ColSeg[2] = '#2c3e50';
+	  SizSeg[2] = 8;
+	  ImgSeg[2] = 'Reports';
+	  ColSeg[3] = '#22aeff';
+	  SizSeg[3] = 2;
+	  ImgSeg[3] = 'Laboratory';
+     
+	  var MaxSegments = 3;
+	  var MaxReports = 12;
+     
+      context.lineWidth = widthSegment;
+	  startAngle = 0 - (Math.PI/2);
+	      	    
+	  var n = 1;
+	  while (n <= MaxSegments)
+	  {
+	      context.beginPath();
+	      ColorRGB = hexToRgb(ColSeg[n]);
+	      // Opacity value reflects how recent data is
+	      var Opac = Math.random();
+	      var Opac = 1;
+	      SegColor = 'rgba('+ColorRGB.r+','+ColorRGB.g+','+ColorRGB.b+','+Opac+')';
+	      
+	      // Draw the segments
+	      context.strokeStyle = SegColor;
+	      endAngle = startAngle + TranslateAngle(SizSeg[n],MaxReports);
+	      midAngle = startAngle + (TranslateAngle(SizSeg[n]/2,MaxReports));
+		  context.lineWidth = widthSegment;
+	      context.arc(x, y, radius, startAngle, endAngle, counterClockwise);
+	      context.stroke();
+
+	      // Draw badges at inner part of segments
+		  var SizeBadge = 40;
+		  var PointAngle = radius-(widthSegment/2)-(SizeBadge/2);
+	      var posx = x + (PointAngle  * Math.cos (midAngle)) - (SizeBadge/2);
+	      var posy = y + (PointAngle  * Math.sin (midAngle)) - (SizeBadge/2);
+		  var imageObj=document.getElementById(ImgSeg[n]);
+		  context.drawImage(imageObj, posx, posy,SizeBadge,SizeBadge);
+
+	      startAngle = endAngle;
+		  n++;
+	  }
+ 		  // Draw Main Text
+		  var font = '30pt Lucida Sans Unicode';
+		  var message = MaxReports+'';
+		  context.fillStyle = '#54bc00';
+		  context.textAlign = 'left';
+		  context.textBaseline = 'top'; // important!
+		  context.font = font;
+		  var w = context.measureText(message).width;
+		  var TextH = GetCanvasTextHeight(message,font);
+		  context.fillText(message, x-(w/2), y-(TextH));
+ 
+ 
+	}, 100)
+
+
+    });
+  
+
+  
+    function TranslateAngle(x,maxim){
+	    var y = (x * Math.PI * 2) / maxim;
+	    return parseFloat(y);
+    }
+    
+    function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+	}
+	
+    
+    function GetCanvasTextHeight(text,font){
+    var fontDraw = document.createElement("canvas");
+
+    var height = 100;
+    var width = 100;
+
+    // here we expect that font size will be less canvas geometry
+    fontDraw.setAttribute("height", height);
+    fontDraw.setAttribute("width", width);
+
+    var ctx = fontDraw.getContext('2d');
+    // black is default
+    ctx.fillRect(0, 0, width, height);
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = 'white';
+    ctx.font = font;
+    ctx.fillText(text/*'Eg'*/, 0, 0);
+
+    var pixels = ctx.getImageData(0, 0, width, height).data;
+
+    // row numbers where we first find letter end where it ends 
+    var start = -1;
+    var end = -1;
+
+    for (var row = 0; row < height; row++) {
+        for (var column = 0; column < width; column++) {
+
+            var index = (row * width + column) * 4;
+
+            // if pixel is not white (background color)
+            if (pixels[index] == 0) {
+                // we havent met white (font color) pixel
+                // on the row and the letters was detected
+                if (column == width - 1 && start != -1) {
+                    end = row;
+                    row = height;
+                    break;
+                }
+                continue;
+            }
+            else {
+                // we find top of letter
+                if (start == -1) {
+                    start = row;
+                }
+                // ..letters body
+                break;
+            }
+
+        }
+
+    }
+   /*
+    document.body.appendChild(fontDraw);
+    fontDraw.style.pixelLeft = 400;
+    fontDraw.style.pixelTop = 400;
+    fontDraw.style.position = "absolute";
+   */
+
+    return end - start;
+    };
+    </script>
+    
+  </body>
+</html>

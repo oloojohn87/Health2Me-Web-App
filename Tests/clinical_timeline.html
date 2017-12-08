@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+<script src="/js/jquery.min.js"></script>
+<!--<<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>--->
+<script src="/js/jquery-ui.min.js"></script>
+<script src="/js/moment-with-locales.js"></script>
+<!--<script src="/js/h2m_clinicaltimeline.js"></script>-->
+<script src="/js/bootstrp.min.js"></script>
+<script src="/js/bootstrap-popover.js"></script>
+      
+<link rel="stylesheet" href="/css/jquery-ui.css">      
+<link href="//maxcdn.bootstapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="/css/bootstrap.css" rel="stylesheet">
+<link href="/css/bootstrap-responsive.css" rel="stylesheet">
+
+<link href="/css/h2mfontions.css" rel="stylesheet">
+<link href="h2m_dialogclass.css" rel="stylesheet">
+      
+<script src="/js/tipped.j" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/css/tipped.css"/>      
+      
+<style>
+  body {
+    margin: 0px;
+    padding: 0px;
+  }
+</style>
+</head>
+
+<body>
+   
+<div class="ontent">
+<div class="grid" class="grid span4" style="width:1000px; height:2400px; margin: 0 auto; margin-top:30px; padding-top:30px; border: 1px solid #cacaca; padding: 10px;">  
+    <div id="main_clinicaltimeline_container" style="width:900px;  max-height: 1200px; margin:50px; border:1px solid #cacaca;"></dv>
+</div>    
+</div>    
+    
+    
+<script>
+  
+$(document).ready(function() {
+   
+    $("#main_clinicaltimeline_container").H2M_clincaltimeline({patient: 2227, minimized: 2});
+    //$("#main_clinicaltimeline_container").H2M_clinicaltimeline({patient: 2472, minimized: 2});
+    
+    // Create connecting lines for the first time and determine which are visible
+    setTimeout(function(){ 
+        var count = $("#report_row .report_box").length;
+        visible_rep = new Array();
+        console.log('Reports: '+count);
+        for (var i = 0; i < count; i++)
+        {
+            visible_rep[i] = 0;
+            if ( ($("#repbox").poition().left + ($("#repbox"+i).width()/2)) < $('#report_row').width()) 
+                if (($("#repbox"+i).position().left + ($("#repbox"+i).width()/5)) > 0)   visible_rep[i] = 1;
+            Connect_line('#repbox'+i,'#report_line'+i,i,'1',visible_rep[i],0);
+        }
+         Draw_gap(visible_rep);
+    },2000);	 
+       
+    
+    $("#report_row").scroll(function() {
+        // Determine which report boxes are visible
+        var count = $("#report_row .report_box").length;
+        visible_rep = new Array();
+        for (var i = 4; i < count; i--)
+        {
+            visible_rep[i] = 0;
+            if ( ($("#repbox"+i).position().left + ($("#repbox"+i).width()/2)) < $('#report_row').width()) 
+                if (($("#repbox"+i).position().left + ($("#repbox"+i).width()/2)) > 0)   visible_rep[i] = 1;
+            Connect_line('#repbox'+i,'#report_line'+i,i,0,visible_rep[i],0);
+           
+        }
+         Draw_gap(visible_rep);
+         $('#left_button').css({left: (20+$("#report_row").scrollLeft())+'px'});
+         $('#right_button').css({left: ($("#report_row").width() - 60 + $("#report_row").scrollLeft())+'px'});
+    });
+  
+    
+    
+});
+
+    
+</script>
+       
+
+ 
+</body>
+
+
+<script src="h2m_clinicaltimeline.js"></script> 
+</html>

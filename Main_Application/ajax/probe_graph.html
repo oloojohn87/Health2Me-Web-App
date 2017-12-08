@@ -1,0 +1,335 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>H2M Probe Graph</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/kinetic-v4.5.5.min.js"></script>
+    <script src="js/moment-with-locales.js"></script>
+    <script src="js/h2m_probegraph.js"></script>
+</head>
+    
+<body>
+    <div id="main"></div>
+    
+    <script>
+        
+        // sample data that will be passed in
+        var sample_data = [{value: 3, date: '2015-01-02 15:33:00'}, /*{value: 1, date: '2015-01-06 15:30:00'},*/ {value: 5, date: '2015-01-10 06:31:00'}, {value: 3, date: '2015-01-07 15:31:00'}, {value: 5, date: '2015-01-08 15:32:00'}, {value: 4, date: '2015-01-12 15:37:00'}, {value: 4, date: '2015-01-09 15:31:00'}, {value: 5, date: '2015-01-11 15:30:00'}, {value: 2, date: '2015-01-14 15:31:00'}, {value: 2, date: '2015-01-13 15:36:00'}, {value: 1, date: '2015-01-14 15:32:00'}];
+        var data_values = ['Very Bad', 'Bad', 'Normal', 'Good', 'Very Good'];
+        var width = 600;
+        var height = 400;
+        
+        $("#main").H2M_ProbeGraph({data: sample_data, height: height, width: width, units: data_values});
+        
+        // begin module code
+        
+        // first, sort the data by date
+        /*sample_data.sort(function(a, b)
+        {
+            if (a.date < b.date)
+                return -1;
+            if (a.date > b.date)
+                return 1;
+            return 0;
+        });
+        
+        var container = document.getElementById('main');
+        
+        container.style.width = width+'px';
+        container.style.height = height+'px';
+        container.style.backgroundColor = '#FEFEFE';
+        container.style.borderRadius = '8px';
+        container.style.border = '1px solid #E8E8E8';
+        container.style.margin = 'auto';
+        container.style.marginTop = '20px';
+        container.style.overflow = 'hidden';
+        
+        var probe_data_font_size = 0;
+        var probe_date_font_size = 0;
+        if(height >= 275)
+        {
+            probe_data_font_size = (height / 16.0);
+            probe_date_font_size = (height / 24.0);
+        }
+        else
+        {
+            probe_data_font_size = (height / 8.0);
+            probe_date_font_size = (height / 14.0);
+        }
+        
+        container.innerHTML = '<div style="width: '+width+'px; height: '+Math.ceil((height * 0.25) * 0.9)+'px; background-color: #888; text-align: center; color: #FFF; font-size: '+probe_data_font_size+'px; font-family: Helvetica, sans-serif; padding-top: '+Math.floor((height * 0.25) * 0.1)+'px;"><div id="probe_data"></div><div id="probe_date" style="font-size: '+probe_date_font_size+'px; margin-top: 10px;"></div></div><div id="main_canvas" style="width: '+width+'px; height: '+height+'px"></div>';
+        
+        if(height < 275)
+        {
+            container.firstChild.children[0].style.float = 'left';
+            container.firstChild.children[0].style.marginLeft = '5px';
+            container.firstChild.children[1].style.float = 'right';
+            container.firstChild.children[1].style.marginTop = '0px';
+            container.firstChild.children[1].style.textAlign = 'right';
+            container.firstChild.children[1].style.marginRight = '5px';
+        }
+        
+        var points_array = [];
+        var dates_array = [];
+        var circles = [];
+        var guide_lines = [];
+        var date_labels = [];
+        var date_borders = [];
+        if(sample_data.length == 1)
+        {
+            points_array.push(width / 2.0);
+            points_array.push((height * 0.75) - ((height / 8.0) * sample_data[0].value));
+            dates_array.push(moment(sample_data[0].date, "YYYY-MM-DD hh:mm:ss"));
+        }
+        else
+        {
+            for(var i = 0; i < sample_data.length; i++)
+            {
+                points_array.push(i * (width / (sample_data.length - 1)));
+                points_array.push((height * 0.75) - ((height / 8.0) * sample_data[i].value));
+                dates_array.push(moment(sample_data[i].date, "YYYY-MM-DD hh:mm:ss"));
+            }
+        }
+        
+        var labels_indexes = [];
+        if(points_array.length == 2)
+        {
+            labels_indexes = [0];
+        }
+        else if(points_array.length > 2)
+        {
+            labels_indexes = [0, Math.floor(points_array.length / 2) - 1];
+        
+            if(sample_data.length <= 4)
+            {
+                for(var i = 1; i < sample_data.length - 1; i++)
+                {
+                    labels_indexes.push(i);
+                }
+            }
+            else
+            {
+                if(sample_data.length % 2 == 1)
+                {
+                    labels_indexes.push(Math.ceil(sample_data.length / 2) - 1);
+                }
+                else
+                {
+                    if(sample_data.length % 3 == 0)
+                    {
+                        labels_indexes.push(Math.ceil(sample_data.length / 3));
+                    }
+                    else
+                    {
+                        labels_indexes.push(Math.ceil(sample_data.length / 3) - 1);
+                    }
+                    labels_indexes.push(Math.ceil((sample_data.length / 3) * 2) - 1);
+                }
+            }
+        }
+        
+        for(var i = 0; i < points_array.length; i += 2)
+        {
+            var circle = new Kinetic.Circle({
+                x: points_array[i],
+                y: points_array[i + 1],
+                radius: 5,
+                fill: '#FFF',
+                stroke: '#22AEFF',
+                strokeWidth: 1
+            });
+            if(points_array.length == 2)
+                circle.setFill('#22AEFF');
+            circles.push(circle);
+            
+            var guideLine = new Kinetic.Line({
+                points: [points_array[i], 0, points_array[i], (height * 0.75) - 15],
+                stroke: '#F2F2F2',
+                strokeWidth: 2,
+                lineJoin: 'round',
+                dashArray: [5, 7]
+            });
+            guide_lines.push(guideLine);
+            
+            var x = points_array[i] - 25;
+            if(i == 0 && points_array.length > 2)
+            {
+                x = 0;
+            }
+            else if(i == (points_array.length - 2) && points_array.length > 2)
+            {
+                x = width - 50;
+            }
+            
+            if(labels_indexes.indexOf(i / 2) != -1)
+            {
+                var text = new Kinetic.Text({
+                    x: x,
+                    y: (height * 0.75) - 11,
+                    text: dates_array[Math.floor(i / 2)].format('MMM DD'),
+                    fontSize: 10,
+                    fontFamily: 'Helvetica',
+                    fill: '#999',
+                    width: 50,
+                    padding: 0,
+                    align: 'center'
+                });
+                date_labels.push(text);
+            }
+            
+        }
+        
+        
+        
+        var stage = new Kinetic.Stage({
+            container: container.children[1],
+            width: width,
+            height: (height * 0.75)
+        });
+
+        var layer = new Kinetic.Layer();
+        
+        var lastIndex = -1;
+        if(sample_data.length > 0)
+        {
+            stage.on('mousemove', function() {
+                var mousePos = stage.getMousePosition();
+                var index = closestPoint(mousePos.x, circles);
+                if(index != lastIndex)
+                {
+                    lastIndex = index;
+                    for(var k = 0; k < circles.length; k++)
+                    {
+                        if(k == index)
+                        {
+                            circles[k].show();
+                            guide_lines[k].setStroke('#CCC');
+                            var label = container.firstChild.children[0];
+                            label.textContent = data_values[(sample_data[k].value - 1)];
+                            var dateLabel = container.firstChild.children[1];
+                            dateLabel.innerHTML = dates_array[k].format('LLL')+'<br/>'+dates_array[k].fromNow();
+                        }
+                        else
+                        {
+                            circles[k].hide();
+                            guide_lines[k].setStroke('#F2F2F2');
+                        }
+                    }
+                    layer.draw();
+                }
+            });
+            document.getElementById('main').onmouseout = function()
+            {
+                // set last probe as active
+                for(var k = 0; k < circles.length - 1; k++)
+                {
+                    circles[k].hide();
+                    guide_lines[k].setStroke('#F2F2F2');
+                }
+                circles[circles.length - 1].show();
+                guide_lines[guide_lines.length - 1].setStroke('#CCC');
+                container.firstChild.children[0].textContent = data_values[(sample_data[sample_data.length - 1].value - 1)];
+                container.firstChild.children[1].innerHTML = dates_array[dates_array.length - 1].format('LLL')+'<br/>'+dates_array[dates_array.length - 1].fromNow();
+                layer.draw();
+            }
+        
+            var x_axis = new Kinetic.Rect({
+                x: 0,
+                y: (height * 0.75) - 13,
+                width: width + 50,
+                height: 15,
+                fill: '#FEFEFE',
+                stroke: '#DDD',
+                strokeWidth: 1,
+            });
+            layer.add(x_axis);
+            var mainLine = null;
+            if(points_array.length > 2)
+            {
+                var mainLine = new Kinetic.Spline({
+                    tension: 0.35,
+                    points: points_array,
+                    stroke: '#22AEFF',
+                    strokeWidth: 2,
+                    lineCap: 'round',
+                    lineJoin: 'round'
+                });
+            }
+
+            for(var i = 0; i < circles.length; i++)
+            {
+                layer.add(guide_lines[i]);
+            }
+            if(points_array.length > 2)
+            {
+                layer.add(mainLine);
+            }
+            for(var i = 0; i < circles.length; i++)
+            {
+                layer.add(circles[i]);
+                circles[i].hide();
+            }
+            for(var i = 0; i < date_labels.length; i++)
+            {
+                layer.add(date_labels[i]);
+            }
+        
+            if(points_array.length > 2)
+            {
+                var arrow_left = new Kinetic.RegularPolygon({
+                    x: 6,
+                    y: (height * 0.75) - 6,
+                    sides: 3,
+                    radius: 3,
+                    fill: '#888',
+                    rotationDeg: 270
+                });
+                var arrow_right = new Kinetic.RegularPolygon({
+                    x: width - 6,
+                    y: (height * 0.75) - 6,
+                    sides: 3,
+                    radius: 3,
+                    fill: '#888',
+                    rotationDeg: 90
+                });
+                layer.add(arrow_left);
+                layer.add(arrow_right);
+            }
+
+            // set last probe as active
+        
+            circles[circles.length - 1].show();
+            guide_lines[guide_lines.length - 1].setStroke('#CCC');
+            container.firstChild.children[0].textContent = data_values[(sample_data[sample_data.length - 1].value - 1)];
+            container.firstChild.children[1].innerHTML = dates_array[dates_array.length - 1].format('LLL')+'<br/>'+dates_array[dates_array.length - 1].fromNow();
+        }
+        else
+        {
+            container.firstChild.children[0].textContent = 'No Probe Data';
+        }
+        
+        
+        stage.add(layer);
+        
+        
+        
+        function closestPoint(x, circles)
+        {
+            var current_index = -1;
+            var current_distance = 10000;
+            for(var k = 0; k < circles.length; k++)
+            {
+                var dist = Math.abs(circles[k].getX() - x);
+                if(dist < current_distance)
+                {
+                    current_distance = dist;
+                    current_index = k;
+                }
+            }
+            return current_index;
+        }
+        */
+    </script>
+</body>
+
+</html>

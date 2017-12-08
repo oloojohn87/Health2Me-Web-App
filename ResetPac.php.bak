@@ -1,0 +1,45 @@
+<?php
+require("environment_detail.php");
+require("PasswordHash.php");
+require("displaySuccessClass.php");
+require("displayExitClass.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="doctors"; // Table name
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$name=$_POST['Nombre'];
+//$IdMed=$_POST['id'];
+$queModo = 1;
+
+//$confirm_code=md5(uniqid(rand()));
+
+//Changes for adding encryption
+$hashresult = explode(":", create_hash($_POST['Password']));
+$IdUsRESERV= $hashresult[3];
+$additional_string=$hashresult[2];
+
+ 
+$q = mysql_query("Update usuarios SET confirmcode='*********',IdUsRESERV ='$IdUsRESERV',salt='$additional_string' where email='$name'"); 
+if($q){
+
+    $exit_display = new displaySuccessClass();
+    $exit_display->displayFunction(6);
+    die;
+
+    //$salto="location:PasswordResetSuccess.html";
+    //header($salto);
+}else{
+    $exit_display = new displayExitClass();
+    $exit_display->displayFunction(6);
+    die;
+    //$salto="location:Error.html";
+    //header($salto);
+}
+
+?>

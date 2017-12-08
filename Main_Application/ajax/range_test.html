@@ -1,0 +1,564 @@
+<html>
+    <head>
+        <title>H2M Range Selector Test</title>
+        <script src="js/jquery.min.js"></script>
+        <script src="js/kinetic-v4.5.5.min.js"></script>
+        <script src="js/H2MRange.js"></script>
+        
+        <link rel='stylesheet' href='font-awesome/css/font-awesome.min.css'>
+    </head>
+    <body>
+    
+        <div id="range" style="margin: auto;">
+            <!--<div style="width: 600px; height: 20px; margin: auto;"></div>
+            <div style="width: 120px; height: 25px; margin: auto; background-color: #888; border-radius: 5px; margin-top: 5px; display: none;">
+                <i class="icon-remove" style="float: right; color: #FFF; font-size: 10px; margin-right: 3px; margin-top: 1px; cursor: pointer;"></i>
+                <input type="text" style="width: 100px; height: 20px; margin-top: 2px; margin-left: 5px; background-color: inherit; border: 0px solid #FFF; outline: none; color: #FFF; text-align: center;" value="test" />
+            </div>-->
+        </div>
+        
+        <script>
+            $("#range").H2MRange({width: 600, min: 20, max: 100, data: [{value: 40, label: 'Bad'}, {value: 100, label: 'Good'}]});
+            
+            setTimeout(function(){
+                $("#range").H2MRangeSetMin(0);
+                $("#range").H2MRangeSetMax(60);
+            }, 1000);
+            
+            setTimeout(function(){
+                console.log($("#range").H2MRangeGet());
+            }, 10000);
+        </script>
+        
+        <!--<script>
+            document.getElementById('range').style.width = '600px';
+            document.getElementById('range').style.height = '80px';
+            
+            var label_editor_container = document.getElementById('range').children[1];
+            var label_close_button = document.getElementById('range').children[1].children[0];
+            var label_editor = document.getElementById('range').children[1].children[1];
+            
+            var stage = new Kinetic.Stage({
+                container: document.getElementById('range').children[0],
+                width: 600,
+                height: 30
+            });
+            
+            
+
+        var layer = new Kinetic.Layer();
+        
+        var rects = [];
+        var add_buttons = [];
+        var delete_buttons = [];
+        var controls = [];
+        var labels = [];
+        var control_labels = [];
+        var texts = ['Bad', 'Normal', 'Good'];
+        var current_rect = 0;
+        for(var i = 0; i < 3; i++)
+        {
+            var rect = new Kinetic.Rect({
+                x: 35 + (185 * i),
+                y: 0,
+                width: 153,
+                height: 20,
+                fill: "#F8F8F8",
+                stroke: "#D8D8D8",
+                strokeWidth: 1
+            });
+            rect.pos_ind = i;
+            rects.push(rect);
+            
+            var text = new Kinetic.Text({
+                x: rect.getX() + rect.getWidth() - 10,
+                y: rect.getY() + 1,
+                text: 'x',
+                fontSize: 10,
+                fontFamily: 'Helvetica, sans-serif',
+                fill: '#FF0000',
+                width: 10,
+                padding: 0,
+                align: 'center'
+            });
+            text.pos_ind = i;
+            delete_buttons.push(text);
+            
+            var text2 = new Kinetic.Text({
+                x: rect.getX() + rect.getWidth() - 10,
+                y: rect.getY() + 9,
+                text: '+',
+                fontSize: 10,
+                fontFamily: 'Helvetica, sans-serif',
+                fill: '#666',
+                width: 10,
+                padding: 0,
+                align: 'center'
+            });
+            text2.pos_ind = i;
+            add_buttons.push(text2);
+        }
+        for(var i = 1; i < 3; i++)
+        {
+            var rect = new Kinetic.Rect({
+                x: 35 + (i * 185) - 30,
+                y: 0,
+                width: 35,
+                height: 20,
+                fill: "#54BC00",
+                stroke: "#54BC00",
+                strokeWidth: 1
+            });
+            rect.pos_ind = i - 1;
+            controls.push(rect);
+            
+            var text = new Kinetic.Text({
+                x: rect.getX(),
+                y: rect.getY(),
+                text: '25',
+                fontSize: 12,
+                fontFamily: 'Helvetica, sans-serif',
+                fill: '#FFF',
+                width: rect.getWidth(),
+                padding: 5,
+                align: 'center'
+            });
+            text.pos_ind = i - 1;
+            control_labels.push(text);
+        }
+            
+        var min = new Kinetic.Shape({
+            drawFunc: function(canvas) {
+                var context = canvas.getContext();
+                var radius = 5;
+                context.beginPath();
+                context.moveTo(35, 0);
+                context.lineTo(35, 20);
+                context.lineTo(radius, 20);
+                context.quadraticCurveTo(0, 20, 0, 20 - radius);
+                context.lineTo(0, radius);
+                context.quadraticCurveTo(0, 0, radius, 0);
+                context.lineTo(35, 0);
+                context.closePath();
+                // KineticJS specific context method
+                canvas.fillStroke(this);
+            },
+            fill: "#54BC00",
+            stroke: "#54BC00",
+            strokeWidth: 1
+        });
+
+        var min_text = new Kinetic.Text({
+            x: 0,
+            y: 0,
+            text: '0',
+            fontSize: 12,
+            fontFamily: 'Helvetica, sans-serif',
+            fill: '#FFF',
+            width: 35,
+            padding: 5,
+            align: 'center'
+        });
+
+        var max_x = 35 + (185 * rects.length) - 30;
+        var max = new Kinetic.Shape({
+            drawFunc: function(canvas) {
+                var context = canvas.getContext();
+                var radius = 5;
+                var x = max_x;
+                context.beginPath();
+                context.moveTo(x, 0);
+                context.lineTo(x, 20);
+                context.lineTo(x + 35 - radius, 20);
+                context.quadraticCurveTo(x + 35, 20, x + 35, 20 - radius);
+                context.lineTo(x + 35, radius);
+                context.quadraticCurveTo(x + 35, 0, x + 35 - radius, 0);
+                context.lineTo(x, 0);
+                context.closePath();
+                // KineticJS specific context method
+                canvas.fillStroke(this);
+            },
+            fill: "#54BC00",
+            stroke: "#54BC00",
+            strokeWidth: 1
+        });
+        
+        
+        var max_text = new Kinetic.Text({
+            x: max_x,
+            y: 0,
+            text: '100',
+            fontSize: 12,
+            fontFamily: 'Helvetica, sans-serif',
+            fill: '#FFF',
+            width: 35,
+            padding: 5,
+            align: 'center'
+        });
+            
+        
+           
+        for(var i = 0; i < rects.length; i++)
+        {
+            
+            layer.add(rects[i]);
+            layer.add(add_buttons[i]);
+            layer.add(delete_buttons[i]);
+            
+        }
+          
+        layer.add(min);
+        layer.add(min_text);
+        layer.add(max);
+        layer.add(max_text);
+            
+        var TN = null;
+        var last_x = 0;
+        for(var i = 0; i < controls.length; i++)
+        {
+            layer.add(controls[i]);
+            layer.add(control_labels[i]);
+            
+            control_labels[i].on('mousedown', control_labels_mousedown);
+            control_labels[i].on('mouseup', control_labels_mouseup);
+            control_labels[i].on('mouseover', control_labels_mouseover);
+            control_labels[i].on('mouseout', control_labels_mouseout);
+        }
+            
+        var arrow = new Kinetic.RegularPolygon({
+            x: 50,
+            y: 23,
+            sides: 3,
+            radius: 6,
+            fill: '#888',
+        });
+        layer.add(arrow);
+        arrow.hide();
+        
+        for(var i = 0; i < rects.length; i++)
+        {
+            rects[i].on('mouseover', rect_mouseover);
+            delete_buttons[i].on('click', remove);
+            add_buttons[i].on('click', add);
+        }
+            
+        stage.on('mousemove', function()
+        {
+            if(TN != null)
+            {
+                var mousePos = stage.getMousePosition();
+                var diff = mousePos.x - last_x;
+                
+                if((diff > 0 && rects[rects.length - 1].getWidth() >= 10) || (diff < 0 && rects[TN.pos_ind].getWidth() >= 10))
+                {
+                    //labels[TN.pos_ind].setWidth(labels[TN.pos_ind].getWidth() + diff);
+                    //labels[labels.length - 1].setWidth(labels[labels.length - 1].getWidth() - diff);
+                    rects[TN.pos_ind].setWidth(rects[TN.pos_ind].getWidth() + diff);
+                    rects[rects.length - 1].setWidth(rects[rects.length - 1].getWidth() - diff);
+
+                    for(var i = TN.pos_ind + 1; i < rects.length; i++)
+                    {
+                        rects[i].setX(rects[i].getX() + diff);
+                        
+                        //labels[i].setX(labels[i].getX() + diff);
+                    }
+                    for(var i = TN.pos_ind; i < controls.length; i++)
+                    {
+                        controls[i].setX(controls[i].getX() + diff);
+                        control_labels[i].setX(control_labels[i].getX() + diff);
+                    }
+                    for(var i = 0; i < control_labels.length; i++)
+                    {
+                        var width = 0;
+                        var totalWidth = 0;
+                        for(var k = 0; k < rects.length; k++)
+                        {
+                            if(k <= i)
+                                width += rects[k].getWidth();
+                            totalWidth += rects[k].getWidth();
+                        }
+                        var val = Math.round((width / totalWidth) * 100.0);
+                        control_labels[i].setText(val);
+                    }
+                    for(var i = 0 ; i < delete_buttons.length; i++)
+                    {
+                        add_buttons[i].setX(rects[i].getX() + rects[i].getWidth() - 10);
+                        delete_buttons[i].setX(rects[i].getX() + rects[i].getWidth() - 10);
+                    }
+                    
+                    arrow.setX(rects[current_rect].getX() + (rects[current_rect].getWidth() / 2.0));
+                    label_editor_container.style.marginLeft = (rects[current_rect].getX() + (rects[current_rect].getWidth() / 2) - 60)+'px';
+                    
+                    last_x = mousePos.x;
+
+                    layer.draw();
+                }
+            }
+        });
+        stage.on('mouseup', function()
+        {
+            TN = null;
+        });
+            
+        
+            
+        label_editor.onkeyup = function(evt)
+        {
+            texts[current_rect] = label_editor.value;
+        };
+            
+        label_close_button.onclick = function(evt)
+        {
+            arrow.hide();
+            document.getElementById('range').children[1].style.display = 'none';
+            layer.draw();
+        }
+        
+        function control_labels_mousedown(evt) 
+        {
+            TN = evt.targetNode;
+            last_x = stage.getMousePosition().x;
+        }
+        function control_labels_mouseup() 
+        {
+            TN = null;
+        }
+        function control_labels_mouseover () 
+        {
+            document.body.style.cursor = 'pointer';
+        }
+        function control_labels_mouseout ()            
+        {
+            document.body.style.cursor = 'default';
+        }
+            
+        function rect_mouseover(evt)
+        {
+            arrow.setX(evt.targetNode.getX() + (evt.targetNode.getWidth() / 2));
+            arrow.show();
+            document.getElementById('range').children[1].style.marginLeft = (evt.targetNode.getX() + (evt.targetNode.getWidth() / 2) - 60)+'px';
+            document.getElementById('range').children[1].style.display = 'block';
+            label_editor.value = texts[evt.targetNode.pos_ind];
+            current_rect = evt.targetNode.pos_ind;
+            layer.draw();
+        }
+            
+        function add(evt)
+        {
+            var newWidth = 65;
+            var widthToRemove = Math.round(newWidth / rects.length);
+            var i = evt.targetNode.pos_ind;
+
+            for(var k = 0 ; k < rects.length; k++)
+            {
+
+                rects[k].setWidth(rects[k].getWidth() - widthToRemove);
+
+
+            }
+
+            texts.splice(i + 1, 0, "Hey");
+
+            var rect = new Kinetic.Rect({
+                x: 35 + (185 * i),
+                y: 0,
+                width: 30,
+                height: 20,
+                fill: "#F8F8F8",
+                stroke: "#D8D8D8",
+                strokeWidth: 1
+            });
+            rect.pos_ind = i + 1;
+            rects.splice(i + 1, 0, rect);
+
+            var text = new Kinetic.Text({
+                x: rect.getX() + rect.getWidth() - 10,
+                y: rect.getY() + 1,
+                text: 'x',
+                fontSize: 10,
+                fontFamily: 'Helvetica, sans-serif',
+                fill: '#FF0000',
+                width: 10,
+                padding: 0,
+                align: 'center'
+            });
+            text.pos_ind = i + 1;
+            delete_buttons.splice(i + 1, 0, text);
+
+            var text2 = new Kinetic.Text({
+                x: rect.getX() + rect.getWidth() - 10,
+                y: rect.getY() + 9,
+                text: '+',
+                fontSize: 10,
+                fontFamily: 'Helvetica, sans-serif',
+                fill: '#666',
+                width: 10,
+                padding: 0,
+                align: 'center'
+            });
+            text2.pos_ind = i + 1;
+            add_buttons.splice(i + 1, 0, text2);
+
+            var rect2 = new Kinetic.Rect({
+                x: 35 + (i * 185) - 30,
+                y: 0,
+                width: 35,
+                height: 20,
+                fill: "#54BC00",
+                stroke: "#54BC00",
+                strokeWidth: 1
+            });
+            rect2.pos_ind = i;
+            controls.splice(i, 0, rect2);
+
+            var text3 = new Kinetic.Text({
+                x: rect2.getX(),
+                y: rect2.getY(),
+                text: '25',
+                fontSize: 12,
+                fontFamily: 'Helvetica, sans-serif',
+                fill: '#FFF',
+                width: rect2.getWidth(),
+                padding: 5,
+                align: 'center'
+            });
+            text3.pos_ind = i;
+            control_labels.splice(i, 0, text3);
+            
+            text3.on('mousedown', control_labels_mousedown);
+            text3.on('mouseup', control_labels_mouseup);
+            text3.on('mouseover', control_labels_mouseover);
+            text3.on('mouseout', control_labels_mouseout);
+            
+            rect.on('mouseover', rect_mouseover);
+            text.on('click', remove);
+            text2.on('click', add);
+
+            layer.add(rect);
+            layer.add(text);
+            layer.add(text2);
+            layer.add(rect2);
+            layer.add(text3);
+
+            for(var k = i + 2; k < rects.length; k++)
+            {
+                rects[k].pos_ind += 1;
+                delete_buttons[k].pos_ind += 1;
+                add_buttons[k].pos_ind += 1;
+            }
+            for(var k = i + 1; k < controls.length; k++)
+            {
+                controls[k].pos_ind += 1;
+                control_labels[k].pos_ind += 1;
+            }
+
+
+
+            var w = 35;
+            for(var k = 0 ; k < rects.length; k++)
+            {
+
+                rects[k].setX(w);
+                w += rects[k].getWidth() + 35;
+            }
+            w = 35;
+            for(var k = 0 ; k < controls.length; k++)
+            {
+                w += rects[k].getWidth();
+                controls[k].setX(w);
+                control_labels[k].setX(w);
+                w += 35;
+            }
+            
+            rects[rects.length - 1].setWidth(max_text.getX() - rects[rects.length - 1].getX());
+
+            for(var i = 0 ; i < delete_buttons.length; i++)
+            {
+                add_buttons[i].setX(rects[i].getX() + rects[i].getWidth() - 10);
+                delete_buttons[i].setX(rects[i].getX() + rects[i].getWidth() - 10);
+            }
+            
+            arrow.remove();
+            layer.add(arrow);
+
+            layer.draw();
+        }
+            
+        function remove(evt)
+        {
+            var i = evt.targetNode.pos_ind;
+                
+            if(i == 0)
+            {
+                rects[i + 1].setX(rects[i + 1].getX() - rects[i].getWidth() - controls[i].getWidth());
+                rects[i + 1].setWidth(rects[i + 1].getWidth() + rects[i].getWidth() + controls[i].getWidth());
+            }
+            else if( i == rects.length - 1)
+            {
+                rects[i - 1].setWidth(rects[i - 1].getWidth() + rects[i].getWidth() + controls[i - 1].getWidth());
+                delete_buttons[i - 1].setX(rects[i - 1].getX() + rects[i - 1].getWidth() - 10);
+                add_buttons[i - 1].setX(rects[i - 1].getX() + rects[i - 1].getWidth() - 10);
+            }
+            else
+            {
+                control_labels[i - 1].setText(control_labels[i].getText());
+                rects[i - 1].setWidth(rects[i - 1].getWidth() + rects[i].getWidth() + controls[i - 1].getWidth());
+                controls[i - 1].setX(rects[i - 1].getX() + rects[i - 1].getWidth());
+                control_labels[i - 1].setX(rects[i - 1].getX() + rects[i - 1].getWidth());
+                delete_buttons[i - 1].setX(rects[i - 1].getX() + rects[i - 1].getWidth() - 10);
+                add_buttons[i - 1].setX(rects[i - 1].getX() + rects[i - 1].getWidth() - 10);
+            }
+
+            for(var k = i + 1; k < rects.length; k++)
+            {
+                rects[k].pos_ind -= 1;
+                delete_buttons[k].pos_ind -= 1;
+                add_buttons[k].pos_ind -= 1;
+                if(k < controls.length)
+                {
+                    controls[k].pos_ind -= 1;
+                    control_labels[k].pos_ind -= 1;
+                }
+            }
+
+            if(rects.length <= 2)
+            {
+                for(var p = 0; p < delete_buttons.length; p++)
+                {
+                    delete_buttons[p].hide();
+                }
+            }
+
+            rects[i].remove();
+            delete_buttons[i].remove();
+            add_buttons[i].remove();
+            if(i - 1 < controls.length && i == rects.length - 1)
+            {
+                controls[i - 1].remove();
+                control_labels[i - 1].remove();
+            }
+            else if(i < controls.length && i < rects.length - 1)
+            {
+                controls[i].remove();
+                control_labels[i].remove();
+            }
+
+            arrow.hide();
+            document.getElementById('range').children[1].style.display = 'none';
+            layer.draw();
+
+            rects.splice(i, 1);
+            delete_buttons.splice(i, 1);
+            add_buttons.splice(i, 1);
+            texts.splice(i, 1);
+            if(i < controls.length)
+            {
+                controls.splice(i, 1);
+                control_labels.splice(i, 1);
+            }
+        }
+
+        stage.add(layer);
+        </script>-->
+    </body>
+</html>

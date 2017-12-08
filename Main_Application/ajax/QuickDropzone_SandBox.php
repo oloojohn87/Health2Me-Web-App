@@ -1,0 +1,889 @@
+<?php
+session_start();
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$NombreEnt = $_SESSION['Nombre'];
+$PasswordEnt = $_SESSION['Password'];
+$MEDID = $_SESSION['MEDID'];
+$UserID = $_SESSION['UserID'];
+$Acceso = $_SESSION['Acceso'];
+$privilege=$_SESSION['Previlege'];
+if ($Acceso != '23432')
+{
+echo "Incorrect credentials for login";
+echo "<br>\n"; 	
+echo "<h2><a href='".$domain."'>Return to Health2me Dashboard</a></h2>";
+die;
+}
+
+					// Connect to server and select databse.
+//KYLE$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$result = mysql_query("SELECT * FROM usuarios where Identif='$UserID'");
+$count=mysql_num_rows($result);
+$row = mysql_fetch_array($result);
+$success ='NO';
+if($count==1){
+	$success ='SI';
+	/*
+    $MedID = $row['id'];
+	$MedUserEmail= $row['IdMEDEmail'];
+	$MedUserName = $row['Name'];
+	$MedUserSurname = $row['Surname'];
+	$MedUserLogo = $row['ImageLogo'];
+	$IdMedFIXED = $row['IdMEDFIXED'];
+	$IdMedFIXEDNAME = $row['IdMEDFIXEDNAME'];
+*/
+    $UserID = $row['Identif'];
+	$UserEmail= $row['email'];
+    $UserName = $row['Name'];
+    $UserSurname = $row['Surname'];
+    $UserPhone = $row['telefono'];
+    //$UserLogo = $row['ImageLogo'];
+    $IdUsFIXED = $row['IdUsFIXED'];
+    $IdUsFIXEDNAME = $row['IdUsFIXEDNAME'];
+    $privilege=1;
+
+    $IdDoctor = $row['IdInvite'];
+    $resultD = mysql_query("SELECT * FROM doctors where id='$IdDoctor'");
+	$rowD = mysql_fetch_array($resultD);
+    $NameDoctor = $rowD['Name'];
+    $SurnameDoctor = $rowD['Surname'];
+	$DoctorEmail = $rowD['IdMEDEmail'];
+    //$MedUserRole = $row['Role'];
+	//if ($MedUserRole=='1') $MedUserTitle ='Dr. '; else $MedUserTitle =' ';
+    
+       
+
+    
+    
+}
+else
+{
+echo "USER NOT VALID. Incorrect credentials for login";
+echo "<br>\n"; 	
+echo "<h2><a href='".$domain."'>Return to Health2me Dashboard</a></h2>";
+die;
+}
+
+
+//BLOCKSLIFEPIN $result = mysql_query("SELECT * FROM blocks");
+$result = mysql_query("SELECT * FROM lifepin");
+
+?>
+<!DOCTYPE html>
+<html lang="en" style="background: #F9F9F9;"><head>
+    <meta charset="utf-8">
+    <title>Inmers - Center Management Console</title>
+    <link rel="icon" type="image/ico" href="favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/style.css" rel="stylesheet">
+   <link href="css/bootstrap.css" rel="stylesheet">  
+ <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+ <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/jquery-ui-1.8.16.custom.css" media="screen"  />
+    <link rel="stylesheet" href="css/fullcalendar.css" media="screen"  />
+    <link rel="stylesheet" href="css/chosen.css" media="screen"  />
+    <link rel="stylesheet" href="css/datepicker.css" >
+    <link rel="stylesheet" type="text/css" href="css/jquery.timepicker.css" />
+    <link rel="stylesheet" href="css/colorpicker.css">
+    <link rel="stylesheet" href="css/glisse.css?1.css">
+    <link rel="stylesheet" href="css/jquery.jgrowl.css">
+    <link rel="stylesheet" href="js/elfinder/css/elfinder.css" media="screen" />
+    <link rel="stylesheet" href="css/jquery.tagsinput.css" />
+    <link rel="stylesheet" href="css/demo_table.css" >
+    <link rel="stylesheet" href="css/jquery.jscrollpane.css" >
+    <link rel="stylesheet" href="css/validationEngine.jquery.css">
+    <link rel="stylesheet" href="css/jquery.stepy.css" />
+	<link rel="stylesheet" href="css/icon/font-awesome.css">
+ <!--   <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="css/bootstrap-responsive.css">
+	<link rel="stylesheet" href="css/toggle-switch.css">
+	
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lte IE 8]><script type="text/javascript" src="/js/excanvas.min.js"></script><![endif]-->
+ 
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/icons/favicon.ico">
+    	<style>
+		.ui-progressbar {
+		position: relative;
+		}
+		.progress-label {
+		position: absolute;
+		left: 50%;
+		top: 4px;
+		font-weight: bold;
+		text-shadow: 1px 1px 0 #fff;
+		}
+	</style>
+	<style>
+	#overlay {
+	  background-color: none;
+	  position: auto;
+	  top: 0; right: 0; bottom: 0; left: 0;
+	  opacity: 1.0; /* also -moz-opacity, etc. */
+	  
+    }
+	#messagecontent {
+	  white-space: pre-wrap;   
+	}
+	</style>
+	  <style>
+		#progressbar .ui-progressbar-value {
+		background-color: #ccc;
+		}
+	  </style>
+
+    <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37863944-1']);
+  _gaq.push(['_setDomainName', 'health2.me']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </head>
+
+  <body style="background: #F9F9F9;">
+      
+      
+      
+      <!-- MODAL VIEW TO FIND DOCTOR -->
+    <div id="find_doctor_modal" title="Find Doctor" style="display:none; text-align:center; padding:20px;">
+        <div id="Talk_Section_1" style="display: block;">
+            <!--<input type="text" style="width: 90%; margin-top: 15px; margin-bottom: 15px; height: 20px; color: #CACACA; padding: 5px;" placeholder="Search for a doctor..." value="" />-->
+            <style>
+            .recent_doctor_button{
+                    padding: 3px; 
+                    width: 80%; 
+                    margin: auto; 
+                    color: #22aeff; 
+                    background-color: #FBFBFB; 
+                    height: 25px; 
+                    border: 1px solid #CFCFCF;
+                    outline: 0px;
+                }
+            .recent_doctor_button_selected{
+                    border: 1px solid #22aeff;
+                    background-color: #22aeff; 
+                    color: #FFF;
+                    padding: 3px; 
+                    width: 80%; 
+                    margin: auto; 
+                    height: 25px;
+                    outline: 0px;
+                }
+           
+            </style>
+            <div id="recent_doctors_section" style="display: block;"></div>
+            <div style="width: 100%; height: 40px; margin-left: 15px;">
+                <label style="float: left;">Find me a(n) </label>
+                <select style="float: left; width: 72%; margin-top: -5px; margin-left: 20px;" name="speciality" id="speciality">
+                    <option value="Allergy and Immunology">Allergist / Immunologist</option>
+                    <option value="Anaesthetics">Aesthetician</option>
+                    <option value="Cardiology">Cardiologist</option>
+                    <option value="Cardiothoracic Surgery">Cardiothoracic Surgeon</option>
+                    <option value="Child & Adolescent Psychiatry">Child & Adolescent Psychiatrist</option>
+                    <option value="Clinical Neurophysiology">Clinical Neurophysiologist</option>
+                    <option value="Dermato-Venereology">Dermato-Venereologist</option>
+                    <option value="Dermatology">Dermatologist</option>
+                    <option value="-Emergency Medicine">Emergency Medicine Specialist</option>
+                    <option value="Endocrinology">Endocrinologist</option>
+                    <option value="Gastroenterology">Gastroenterologist</option>
+                    <option value="General Practice" selected>General Practice Doctor</option>
+                    <option value="General Surgery">General Surgeon</option>
+                    <option value="Geriatrics">Geriatrician</option>
+                    <option value="Gynaecology and Obstetrics">Gynaecologist / Obstetrician</option>
+                    <option value="Health Informatics">Health Informatics Specialist</option>
+                    <option value="Infectious Diseases">Infectious Disease Specialist</option>
+                    <option value="Internal Medicine">Internal Medicine Specialist</option>
+                    <option value="Interventional Radiology">Interventional Radiologist</option>
+                    <option value="Microbiology">Microbiologist</option>
+                    <option value="Neonatology">Neonatologist</option>
+                    <option value="Nephrology">Nephrologist</option>
+                    <option value="Neurology">Neurologist</option>
+                    <option value="Neuroradiology">Neuroradiologist</option>
+                    <option value="Neurosurgery">Neurosurgeon</option>
+                    <option value="Nuclear Medicine">Nuclear Medicine Specialist</option>
+                    <option value="Occupational Medicine">Occupational Medicine Specialist</option>
+                    <option value="Oncology">Oncologist</option>
+                    <option value="Ophthalmology">Ophthalmologist</option>
+                    <option value="Oral and Maxillofacial Surgery">Oral and Maxillofacial Surgeon</option>
+                    <option value="Orthopaedics">Orthopedician</option>
+                    <option value="Otorhinolaryngology">Otorhinolaryngologist</option>
+                    <option value="Paediatric Cardiology">Paediatric Cardiologist</option>
+                    <option value="Paediatric Surgery">Paediatric Surgeon</option>
+                    <option value="Paediatrics">Paediatrician</option>
+                    <option value="Pathology">Pathologist</option>
+                    <option value="Physical Medicine and Rehabilitation">Physical Medicine and Rehabilitation Specialist</option>
+                    <option value="Plastic, Reconstructive and Aesthetic Surgery">Plastic, Reconstructive and Aesthetic Surgeon</option>
+                    <option value="Pneumology">Pulmonologist</option>
+                    <option value="Psychiatry">Psychiatrist</option>
+                    <option value="Public Health">Public Health Specialist</option>
+                    <option value="Radiology">Radiologist</option>
+                    <option value="Radiotherapy">Radiotherapist</option>
+                    <option value="Stomatology">Stomatologist</option>
+                    <option value="Vascular Medicine">Vascular Medicine Specialist</option>
+                    <option value="Vascular Surgery">Vascular Surgeon</option>
+                    <option value="Urology">Urologist</option>
+                </select>
+            </div>
+            <button style="width: 200px; heightL 30px; background-color: #22aeff; color: #FFF; border: 0px solid #FFF; margin: auto; margin-top: 15px; border-radius: 7px; outline: 0px;" id="find_doctor_button">Next</button>
+        </div>
+        <div id="Talk_Section_2" style="display: none;">
+            <button style="width: 200px; heightL 30px; background-color: #22aeff; color: #FFF; border: 0px solid #FFF; margin: auto; margin-top: 15px; margin-left: 20px; border-radius: 7px; outline: 0px; float: left;" id="video_call_button">Video Call</button>
+            <button style="width: 200px; heightL 30px; background-color: #22aeff; color: #FFF; border: 0px solid #FFF; margin: auto; margin-top: 15px; margin-right: 20px; border-radius: 7px; outline: 0px; float: right;" id="phone_call_button">Phone Call</button>
+           
+            
+        </div>
+        <div id="Talk_Section_3" style="display: none;">
+            <br/>
+            <p>No doctors are available at this time. Please try again later.</p>
+           
+            
+        </div>
+        <div id="Talk_Section_4" style="display: none;">
+            <br/>
+            <p>We are now calling your doctor, please wait...</p>
+           
+            
+        </div>
+    </div>
+    <!-- END MODAL VIEW TO FIND DOCTOR -->
+
+<input type="hidden" id="NombreEnt" value="<?php echo $NombreEnt; ?>">
+<input type="hidden" id="PasswordEnt" value="<?php echo $PasswordEnt; ?>">
+<input type="hidden" id="UserHidden">
+
+	<!--Header Start-->
+	<div class="header" >
+     	<input type="hidden" id="USERID" Value="<?php echo $UserID; ?>">	
+    	<input type="hidden" id="MEDID" Value="<?php echo $MedID; ?>">	
+    	<input type="hidden" id="IdMEDEmail" Value="<?php echo $MedUserEmail; ?>">	
+    	<input type="hidden" id="IdMEDName" Value="<?php echo $MedUserName; ?>">	
+    	<input type="hidden" id="IdMEDSurname" Value="<?php echo $MedUserSurname; ?>">	
+    	<input type="hidden" id="IdMEDLogo" Value="<?php echo $MedUserLogo; ?>">
+        <input type="hidden" id="USERNAME" Value="<?php echo $UserName; ?>">	
+        <input type="hidden" id="USERSURNAME" Value="<?php echo $UserSurname; ?>">	
+        <input type="hidden" id="USERPHONE" Value="<?php echo $UserPhone; ?>">	
+  		
+           <a href="index.html" class="logo"><h1>Health2me</h1></a>
+           
+           <div class="pull-right">
+           
+            
+           <!--Button User Start-->
+		   <div class="btn-group pull-right" >
+           
+            <a class="btn btn-profile dropdown-toggle" id="button-profile" data-toggle="dropdown" href="#">
+              <span class="name-user"><strong>Welcome</strong> <?php echo $UserName.' '.$UserSurname; ?></span> 
+             <?php 
+             $hash = md5( strtolower( trim( $UserEmail ) ) );
+             $avat = 'identicon.php?size=29&hash='.$hash;
+			?>	
+              <span class="avatar" style="background-color:WHITE;"><img src="<?php echo $avat; ?>" alt="" ></span> 
+              <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu" id="prof_dropdown">
+            <div class="item_m"><span class="caret"></span></div>
+            <ul class="clear_ul" >
+			  <li><a href="dashboard.php"><i class="icon-globe"></i> Home</a></li>
+              <li><a href="medicalConfiguration.php"><i class="icon-cog"></i> Settings</a></li>
+              <li><a href="logout.php"><i class="icon-off"></i> Sign Out</a></li>
+            </ul>
+            </div>
+          </div>
+          <!--Button User END-->  
+          
+          </div>
+    </div>
+    <!--Header END-->
+ 
+   	 <!--- VENTANA MODAL  This has been added to show individual message content which user click on the inbox messages ---> 
+   	 <button id="message_modal" data-target="#header-message" data-toggle="modal" class="btn btn-warning" style="display: none;">Modal with Header</button> 
+   	  <div id="header-message" class="modal hide" style="display: none;" aria-hidden="true">
+         <div class="modal-header">
+             <button class="close" type="button" data-dismiss="modal">×</button>
+                  Message Details
+         </div>
+         <div class="modal-body">
+         <div class="formRow" style=" margin-top:-10px; margin-bottom:10px;">
+             <span id="ToDoctor" style="color:#2c93dd; font-weight:bold;">TO <?php echo 'Dr. '.$NameDoctor.' '.$SurnameDoctor; ?></span><input type="hidden" id="IdDoctor" value='<?php echo $IdDoctor; ?>'/>
+         </div>
+         <textarea  id="messagedetails" class="span message-text" style="height:200px;" name="message" rows="1"></textarea>
+         
+		 <form id="replymessage" class="new-message">
+                   <div class="formRow">
+                        <label>Subject: </label>
+                        <div class="formRight">
+                            <input type="text" id="subjectname_inbox" name="name"  class="span"> 
+                        </div>
+                   </div>
+				   <div class="formRow">
+						<label>Attachments: </label>
+						<div id="attachreportdiv" class="formRight">
+							<input type="button" class="btn btn-success" value="Attach Reports" id="attachreports">
+						</div>
+				   </div>
+                   <div class="formRow">
+                        <label>Message:</label>
+                        <div class="formRight tooltip-top" style="height:120px;">
+                            <textarea  id="messagecontent_inbox" class="span message-text" name="message" style="height:90px;" rows="1"></textarea>
+                            
+                            <div class="clear"></div>
+                        </div>
+                   </div>
+            </form>
+			<div id="attachments" style="display:none">
+			
+			
+			
+			</div>
+		 </div>
+         <input type="hidden" id="Idpin">
+        <!-- <input type="hidden" id="docId" value="<?php echo $IdMed; ?>"/> -->
+         <input type="hidden" id="userId" value="<?php echo $IdUsu; ?>" />
+         <div class="modal-footer">
+		     <input type="button" class="btn btn-info" value="Send messages" id="sendmessages_inbox">
+             <input type="button" class="btn btn-success" value="Attach" id="Attach">	
+	         <input type="button" class="btn btn-success" value="Reply" id="Reply">			 
+	         <a href="#" class="btn btn-primary" data-dismiss="modal" id="CloseMessage">Close</a>
+         </div>
+      </div>  
+	  <!--- VENTANA MODAL  ---> 	
+       
+    <!--Content Start-->
+	<div id="content" style="background: #F9F9F9; padding-left:0px;">
+    
+    	    
+	 <!--SpeedBar Start--->
+     <div class="speedbar">
+     <div class="speedbar-content">
+     <ul class="menu-speedbar">		
+			  <li><a href="dashboard.php"><i class="icon-globe"></i> Home</a></li>
+              <li><a href="medicalConfiguration.php"><i class="icon-cog"></i> Settings</a></li>
+              <li><a href="logout.php" style="color:yellow;"><i class="icon-off"></i> Sign Out</a></li>
+     </ul>
+
+     
+     </div>
+     </div>
+     <!--SpeedBar END-->
+     
+     
+     
+     <!--CONTENT MAIN START-->
+     <div class="content">
+	     <div class="grid" class="grid span4" style="width:1000px; height:500px; margin: 0 auto; margin-top:30px; padding-top:30px;">
+			 <div style="float:left; height:50px;">
+				 <p style="font-size:16px; color:grey; margin-left:20px;">Health Information DROP AREA</p>
+			 </div>	 
+			 <div style="float:right; height:50px; margin-right:20px;">
+				 <p style="font-size:14px; color:#22aeff; margin-left:20px;"> Owner: <span style="font-size:16px;">Jane Doesix</span></p>
+				 <p style="font-size:14px; color:#54bc00; margin-left:20px; margin-top:-10px; font-style: oblique; font-weight: bold;">Personalized for: whatever@email.com </p>
+			 </div>
+			 
+			 <!-- Utility Area -->
+			 <div style="float:left; width:960px; height:10px; border:0px solid #cacaca; margin-left:20px; margin-top:20px; margin-bottom:20px;">
+			 </div>
+
+			 <!-- Left Column -->
+			 <div style="float:left; width:470px; height:300px; border:0px solid #cacaca; margin-left:20px; text-align:center;">
+			 	 <span style="font-size:18px; color:#22aeff;">Please Drop Reports Here</span>
+			 	 <div style="margin:0 auto; margin-top:15px;"><i class="icon-arrow-down icon-4x" style="color:#22aeff; margin:0 auto; "></i> </div>
+			 	 <div style="border: 3px #9a8989 dashed; border-radius:15px; margin:0 auto; margin-top:15px; background-color: #fdfcfc; padding: 10px; color: #22aeff; height:180px; width:220px; ">
+			 	 	   <table style="width:100%">
+				 	 	   <tbody>
+					 	 	   <tr style="height:100%;">
+						 	 	   <td class="centerText" style="height: 150px;background-color: #fdfcfc;"><span style="font-size:30px; color:#cbcbcb;">Drop Area</span></td>
+						 	 	</tr>
+						 	</tbody>
+						</table>
+			 	 </div>
+			 	
+			 </div>
+			 
+			 
+			 <!-- Right Column -->
+			 <style>
+			 div.RepRow{
+				 height:90px; 
+				 width:430px; 
+				 border:1px solid #cacaca; 
+				 margin:0 auto;
+				 margin-top:10px;
+			 }
+			 </style>
+
+			 <div style="float:left; width:470px; height:300px; border:1px solid #cacaca; margin-left:20px; overflow:auto;">
+				 <div class="RepRow">
+					 <div style="float:left; width:20px; height:89px; background-color:#22aeff;"></div>
+					 <div style="float:left; border:0px solid #cacaca; width:380px; height:89px;">
+								 <div style="float:left; width:50px; height:80px; background-color:white;"><img src="images/File-icons/48px/pdf.png" style="margin-top:20px;"/></div>
+								 <div style="float:left; width:330px; height:70px; background-color:white; padding-top:10px; border:0px solid #cacaca;">
+									 
+									 <div style="float:left; width:270px; height:70px; background-color:white; border:0px solid #cacaca;">
+										 <div style="width:280px; height:25px; border:0px solid #cacaca;">
+									 	<span style="float:left; width:160px;"> Select Date of Report</span>
+									 	<div style="float:left; width:100px;"><input type="text" class="span2" value="02-16-2012" id="dp1" readonly="" style="width:100px; min-height:20px; font-size:12px; "></div>						 
+									 </div>
+				
+										 <div style="width:280px; height:25px; border:0px solid #cacaca; margin-top:5px;">
+									 	<span style="float:left; width:160px;"> Select Type of Report</span>
+										<div class="btn-group" style="font-size:10px;">
+											  <button type="button" class="btn btn-xs dropdown-toggle" data-toggle="dropdown" style="font-size:12px; width:100px; text-align:left;">
+											    Types <span class="caret" style="float:right;"> </span>
+											  </button>
+											  <ul class="dropdown-menu" role="menu">
+											    <li><a href="#">Imaging</a></li>
+											    <li><a href="#">Lab Reports</a></li>
+											    <li><a href="#">Summary</a></li>
+											    <li><a href="#">Reports</a></li>
+											    <li><a href="#">Doctor Notes</a></li>
+											    <li class="divider"></li>
+											    <li><a href="#">Unspecified</a></li>
+											  </ul>
+									     </div>		
+									 </div>	 			
+									 </div>	 
+									 <div style="float:left; width:50px; height:70px; background-color:white; border:0px solid #cacaca;">
+									 	 <button class="btn btn-danger" style="height: 50px; padding-top: 0px; margin-top: 0px; margin-left:8px;">Del</button>	
+									 </div>	 
+								
+								 </div>
+								 <div class="progress progress-striped active" style="float:left; width:300px; height:10px; margin-left:10px;">
+										  <div class="progress-bar"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+										    <span class="sr-only">45% Complete</span>
+										  </div>
+								 </div>
+					 </div>
+					 <div style="float:right; width:20px; height:89px; background-color:#54bc00;"></div>
+				 </div>
+				 <div class="RepRow"></div>
+				 <div class="RepRow"></div>
+			 </div>
+	     </div>
+     </div>
+
+
+
+
+
+     <!--CONTENT MAIN END-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+
+    <!-- Libraries for notifications -->
+    <script src="realtime-notifications/lib/gritter/js/jquery.gritter.min.js"></script>
+	<!--<script src="realtime-notifications/pusher.min.js"></script>
+    <script src="realtime-notifications/PusherNotifier.js"></script>-->
+    <script src="js/socket.io-1.3.5.js"></script>
+    <script src="push/push_client.js"></script>
+	<link href="realtime-notifications/lib/gritter/css/jquery.gritter.css"rel="stylesheet" type="text/css" />
+	<!--<script src="imageLens/jquery.js" type="text/javascript"></script>-->
+	<script src="imageLens/jquery.imageLens.js" type="text/javascript"></script>
+    <script>
+		$(function() {
+	    //var pusher = new Pusher('d869a07d8f17a76448ed');
+	    //var channel_name=$('#MEDID').val();
+		//var channel = pusher.subscribe(channel_name);
+		//var notifier=new PusherNotifier(channel);
+            
+        var push = new Push($("#MEDID").val(), window.location.hostname + ':3955');
+        push.bind('notification', function(data) 
+        {
+            displaynotification('New Message', data);
+        });
+		
+	  });
+    </script>
+    
+<link type="text/css" href="css/bootstrap-timepicker.min.css" />
+
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<!--<script src="js/bootstrap.min.js"></script>-->
+<script src="js/bootstrap-datepicker.js"></script>
+
+    <!-- Libraries for notifications -->
+
+
+
+    <script src="TypeWatch/jquery.typewatch.js"></script>
+    <script type="text/javascript" >
+    
+    $('.datepicker').datepicker();
+    
+       
+	var timeoutTime = 18000000;
+	//var timeoutTime = 300000;  //5minutes
+	var timeoutTimer = setTimeout(ShowTimeOutWarning, timeoutTime);
+
+
+	var active_session_timer = 60000; //1minute
+	var sessionTimer = setTimeout(inform_about_session, active_session_timer);
+
+    var reportcheck = new Array();
+   
+	//This function is called at regular intervals and it updates ongoing_sessions lastseen time
+	function inform_about_session()
+	{
+		$.ajax({
+			url: '<?php echo $domain?>/ongoing_sessions.php?userid='+<?php echo $_SESSION['MEDID'] ?>,
+			success: function(data){
+			//alert('done');
+			}
+		});
+		clearTimeout(sessionTimer);
+		sessionTimer = setTimeout(inform_about_session, active_session_timer);
+	}
+
+	function ShowTimeOutWarning()
+	{
+		alert ('Session expired');
+		var a=0;
+		window.location = 'timeout.php';
+	}
+        
+	// function launchTelemedicine()
+    // {
+		// $.ajax({
+		// url: '<?php echo $domain?>/weemo_test.php?calleeID='+<?php echo $DoctorEmail?>,
+			// success: function(data){
+			//alert('done');
+			// }
+		// });
+    // }	
+    function LanzaAjax (DirURL)
+		{
+		var RecTipo = 'SIN MODIFICACIÓN';
+	    $.ajax(
+           {
+           url: DirURL,
+           dataType: "html",
+           async: false,
+           complete: function(){ //alert('Completed');
+                    },
+           success: function(data) {
+                    if (typeof data == "string") {
+                                RecTipo = data;
+                                }
+                     }
+            });
+		return RecTipo;
+		} 	
+	
+	setInterval(function() {
+    		$('#newinbox').trigger('click');
+      }, 10000);
+
+    function displaynotification(status,message){
+  
+  var gritterOptions = {
+			   title: status,
+			   text: message,
+			   image:'images/Icono_H2M.png',
+			   sticky: false,
+			   time: '3000'
+			  };
+	$.gritter.add(gritterOptions);
+	
+  }
+
+    function getUserData(UserId) {
+ 	var cadenaGUD = '<?php echo $domain;?>/GetUserData.php?UserId='+UserId;
+    $.ajax(
+           {
+           url: cadenaGUD,
+           dataType: "json",
+           async: false,
+           success: function(data)
+           {
+           //alert ('success');
+           user = data.items;
+           }
+           });
+    }
+
+    function getMedCreator(UserId) {
+ 	var cadenaGUD = '<?php echo $domain;?>/GetMedCreator.php?UserId='+UserId;
+    $.ajax(
+           {
+           url: cadenaGUD,
+           dataType: "json",
+           async: false,
+           success: function(data)
+           {
+           //alert ('success');
+           doctor = data.items;
+           }
+           });
+    }
+
+        
+    $(document).ready(function() {
+	
+	$(window).load(function() {
+	});
+	
+
+	
+	$('body').bind('mousedown keydown', function(event) {
+        clearTimeout(timeoutTimer);
+        timeoutTimer = setTimeout(ShowTimeOutWarning, timeoutTime);
+    });
+
+ 
+	$('#BotMessages').live('click',function(){
+        $('#compose_message').trigger('click');
+	});
+	
+   
+     $('#Wait1')
+    .hide()  // hide it initially
+    .ajaxStart(function() {
+        //alert ('ajax start');
+        $(this).show();
+    })
+    .ajaxStop(function() {
+        $(this).hide();
+    }); 
+
+    $('#datatable_1 tbody').click( function () {
+    // Alert the contents of an element in a SPAN in the first TD    
+    alert( $('td:eq(0) span', this).html() );
+    } );
+ 
+    });        
+    
+     
+    function getLifePines(serviceURL) {
+    $.ajax(
+           {
+           url: serviceURL,
+           dataType: "json",
+           async: false,
+           success: function(data)
+           {
+           pines = data.items;
+           }
+           });
+     }        
+
+	window.onload = function(){		
+		
+		var quePorcentaje = $('#quePorcentaje').val();
+		var g = new JustGage({
+			id: "gauge", 
+			value: quePorcentaje, 
+			min: 0,
+			max: 100,
+			title: " ",
+			label: "% Refered to me"
+		}); 
+	};
+	
+	  
+
+  
+    function TranslateAngle(x,maxim){
+	    var y = (x * Math.PI * 2) / maxim;
+	    return parseFloat(y);
+    }
+    
+    function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+	}
+	
+    
+    function GetCanvasTextHeight(text,font){
+    var fontDraw = document.createElement("canvas");
+
+    var height = 100;
+    var width = 100;
+
+    // here we expect that font size will be less canvas geometry
+    fontDraw.setAttribute("height", height);
+    fontDraw.setAttribute("width", width);
+
+    var ctx = fontDraw.getContext('2d');
+    // black is default
+    ctx.fillRect(0, 0, width, height);
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = 'white';
+    ctx.font = font;
+    ctx.fillText(text/*'Eg'*/, 0, 0);
+
+    var pixels = ctx.getImageData(0, 0, width, height).data;
+
+    // row numbers where we first find letter end where it ends 
+    var start = -1;
+    var end = -1;
+
+    for (var row = 0; row < height; row++) {
+        for (var column = 0; column < width; column++) {
+
+            var index = (row * width + column) * 4;
+
+            // if pixel is not white (background color)
+            if (pixels[index] == 0) {
+                // we havent met white (font color) pixel
+                // on the row and the letters was detected
+                if (column == width - 1 && start != -1) {
+                    end = row;
+                    row = height;
+                    break;
+                }
+                continue;
+            }
+            else {
+                // we find top of letter
+                if (start == -1) {
+                    start = row;
+                }
+                // ..letters body
+                break;
+            }
+
+        }
+
+    }
+   /*
+    document.body.appendChild(fontDraw);
+    fontDraw.style.pixelLeft = 400;
+    fontDraw.style.pixelTop = 400;
+    fontDraw.style.position = "absolute";
+   */
+
+    return end - start;
+    };
+				 		
+	</script>
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/bootstrap-colorpicker.js"></script>
+    <script src="js/google-code-prettify/prettify.js"></script>
+   
+    <script src="js/jquery.flot.min.js"></script>
+    <script src="js/jquery.flot.pie.js"></script>
+    <script src="js/jquery.flot.orderBars.js"></script>
+    <script src="js/jquery.flot.resize.js"></script>
+    <script src="js/graphtable.js"></script>
+    <script src="js/fullcalendar.min.js"></script>
+    <script src="js/chosen.jquery.min.js"></script>
+    <script src="js/autoresize.jquery.min.js"></script>
+    <script src="js/jquery.tagsinput.min.js"></script>
+    <script src="js/jquery.autotab.js"></script>
+    <script src="js/elfinder/js/elfinder.min.js" charset="utf-8"></script>
+	<script src="js/tiny_mce/tiny_mce.js"></script>
+    <script src="js/validation/languages/jquery.validationEngine-en.js" charset="utf-8"></script>
+	<script src="js/validation/jquery.validationEngine.js" charset="utf-8"></script>
+    <script src="js/jquery.jgrowl_minimized.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/jquery.mousewheel.js"></script>
+    <script src="js/jquery.jscrollpane.min.js"></script>
+    <script src="js/jquery.stepy.min.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/raphael.2.1.0.min.js"></script>
+    <script src="js/justgage.1.0.1.min.js"></script>
+	<script src="js/glisse.js"></script>
+
+	<script src="js/application.js"></script>
+
+ <?php
+
+function queFuente ($numero)
+{
+$queF=10;
+switch ($numero)
+{
+	case ($numero>999 && $numero<9999):	$queF = 30;
+										break;
+	case ($numero>99 && $numero<1000):	$queF = 50;
+										break;
+	case ($numero>0 && $numero<100):	$queF = 70;
+										break;
+}
+
+return ($queF);
+
+}
+
+function queFuente2 ($numero1, $numero2)
+{
+$queF=10;
+$numero= digitos($numero1)+digitos($numero2);
+switch ($numero)
+{
+	case 2:	$queF = 60;
+			break;
+	case 3:	$queF = 55;
+			break;
+	case 4:	$queF = 50;
+			break;
+	case 5:	$queF = 45;
+			break;
+	case 6:	$queF = 40;
+			break;
+	case 7:	$queF = 35;
+			break;
+	case 8:	$queF = 30;
+			break;
+}
+
+return ($queF);
+
+}
+
+function digitos ($numero)
+{
+$queF=0;
+
+switch ($numero)
+{
+	case ($numero>999 && $numero<9999):	$queF = 4;
+										break;
+	case ($numero>99 && $numero<1000):	$queF = 3;
+										break;
+	case ($numero>0 && $numero<100):	$queF = 2;
+										break;
+}
+
+return ($queF);
+
+}
+?>
+
+  </body>
+</html>

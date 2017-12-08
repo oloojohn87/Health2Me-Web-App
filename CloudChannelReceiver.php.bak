@@ -1,0 +1,87 @@
+<?php session_start();
+## This file acts as call back URL for dropbox authentication
+## Include the Dropbox SDK libraries
+require_once "dropbox-sdk/Dropbox/autoload.php";
+
+
+use \Dropbox as dbx;
+
+$appInfo = dbx\AppInfo::loadFromJsonFile("config.json");
+
+$dbxConfig = new dbx\Config($appInfo, "PHP-Example/1.0");
+
+$webAuth = new dbx\WebAuth($dbxConfig);
+
+$MedID=$_GET['medID'];
+$EmailID=$_GET['EmailID'];
+$givenKey = $_GET['oauth_token'];
+
+
+$requestToken = dbx\RequestToken::deserialize($_SESSION['dropbox-request-token']);
+
+
+list($accessToken, $dropboxUserId) = $webAuth->finish($requestToken);
+
+//print "Access Token: " . $accessToken->serialize() . "\n";
+$AccessToken=$accessToken->serialize();
+
+$dbxClient = new dbx\Client($dbxConfig, $accessToken);
+$accountInfo = $dbxClient->getAccountInfo();
+$DBEmail=$accountInfo['email'];
+$displayname=$accountInfo['display_name'];
+//print_r($accountInfo);
+
+
+//print "Accountinfo end";
+echo "<br><br><br>";
+
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+					
+ // Connect to server and select databse.
+ $link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+	mysql_select_db("$dbname")or die("cannot select DB");
+
+ //Inserting dropbox details for the authorised user  	
+   $Isql="INSERT INTO dropboxdetails SET ID= '$MedID',IDMEDEmail='$EmailID',DBMail='$DBEmail',AccessToken='$AccessToken'";
+							   
+	$q = mysql_query($Isql);
+	
+   	mysql_close($link);
+
+	print "Dr. ".$displayname .",";
+	print '<br>';
+	print "				<b> Good News!! Your DropBox Cloud Channel has been activated </b>";
+	print '<br><br>';
+	print "				<i>You can now send the medical reports @ /APPS/Health2me from DropBox Home Page. Happy DropBoxing!!</i>";
+	print '<br><br><br>';
+	print "This window will autoclose in 10 seconds!!"
+
+	
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<header>
+
+
+<script type="text/javascript">
+	setTimeout("window.close();", 10000);
+</script>
+<script type="text/javascript">
+function closeWin()
+{
+window.close();
+}
+</script>
+</header>
+
+
+<body>
+	<input type="button" value="Close Window'" align="bottom" onclick="closeWin()" />
+</body>
+</html>

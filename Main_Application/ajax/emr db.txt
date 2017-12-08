@@ -1,0 +1,138 @@
+create table BasicEMRData
+(
+	IdPatient int(11) auto_increment,
+	DOB datetime,
+	Address varchar(25),
+	Address2 varchar(25),
+	City varchar(25),
+	state varchar(25),
+	country varchar(25),
+	Notes text,
+	fractures text,
+	surgeries text,
+	otherknown text,
+	obstetric text,
+	otherMed text,
+	fatherAlive boolean,
+	fatherCoD varchar(50),
+	fatherAoD int(3),
+	fatherRD varchar(80),
+	motherAlive boolean,
+	motherCoD varchar(50),
+	motherAoD int(3),
+	motherRD varchar(80),
+	siblingsRD varchar(80),
+	primary key(IdPatient)
+);
+
+
+create table PastDX
+(
+	IdPatient int(11),
+	IdDX int(11) auto_increment,
+	Name varchar(25),
+	ICDCode varchar(10),
+	DateStart datetime,
+	DateStop datetime,
+	primary key(IdDX)
+);
+
+create table Medications
+(
+	IdPatient int(11),
+	IdMedication int(11) auto_increment,
+	Name varchar(25),
+	DrugCode varchar(10),
+	Dossage varchar(10),
+	NumberDay int(3),
+	datestart datetime,
+	datestop datetime,
+	primary key(IdMedication)
+);
+
+create table Immunizations
+(
+	IdPatient int(11),
+	IdImmunization int(11) auto_increment,
+	Name varchar(25),
+	date datetime,
+	age int(3),
+	reaction text,
+	primary key(IdImmunization)
+);
+
+create table Allergies
+(
+	IdPatient int(11),
+	IdAllergy int(11) auto_increment,
+	Name varchar(25),
+	Type varchar(25),
+	DateRec datetime,
+	Description varchar(80),
+	primary key(IdAllergy)
+);
+
+create table PhysNotes
+(
+	IdPatient int(11),
+	IdNote int(11),
+	Date datetime,
+	text text,
+	primary key(IdNote)
+
+);
+
+
+create table emr_config
+(
+	userid int(11),
+	demographics int(1) default 1,
+	personal int(1) default 1,
+	family int(1) default 1,
+	pastdx int(1) default 1,
+	medications int(1) default 1,
+	immunizations int(1) default 1,
+	allergies int(1) default 1,
+
+	name int(1) default 1,
+	middle int(1) default 1,
+	surname int(1) default 1,
+	gender int(1) default 1,
+	dob int(1) default 1,
+	address int(1) default 1,
+	address2 int(1) default 1,
+	city int(1) default 1,
+	state int(1) default 1,
+	country int(1) default 1,
+	notes int(1) default 1,
+	
+	fractures int(1) default 1,
+	surgeries int(1) default 1,
+	otherknown int(1) default 1,
+	obstetric int(1) default 1,
+	othermed int(1) default 1,
+	
+	father int(1) default 1,
+	mother int(1) default 1,
+	siblings int(1) default 1,
+	
+	primary key(userid)
+);
+
+
+create table changing_personal_history
+(
+	id int(11) auto_increment,
+	idpatient int(11),
+	height varchar(25),
+	weight varchar(25),
+	hbp varchar(25),
+	lbp varchar(25),
+	date_rec datetime,
+	primary key(id)
+);
+
+alter table changing_personal_history add column del int(1) default 0;
+alter table usuarios add column mi char(1);
+
+alter table lifepin add column emr_report int(1) default 0

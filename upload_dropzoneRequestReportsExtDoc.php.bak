@@ -1,0 +1,175 @@
+<?php
+session_start();
+set_time_limit(600);
+error_reporting(E_ERROR | E_PARSE);
+//require "logger.php";
+require "environment_detail.php";
+$dbhost = $env_var_db['dbhost'];
+$dbname = $env_var_db['dbname'];
+$dbuser = $env_var_db['dbuser'];
+$dbpass = $env_var_db['dbpass'];
+		
+		
+$path_for_ffmpeg = "ffmpeg\\bin\\";
+		
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+	
+
+//$id = $_POST["id"];
+$idusu = $_POST["idus"];
+$DoctorId = $_POST["doctorId"];
+$userid = $DoctorId;
+//$tipo = $_POST["tipo"];
+//file_put_contents("ip.txt", 'Received from '.$tipo, FILE_APPEND);
+$ds = DIRECTORY_SEPARATOR;  //1
+
+if (!file_exists('dropzone_uploads'.$ds.$idusu)) 
+{
+    mkdir('dropzone_uploads'.$ds.$idusu, 0777, true);
+	mkdir('dropzone_uploads'.$ds.$idusu.$ds.'Thumbnail', 0777, true);
+	
+}
+
+$query1 = mysql_query("select pass from encryption_pass where id = (select max(id) from encryption_pass)");
+			$row1 = mysql_fetch_array($query1);
+			$enc_pass=$row1['pass'];
+
+
+
+mkdir('dropzone_uploads'.$ds.'externalH2MDoc', 0777, true);
+mkdir('dropzone_uploads'.$ds.'externalH2MDoc'.$ds.'Thumbnail', 0777, true);
+
+
+
+$storeFolder = 'dropzone_uploads'.$ds.'externalH2MDoc'.$ds;
+
+
+//Code for writing file to a temp location which will be used for retrieving file for View Preview button
+if(!file_exists('dropzone_uploads'.$ds.'temporaryForFilePreview'))
+{
+    mkdir('dropzone_uploads'.$ds.'temporaryForFilePreview', 0777, true);
+}
+if(!file_exists('dropzone_uploads'.$ds.'temporaryForFilePreview'.$ds.'Thumbnail'))
+{
+    mkdir('dropzone_uploads'.$ds.'temporaryForFilePreview'.$ds.'Thumbnail', 0777, true);
+}
+$tempFolder = 'dropzone_uploads'.$ds.'temporaryForFilePreview'.$ds;
+
+$tempFileForPreview = $_FILES['file']['tmp_name'];
+$targetPathForPreview = dirname( __FILE__ ) . $ds.$tempFolder ;
+$targetFileForPreview =  $targetPathForPreview.$_FILES['file']['name'];
+copy($tempFileForPreview,$targetFileForPreview);
+//$filepathForPreview = $targetFileForPreview;
+//$extensionForPreview = substr($_FILES['file']['name'],strlen($_FILES['file']['name'])-3,3);
+
+//$filename =$FILES['file']['name']'.'.$extensionForPreview;
+//$locFile ='dropzone_uploads/temporaryForFilePreview';
+//copy($filepathForPreview,$tempFolder.$tempFileForPreview);
+
+
+
+
+if (!empty($_FILES)) {
+     
+    $tempFile = $_FILES['file']['tmp_name'];          //3
+	
+      
+    $targetPath = dirname( __FILE__ ) . $ds. $storeFolder ;  //4
+     
+    $targetFile =  $targetPath. $_FILES['file']['name'];  //5
+ 
+    move_uploaded_file($tempFile,$targetFile); //6
+	
+	$checksum=md5_file($filepath);
+	//1. Find patients idusfixed
+	$query = "select idusfixed,idusfixedname from usuarios where identif = ".$idusu;
+	$result=mysql_query($query);
+	$row = mysql_fetch_array($result);
+	$IdUsFIXED=$row['idusfixed'];
+	$idusfixedname=$row['idusfixedname'];
+	
+	//2.Get file Extension
+	$extension = substr($_FILES['file']['name'],strlen($_FILES['file']['name'])-3,3);
+
+	
+	
+	//3.Create a new file name
+	$confcode = $IdUsFIXED.md5(date('Ymdgisu'));
+	$new_image_name = 'eML'.$confcode.'.'.$extension;			
+	
+	$filepath = $targetFile;
+	
+	$locFile = "Packages_Encrypted";  //Changed from PAckages to PAckages_Encrypted by Ankit
+	copy($filepath, $locFile.$ds.$new_image_name);
+	copy($filepath, 'temp'.$ds.$userid.$ds.'Packages_Encrypted'.$ds.$new_image_name);
+	
+	$checksum=md5_file($locFile.$ds.$new_image_name);
+	
+	$locFileTH = "PackagesTH_Encrypted";    //Changed from PackagesTH to PackagesTH_Encrypted
+						
+	//Changes for handling jpg files
+	if($extension!="jpg") 
+	{
+		$new_image_nameTH = 'eML'.$confcode.'.png';	
+	}else 
+	{
+		$new_image_nameTH = 'eML'.$confcode.'.jpg';
+	}
+	
+	
+				
+	if($extension=="MOV") //for video use this command
+	{
+		$path = $path_for_ffmpeg;  //path of ffmpeg
+		$cadenaConvert = $path.'ffmpeg.exe -i '.$locFile.$ds.$new_image_name.' -f image2 -t 0.001 -ss 3 '. $locFileTH.$ds.$new_image_nameTH;
+	}
+	else   //use this command for other file types
+	{
+		$path="C:\\PROGRA~2\\ImageMagick-6.8.1-Q16\\";  //path of ImageMagick
+	    $cadenaConvert = $path.'convert "'.$locFile.$ds.$new_image_name.'[0]" -colorspace RGB -geometry 200 "'.$locFileTH.$ds.$new_image_nameTH.'" 2>&1';
+	}													
+	file_put_contents("ip.txt", $cadenaConvert, FILE_APPEND);													
+												
+																																	
+	$output = shell_exec($cadenaConvert);  
+	
+	copy($locFileTH.$ds.$new_image_nameTH, 'temp'.$ds.$userid.$ds.'PackagesTH_Encrypted'.$ds.$new_image_nameTH);
+	
+	shell_exec('Encrypt.bat PackagesTH_Encrypted '.$new_image_nameTH.' '.$enc_pass);          				//Encrypt the thumbnail(added by ankit)
+	
+	
+	shell_exec('Encrypt.bat Packages_Encrypted '.$new_image_name.' '.$enc_pass);          //Encrypt the report (ankit)
+	
+    $query = mysql_query("select previlege from doctor where id=".$DoctorId);
+    
+	$query = "insert into lifepin(idusu,rawimage,fecha,fechainput,creatortype,IdCreator,orig_filename,tipo) values(".$idusu.",'".$new_image_name."',now(),now(),2,$DoctorId,'".$_FILES['file']['name']."',70)";
+	//file_put_contents("ip.txt", $query, FILE_APPEND);
+	mysql_query($query);
+
+	
+	
+	
+	
+	
+	/*$query = "select max(idpin) as idpin from lifepin";
+	$result = mysql_query($query);
+	$row =  mysql_fetch_array($result);
+	
+	//Log that report has been uploaded
+	$IdPin=$row['idpin'];
+	$content = "Report Uploaded";
+	$VIEWIdUser=$idusu;
+	$VIEWIdMed=$userid;
+	$ip=$_SERVER['REMOTE_ADDR'];
+	$MEDIO=0;
+	$q = mysql_query("INSERT INTO bpinview  SET  IDPIN ='$IdPin', Content='$content', DateTimeSTAMP = NOW(), VIEWIdUser = '$VIEWIdUser', VIEWIdMed = '$VIEWIdMed', VIEWIP = '$ip', MEDIO = '$MEDIO' ");
+	//LogBLOCKAMP ($IdPin, $content, $VIEWIdUser, $VIEWIdMed, $ip, $MEDIO);
+	
+	
+	
+	echo $id.';'.$row['idpin'].';'.$new_image_name.';'.$tipo; */
+	
+
+} 
+?>    

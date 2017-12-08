@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+   	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Inmers - Notifications Console</title>
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript">
+	 
+	function sendAjax(succ){
+	  $.ajax({type:"GET",
+               url: "doctor_notifications.php",
+               success: succ
+       }); 
+	 
+	 }
+	 
+	 //The below function send ajax request to further process the files from the cloud channel
+	 /*function NextAjax(succ1){
+	  $.ajax({type:"GET",
+               url: "doctor_notifications.php",
+               success: succ1
+       }); 
+	 
+	 }
+	 */
+	  $(document).ready(function() {
+	  	 
+		      var activo = 0;
+		      var rounds = 0;
+		      var rounds2 = 0;
+			  var running = 0;
+		      
+		      $('#START').click(function () {
+		      		var d = new Date();
+		      		var time = d.toLocaleTimeString();
+			  		activo = 1;			
+			  		$('#Live').css("color","green");
+			  		$('#Live').html("SYSTEM ACTIVE");
+			  		$('#HoraIni').html(time);
+			  	 });
+			      
+		      $('#STOP').click(function () {
+		      		var d = new Date();
+		      		var time = d.toLocaleTimeString();
+			  		activo = 0;			
+			  		$('#Live').css("color","red");
+			  		$('#Live').html("SYSTEM OFF-LINE");
+			  		$('#Consola').html("");
+			  		$('#Consola1').html("");
+			  		});			 
+			 
+			 setInterval(function() {
+				 	if (activo==1){
+				 	d2 = new Date();
+				 	time2 = d2.toLocaleTimeString();
+				 	$('#HoraNow').html(time2);
+				 		}
+				 	}, 1000);    
+				 		  
+	 	 	setInterval( function(){
+	 	 			if(activo==1 && running == 0){
+	  				  
+					 running = 1;
+	  				 sendAjax(function(responseText){
+	  				 	$("#Consola").html(responseText); 
+	  				 }) 
+					running = 0;
+              } },60000 );
+			
+			
+		
+		
+		});
+	  		
+	  </script>
+
+   
+  <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37863944-1']);
+  _gaq.push(['_setDomainName', 'health2.me']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+	    
+</head>
+<body>
+	
+		<div style="height:60px; background-color:blue;">
+			<p style="margin-left:20%; margin-top:; font-size:24px; font-family:Verdana; ">
+		       <span style="color:white;">Notification DETAILS</span>
+	    	</p>
+     	</div>
+		<div style="width:40%; height:480px; margin-left:auto; margin-right:auto;  margin-top:10px; float:left; ">
+			<p style="margin-left:20%; margin-top:20px;font-size:18px; ">
+		  		<span id="Live" style="color:red;">SYSTEM OFF-LINE</span>
+			</p>
+			<p style="margin-left:20%; margin-top:20px;font-size:16px; ">
+			Start at <span id="HoraIni">00:00 AM</span>
+			</p>
+			<p style="margin-left:20%; margin-top:10px;font-size:16px; ">
+			Actual: <span id="HoraNow">00:00 AM</span>
+			</p>
+			<input type=button value="Start" id="START" style="height:50px; width:100px; margin-left:20%; margin-top:30px;">
+			<br><br><br>
+			<input type=button value="Stop" id="STOP" style="height:50px; width:100px; margin-left:20%; margin-top:30px;">
+		</div>
+		<div margin-top:10px; margin-left:500px; float:right;><p><b>Notification Updates</b></p></div>
+	  	<div style="height:300px; width:45%; background-color:grey; overflow:scroll; color:white; margin-top:10px; margin-left:20px; ">
+		
+			<p id="Consola" style="margin-left:20%; margin-top:; font-size:12px; font-family:Verdana;">
+		
+	    	</p>
+    	 </div> 
+    	 
+    	
+</body>
+</html>

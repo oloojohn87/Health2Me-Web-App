@@ -1,0 +1,45 @@
+<?php
+require "Services/Twilio.php";
+		
+/*
+//https://www.twilio.com/docs/quickstart/php/rest/call-request
+//https://www.twilio.com/help/faq/voice/can-twilio-tell-whether-a-call-was-answered-by-a-human-or-machine
+//https://www.twilio.com/docs/api/rest/making-calls
+*/
+$sid = $_POST['CallSid'];
+$status = $_POST['CallStatus'];
+//$answeredBy = $_GET['AnsweredBy'];
+
+require("environment_detail.php");
+		require("push_server.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+
+
+if($status=='busy')
+{
+	$query = "UPDATE sentprobelog set result=12 where sid='".$sid."'";
+	mysql_query($query);
+
+}
+else if($status=='failed')
+{
+	$query = "UPDATE sentprobelog set result=14 where sid='".$sid."'";
+	mysql_query($query);
+}
+else if($status=='completed')
+{
+	//do nothing because response may have been received or no response
+}
+
+
+
+?>
+

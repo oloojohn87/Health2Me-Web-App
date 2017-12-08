@@ -1,0 +1,357 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<script src="jquery-lang-js-master/js/jquery-cookie.js" charset="utf-8" type="text/javascript"></script>
+<script src="jquery-lang-js-master/js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
+<script type="text/javascript">
+	var lang = new Lang('en');
+	window.lang.dynamic('th', 'jquery-lang-js-master/js/langpack/th.json');
+
+
+//alert($.cookie('lang'));
+
+var langType = $.cookie('lang');
+
+if(langType == 'th'){
+window.lang.change('th');
+//alert('th');
+}
+
+if(langType == 'en'){
+window.lang.change('en');
+//alert('en');
+}
+	
+
+</script>
+<?php
+ 
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="doctors"; // Table name
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }	
+
+$queUsu = $_GET['Doctor'];
+$NReports=empty($_GET['NReports']) ? 30: $_GET['NReports'];
+$daysExplore=empty($_GET['days']) ? 30: $_GET['days'];
+$TypeEntry=empty($_GET['TypeEntry']) ? 0: $_GET['TypeEntry'];
+$withGroup = 0;
+if (isset($_GET['Group']))
+{
+    $withGroup = $_GET['Group'];
+}
+
+if ($TypeEntry == 'in')
+{
+    if ($withGroup == 0)
+    {
+	   $result = $con->prepare("SELECT * FROM doctorslinkdoctors WHERE IdMED2 = ? ORDER BY Fecha DESC LIMIT 10 ");
+	   $result->bindValue(1, $queUsu, PDO::PARAM_INT);
+	   $result->execute(); 
+    }
+    else
+    {
+       $result = $con->prepare("SELECT * FROM doctorslinkdoctors WHERE IdMED2 = ? OR IdMED2 IN (SELECT idGroup FROM doctorsgroups WHERE idDoctor= ?) ORDER BY Fecha DESC LIMIT 10 "); 
+	   $result->bindValue(1, $queUsu, PDO::PARAM_INT);
+	   $result->bindValue(2, $queUsu, PDO::PARAM_INT);
+	   $result->execute(); 
+    }
+}else
+{
+    if ($withGroup == 0)
+    {
+	   $result = $con->prepare("SELECT * FROM doctorslinkdoctors WHERE IdMED = ? ORDER BY Fecha DESC LIMIT 10 ");
+	   $result->bindValue(1, $queUsu, PDO::PARAM_INT);
+	   $result->execute(); 
+    }
+    else
+    {
+	   $result = $con->prepare("SELECT * FROM doctorslinkdoctors WHERE IdMED = ? OR IdMED IN (SELECT idGroup FROM doctorsgroups WHERE idDoctor= ?)  ORDER BY Fecha DESC LIMIT 10 ");
+	   $result->bindValue(1, $queUsu, PDO::PARAM_INT);
+	   $result->bindValue(2, $queUsu, PDO::PARAM_INT);
+	   $result->execute(); 
+    }
+}
+$n=0;
+$count = $result->rowCount();
+$cadena = '';
+$html = '<div style="width:100%;">
+            <table style="background-color:white; width:100%;">
+                <tr style="border-bottom:1px solid #cacaca; height:25px; background-color:#cacaca; color:white;">
+                    <td style="width:20px; text-align:center;">
+                        <p style="margin-bottom:0px; text-align:center;"><span style="font-size:14px;" lang="en">Comm</span></p>
+                    </td>
+                    <td style="width:100px;">
+                        <p style="margin-bottom:0px;"><span style="font-size:14px;" lang="en">Patient/Doctor</span></p>
+                    </td>
+                    <td style="width:60px;" lang="en">Stage</td>
+                    <td style="width:5px;"></td>
+                    <td style="width:40px;" lang="en">Time</td>';
+
+// Report all errors except E_NOTICE
+error_reporting(E_ALL ^ E_NOTICE);
+$IterationRef = array();
+
+while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
+    $referral_id = $row['id'];
+    $referral_date = $row['Fecha'];
+    
+    //Adding changes for the new referrral type
+    $referral_type=$row['Type'];
+    
+    $referral_dateCONF = $row['FechaConfirm'];
+    $result2B = $con->prepare("select stage,datevisit from referral_stage where referral_id=?");
+	$result2B->bindValue(1, $referral_id, PDO::PARAM_INT);
+	$result2B->execute();
+	
+    $row2B = $result2B->fetch(PDO::FETCH_ASSOC);
+    $referral_stage=$row2B['stage'];
+    switch ($referral_stage){
+        case 1: $LetStage='A';
+                break;
+        case 2: $LetStage='B';
+                break;
+        case 3: $LetStage='C';
+                break;
+        case 4: $LetStage='D';
+                break;
+    }
+    
+    $IdPac = $row['IdPac'];
+    
+    if ($TypeEntry == 'in')
+    {
+        $IdDoctor = $row['IdMED'];
+        $IterationRef[$IdPac]=0;
+    }else
+    {
+        $IdDoctor = $row['IdMED2'];
+        $IterationRef[$IdPac]++;
+        
+    }
+    $result2 = $con->prepare("SELECT * FROM doctors WHERE id = ? LIMIT 15");
+	$result2->bindValue(1, $IdDoctor, PDO::PARAM_INT);
+	$result2->execute();
+    
+    while ($row2 = $result2->fetch(PDO::FETCH_ASSOC)) {
+        $NameD2 = $row2['Name'];
+        $SurnameD2 = $row2['Surname'];
+        $RoleD2 = $row2['Role'];
+        $TreatD2 = '';
+        if ($RoleD2 == '1') $TreatD2 = 'Dr.';
+    }
+    $result2 = $con->prepare("SELECT * FROM usuarios WHERE Identif = ? LIMIT 15");
+	$result2->bindValue(1, $IdPac, PDO::PARAM_INT);
+	$result2->execute();
+    
+    while ($row2 = $result2->fetch(PDO::FETCH_ASSOC)) {
+        $NameP = $row2['Name'];
+        $SurnameP = $row2['Surname'];
+    }
+    
+    
+        // Check if any of this patients has new MESSAGES from DOCTORS
+        $resultMES = $con->prepare("SELECT sender_id,receiver_id,fecha,attachments,status FROM message_infrasture WHERE patient_id = ? AND receiver_id = ? AND DATEDIFF(NOW(), fecha) <= ? ORDER BY fecha DESC ");
+		$resultMES->bindValue(1, $IdPac, PDO::PARAM_INT);
+		$resultMES->bindValue(2, $queUsu, PDO::PARAM_INT);
+		$resultMES->bindValue(3, $daysExplore, PDO::PARAM_STR);
+		$resultMES->execute();
+		
+        $MessagesReceived=0;
+        $MessagesReceivedNEW=0;
+        $NewestdateMessage=0;
+        while ($rowMES = $resultMES->fetch(PDO::FETCH_ASSOC)) {
+            if ($rowMES['status'] == 'new') { $MessagesReceivedNEW++; $NewestdateMessage = $rowMES['fecha'];}
+            $MessagesReceived++;
+        }
+    
+    $CircleColor = '';
+    if ($TypeEntry == 'in')
+    {
+        $CircleColor='orange';
+    }
+    else 
+    {
+        $CircleColor='#54bc00';
+    }
+    if ($n < $count-1)
+    {
+        $html .= '<tr style="border-bottom:1px solid #cacaca; height:30px;">';
+    }
+    else 
+    {    
+        $html .= '<tr style="height:30px; border:none;">';
+    }
+    $MsgColor = '';
+    $Iteration = '';
+    if ($MessagesReceivedNEW > 0 ) 
+    {
+        $MsgColor = '#22aeff';
+    }
+    else
+    {
+        $MsgColor = '#e9e9e9';
+    }
+    $html .= '<td style="width:20px;"><div style="width:100%; text-align:center; margin-top:-5px; font-size:20px; color:'.$MsgColor.';"><icon class="icon-envelope" title="BLUE means there are NEW MESSAGES"></icon></div></td>';
+    if ($IterationRef[$IdPac] > 1) 
+    {
+        $Iteration = '('.$IterationRef[$IdPac].')'; 
+    }
+    $html .= '<td style="width:100px; padding:6px; "><a href="patientdetailMED-new.php?IdUsu='.$IdPac.'" style="text-decoration:none;"><div style="line-height:1; color: #54bc00; font-size:14px; width:100%;">'.BeauStr($SurnameP).', '.strtoupper($NameP[0]).' '.$Iteration.'</div><div style="color: #22aeff; font-size:12px; width:100%; margin-top:0px;"> '.strtoupper($SurnameD2).'</div></a></td>';
+    $St1='OFF';	
+    $St2='OFF';	
+    $St3='OFF';	
+    $St4='OFF';	
+    $CircleC1 = '';
+    $CircleC2 = '';
+    $CircleC3 = '';
+    $CircleC4 = '';
+    if($referral_type > 0)
+    {
+        switch ($referral_stage)
+        {
+            case '1': 
+                $St1='ON';
+                $CircleC1 = '#22aeff';
+                break;
+            case '2': 
+                $St1='ON';	
+                $St2='ON';
+                $CircleC1 = '#22aeff';
+                $CircleC2 = '#22aeff';
+                break;
+            case '3': 
+                $St1='ON';	
+                $St2='ON';	
+                $St3='ON';	
+                $CircleC1 = '#22aeff';
+                $CircleC2 = '#22aeff';
+                $CircleC3 = '#22aeff';
+                break;
+            
+            default: 	
+                break;
+        }
+        $html .= '<td style="width:60px;">';
+        $html .= '<div style="width: 12px;height: 12px;font-size: 11px; margin-left:2px; background-color:'.$CircleC1.';" class="LetterRectangle'.$St1.'" title="A means PATIENT has been ACKNOWLEDGED">A</div>';
+        $html .= '<div style="width: 12px;height: 12px;font-size: 11px; margin-left:2px; background-color:'.$CircleC2.';" class="LetterRectangle'.$St2.'" title="B means INFORMATION has been REVIEWED">B</div>';
+        $html .= '<div style="width: 12px;height: 12px;font-size: 11px; margin-left:2px; background-color:'.$CircleC3.';" class="LetterRectangle'.$St3.'" title="C means Comments has been Added">C</div></td>';
+    
+    }
+    else
+    {
+        switch ($referral_stage)
+        {
+            case '1': 
+                $St1='ON';
+                $CircleC1 = $CircleColor;
+                break;
+            case '2': 
+                $St1='ON';	
+                $St2='ON';
+                $CircleC1 = $CircleColor;
+                $CircleC2 = $CircleColor;
+                    break;
+            case '3': 
+                $St1='ON';	
+                $St2='ON';	
+                $St3='ON';	
+                $CircleC1 = $CircleColor;
+                $CircleC2 = $CircleColor;
+                $CircleC3 = $CircleColor;
+                break;
+            case '4': 
+                $St1='ON';	
+                $St2='ON';	
+                $St3='ON';	
+                $St4='ON';	
+                $CircleC1 = $CircleColor;
+                $CircleC2 = $CircleColor;
+                $CircleC3 = $CircleColor;
+                $CircleC4 = $CircleColor;
+                break;
+            default: 	
+                break;
+        }
+        $html .= '<td style="width:60px;">';
+        $html .= '<div style="width: 12px;height: 12px;font-size: 11px; margin-left:2px; background-color:'.$CircleC1.';" class="LetterCircle'.$St1.'" title="A means PATIENT has been ACKNOWLEDGED">A</div>';
+        $html .= '<div style="width: 12px;height: 12px;font-size: 11px; margin-left:2px; background-color:'.$CircleC2.';" class="LetterCircle'.$St2.'" title="B means PATIENT has been APPOINTED">B</div>';
+        $html .= '<div style="width: 12px;height: 12px;font-size: 11px; margin-left:2px; background-color:'.$CircleC3.';" class="LetterCircle'.$St3.'" title="C means INFORMATION has been REVIEWED">C</div>';
+        $html .= '<div style="width: 12px;height: 12px;font-size: 11px; margin-left:2px; background-color:'.$CircleC4.';" class="LetterCircle'.$St4.'" title="D means DOCTOR and PATIENT MET">D</div></td>';
+    }
+    
+    $html .= '<td style="width:5px;"></td>';
+                        //Column 4 TIME
+    $now = time(); // or your date as well
+    $your_date = strtotime($referral_date);
+    $datediff = $now - $your_date;
+    $temp_diff = $datediff/(3600);
+    $validDif = '';
+    $WhatLabel = '';
+    if ($temp_diff < 24)
+    {
+        $validDif = floor($temp_diff);
+        $WhatLabel = 'hours';
+    }
+    else
+    {
+        $validDif = floor($temp_diff/24);
+        $WhatLabel = 'days';
+    }
+        
+    $WhatColor = '';                   
+    switch(true)
+    {
+        case ($validDif >= 0 && $validDif <= 2): 	
+            $WhatColor = 'black';
+            break;
+        case ($validDif > 2 && $validDif <= 7): 	
+            $WhatColor = 'grey';
+            break;
+        case ($validDif > 7 && $validDif < 30): 	
+            $WhatColor = '#cacaca';
+            break;
+        case ($validDif >= 30): 					
+            $WhatColor = '#e9e9e9';
+            break;
+        default:								
+            $WhatColor = 'blue';
+            break;
+    }
+    $html .= '<td style="width:40px; text-align:center; color: white; background-color: '.$WhatColor.'; "><div style="width:100%; font-size:18px;">'.$validDif.'</div><div style="width:100%; font-size:10px; margin-top:-5px;">'.$WhatLabel.'</div></td>';
+    
+    $n++;
+
+
+}
+$html .= '</table></div>';
+
+//$encode = json_encode($cadena);
+//echo '{"items":['.($cadena).']}';
+echo $html;
+    
+function SanDate($entrydate)
+{
+	$newDate = date("m/d/Y H:i:s", strtotime($entrydate));
+	return $newDate;
+}
+function BeauStr ($EString)
+{
+    $FirstChar = strtoupper(substr($EString, 0, 1));
+    $ELen = strlen($EString);
+    $RemainChar = strtolower(substr($EString, 1, $ELen));
+    $MExit = $FirstChar.''.$RemainChar;
+    return $MExit;
+}
+
+?>

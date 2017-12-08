@@ -1,0 +1,45 @@
+<?php
+ //   echo '<table><tr><td>TEST</td></tr></table>';
+//require "identicon.php";
+ 
+ require("environment_detail.php");
+ 
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="messages"; // Table name
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }			
+
+$id_doc=$_GET['idDoc'];
+$state=$_GET['state'];
+$value=$_GET['value'];
+
+if($state){
+$q=$con->prepare("update doctors set notify_email=? where id=?");
+$q->bindValue(1, $value, PDO::PARAM_STR);
+$q->bindValue(2, $id_doc, PDO::PARAM_INT);
+$q->execute();
+
+}else{
+
+$q=$con->prepare("select notify_email from doctors where id=?");
+$q->bindValue(1, $id_doc, PDO::PARAM_INT);
+$q->execute();
+
+$row = $q->fetch(PDO::FETCH_ASSOC);
+
+echo $row['notify_email'];
+}
+
+//$count=mysql_num_rows($result);
+//echo $q;
+?>

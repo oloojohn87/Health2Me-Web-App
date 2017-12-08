@@ -1,0 +1,72 @@
+<?php
+session_start();
+require("environment_detail.php");
+require ("push_server.php");
+
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$query = "select distinct(userid) as userid from events where date(gmt_start) = date(now())";
+
+$result= mysql_query($query);
+$num_rows = mysql_num_rows($result);
+echo $num_rows.' events today';
+while($row = mysql_fetch_array($result))
+{
+
+
+	//Get minutes of user
+	$min_q = "select minutes from notification_config where userid = ".$row['userid'];
+	$min_query = mysql_query($min_q);
+	$min_qq = mysql_fetch_array($min_query);
+	$minutes = $min_qq['minutes'];
+	
+	
+	$q = "select * from events where date(gmt_start) = date(now()) and doctor_notify is null and timestampdiff(MINUTE,now(),gmt_start)=".$minutes;
+	$res= mysql_query($q);
+	
+	/*$qqq = "select title,timestampdiff(MINUTE,now(),start) as offset from events where date(start) = date(now()) having min(timestampdiff(MINUTE,now(),start))";
+	$rrr = mysql_query($qqq);
+	$rowrrr = mysql_fetch_array($rrr);
+	$nr = mysql_num_rows($rrr);
+	if($nr)
+	{
+		echo '<br>Next event is '.$rowrrr['offset'].' minutes away';
+	}
+	else
+	{
+		echo '<br>No more events left to be reminded today';
+	}
+	*/
+	
+	while($row1 = mysql_fetch_array($res))
+	{
+		$q1 = "select idusfixedname from usuarios where identif = ".$row1['patient'];
+		$res1= mysql_query($q1);
+		$row2 = mysql_fetch_array($res1);
+		$patient_name = $row2['idusfixedname'];
+		
+		$message = "This is a reminder that you have a ". $row1['title'] ." with ".$patient_name;
+		$message = $message . " in ".$minutes." minutes";
+	
+		//send $message to $row1['userid'];
+		Push_notification($row1['userid'],$message);
+		//Push_Email($row1['userid'],$message);
+		Push_Reminder_Email($row1['userid'],$message);
+		$update_time = "update events set doctor_notify=now() where id=".$row1['id'];
+		mysql_query($update_time);
+		
+		echo '<br>Reminded '.$row1['userid'].' of '.$row1['title'].' with '.$patient_name;
+	}
+}
+
+
+
+
+
+?>

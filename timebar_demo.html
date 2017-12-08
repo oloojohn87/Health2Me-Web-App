@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <title>The Health2Me Timebar</title>
+        <link rel="stylesheet" href="css/timebar.css" >
+        <script src="js/jquery.min.js"></script>
+        <script src="js/timebar.js"></script>
+        
+        <style>
+            #main_timebar{
+                width: 60%;
+                margin-left: 20%;
+                height: 30px;
+            }
+        </style>
+    </head>
+    <body>
+        <h3 style="color: #22AEFF; text-align: center; font-family: Arial, sans-serif;">The Health2Me Timebar</h3>
+        <div id="main_timebar" class="timebar"></div>
+        <script>
+            $(document).ready(function()
+            {
+                $("#main_timebar").timebar({type: "day", colors: new Array("22AEFF"), hoverColor: "E5E5E5", onClick: function(val)
+                {
+                    console.log("Day:     " + val.day);
+                    console.log("Start:   " + val.start);
+                    console.log("End:     " + val.end);
+                    console.log("Tag:     " + val.tag);
+                    console.log("Element: " + val.element.css("height"));
+                }, onMouseOver: function(val)
+                {
+                    console.log("Mouse Over: " + val.start);
+                }, onMouseOut: function(val)
+                {
+                    console.log("Mouse Out: " + val.start);
+                }});
+                $("#main_timebar").timebarAdd({start: "2014-09-14 12:40:23", end: "2014-09-14 15:45:00"});
+                $("#main_timebar").timebarRemove({start: "2014-09-14 14:50:23", end: "2014-09-14 19:45:00"});
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,82 @@
+<?php
+
+// SEND EMAIL TO REFERRAL:
+require_once 'lib/swift_required.php';
+
+$NamePatient = 'Test1 Test2';
+  
+$aQuien = 'lapspart@me.com';
+$Sobre = 'Health2Me Referrals Network.-  Dr. Test sends you Patient: pattests';
+
+$FromText = 'FromText';
+    
+$ContenidoAdic='';
+$Content ='';
+$Content = file_get_contents('http://dev.health2.me/templates/Referral1.html');
+
+$Var1 = '';
+$Var2 = '';
+$Var3 = 'Patientname Patientsurname';
+$Var4 = 'Drname';
+$Var5 = 'Drsurname';
+$Var6 = 'domainname';
+$Var7 = 'tempid';
+$Var8 = 'idusu';
+$Var9 = 'email';
+$Var10 = 'token';
+$Var11 = '';
+$Var12 = '';
+$Var13 = '';
+$Var14 = '';
+$Var15 = '';
+$Content = str_replace("**Var1**",$Var1,$Content);
+$Content = str_replace("**Var2**",$Var2,$Content);
+$Content = str_replace("**Var3**",$Var3,$Content);
+$Content = str_replace("**Var4**",$Var4,$Content);
+$Content = str_replace("**Var5**",$Var5,$Content);
+$Content = str_replace("**Var6**",$Var6,$Content);
+$Content = str_replace("**Var7**",$Var7,$Content);
+$Content = str_replace("**Var8**",$Var8,$Content);
+$Content = str_replace("**Var9**",$Var9,$Content);
+$Content = str_replace("**Var10**",$Var10,$Content);
+$Content = str_replace("**Var11**",$Var11,$Content);
+$Content = str_replace("**Var12**",$Var12,$Content);
+$Content = str_replace("**Var13**",$Var13,$Content);
+$Content = str_replace("**Var14**",$Var14,$Content);
+$Content = str_replace("**Var15**",$Var15,$Content);
+  
+    
+$Body = $Content.$ContenidoAdic;
+ 
+echo $Body;
+die; 
+
+  
+ $transporter = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
+  ->setUsername('dev.health2me@gmail.com')
+  ->setPassword('health2me');
+
+$mailer = Swift_Mailer::newInstance($transporter);
+
+// Create the message
+$message = Swift_Message::newInstance()
+  
+  // Give the message a subject
+  ->setSubject($Sobre)
+
+  // Set the From address with an associative array
+  ->setFrom(array('hub@inmers.us' => $FromText))
+
+  // Set the To addresses with an associative array
+  ->setTo(array($aQuien))
+
+  ->setBody($Body, 'text/html')
+
+  ;
+
+$result = $mailer->send($message);
+
+// SEND EMAIL TO REFERRAL ******************************
+
+
+?>

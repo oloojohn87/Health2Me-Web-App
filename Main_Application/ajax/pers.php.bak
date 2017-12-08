@@ -1,0 +1,23 @@
+<?php
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+// Connect to server and select databse.
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$pers1=$_GET['frac'];
+$pers2=$_GET['surg'];
+$pers3=$_GET['oknown'];
+$pers4=$_GET['obs'];
+$pers5=$_GET['omed'];
+$sql="INSERT INTO personal VALUES ('$pers1','$pers2','$pers3','$pers4','$pers5')";
+
+if(!mysql_query($sql))
+{
+die('Error: ' .mysql_error());
+}
+?>

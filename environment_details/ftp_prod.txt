@@ -1,0 +1,3 @@
+server = "health2.me"; 
+user = "ITGroup"; 
+pass = "InmersIT"; 

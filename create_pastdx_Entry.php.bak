@@ -1,0 +1,28 @@
+<?php
+session_start();
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+ 
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$idp = $_GET['idp'];
+$dxname = $_GET['dxname'];
+$icdcode = $_GET['icdcode'];
+$dxstart = $_GET['dxstart'];
+$dxend = $_GET['dxend'];
+
+$query = "insert into pastdx(idpatient,name,icdcode,datestart,datestop) values($idp,'$dxname','$icdcode','$dxstart','$dxend')";
+
+if(mysql_query($query))
+{
+	echo 'success';
+}
+
+
+
+?>

@@ -1,0 +1,25 @@
+<?php
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+// Connect to server and select databse.
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$med1=$_GET['mname'];
+$med2=$_GET['mcode'];
+$med3=$_GET['mdose'];
+$med4=$_GET['mnum'];
+$med5=$_GET['mstart'];
+$med6=$_GET['mend'];
+
+$sql="INSERT INTO medic VALUES ('$med1','$med2','$med3','$med4','$med5','$med6')";
+
+if(!mysql_query($sql))
+{
+die('Error: ' .mysql_error());
+}
+?>

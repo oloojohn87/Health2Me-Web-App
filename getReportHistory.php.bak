@@ -1,0 +1,55 @@
+<?php
+ //   echo '<table><tr><td>TEST</td></tr></table>';
+ 
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+    
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }		
+
+$queid = $_GET['id'];
+
+$query1=$con->prepare("SELECT b.id as id,date(datetimestamp) as eventdate,time(datetimestamp) as eventtime,content,u.idmedfixedname as user,viewip FROM bpinview b,doctors u  USE INDEX(I1) WHERE b.viewIdmed=u.id and  b.idpin=? order by datetimestamp");
+$query1->bindValue(1, $queid, PDO::PARAM_INT);
+$result = $query1->execute();
+
+
+//$url = json_decode(file_get_contents('http://api.ipinfodb.com/v3/ip-city/?key=64dc8f15133cc6db575bcaf70200a1dfd0bca8e372077ebfc22905557e59ea77&ip=83.49.128.83&format=json'));
+/*
+$json = 'http://api.ipinfodb.com/v3/ip-city/?key=64dc8f15133cc6db575bcaf70200a1dfd0bca8e372077ebfc22905557e59ea77&ip=83.49.128.83&format=json';
+$url = json_decode(file_get_contents($json));
+echo '****';
+echo $url->countryName;
+echo '---';
+*/
+
+echo '<thead><tr id="FILA" class="CFILAMODAL"><th style="text-align: center;">Date</th><th style="text-align: center;">Time</th><th style="text-align: center;">Event</th><th style="text-align: center;">IP</th></tr></thead>';
+//echo '<thead><tr id="FILA" class="CFILAMODAL"><th style="text-align: center;">Date</th><th style="text-align: center;">Time</th><th style="text-align: center;">Event</th><th style="text-align: center;">IP</th><th style="text-align: center;">Country</th><th style="text-align: center;">City</th></tr></thead>';
+echo '<tbody>';
+
+while ($row = $query1->fetch(PDO::FETCH_ASSOC)) {
+
+ 	echo '<tr class="CFILAMODAL" id="'.$row['id'].'" style="height:10px; line-height:0;">';
+		echo '<td style="text-align: center; overflow:hidden;white-space:nowrap; width:80px;" >'.$row['eventdate'].'</td>';
+		echo '<td style="text-align: center; overflow:hidden;white-space:nowrap; width:80px;" >'.$row['eventtime'].'</td>';
+		echo '<td style="text-align: center; overflow:hidden;white-space:nowrap; width:200px;" >'.$row['content']." by ".$row['user'].'</td>';
+		echo '<td style="text-align: center; overflow:hidden;white-space:nowrap; width:120px;" >'.$row['viewip'].'</td>';
+//		echo '<td style="text-align: center; overflow:hidden;white-space:nowrap; width:120px;" >'.$url->countryName.'</td>';
+//		echo '<td style="text-align: center; overflow:hidden;white-space:nowrap; width:120px;" >'.$url->cityName.'</td>';
+
+echo '</tr>';
+
+}
+
+echo '</tbody>';    
+
+?>

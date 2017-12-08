@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<title>Page Title</title>
+
+<script src="js/jquery.min.js"></script>
+
+<body>
+	<div id='tester_div'>
+	</div>
+</body>
+<script>
+
+var patients = [{"patients":{"PatientId":1, 
+				"CompanyName":"Catapult", 
+				"FirstName":"Ryan", 
+				"LastName":"Smith", 
+				"DOB":"03/12/1988", 
+				"SSN":"765121659", 
+				"EmployeeId":"B234",
+				"Gender":"M",
+				"LanguageId":1,
+				"MiddleInitial":"E",
+				"Address1":"4205 Whippoorwill Lane",
+				"Address2":"",
+				"City":"Plano",
+				"State":"Texas",
+				"PostalCode":"75093",
+				"HomePhone":"2147349964",
+				"CellPhone":"2147349964",
+				"EmailAddress":"kaustin@inmers.us",
+				"InsuranceGroupId":"Insur445",
+				"InsuranceMemberId":"Mem876",
+				"InsurancePlanId":5,
+				"HispanicLatino":0,
+				"EthnicityId":0,
+				"IsActive":1
+				}}];
+
+$.ajax({
+     url: "http://dev.health2.me/CatapultAPI.php",
+     type: "POST",
+     async: false,
+     data:{ json: JSON.stringify(patients)},
+     success: function (data){
+     	$('#tester_div').html(data);
+     },
+    error: function(XMLHttpRequest, textStatus, errorThrown) { 
+        alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+    } 
+ });
+
+</script>
+
+
+
+</html>

@@ -1,0 +1,186 @@
+    <link href="css/bootstrap.css" rel="stylesheet">
+         <div class='container-fluid'><center><b>Health2.me API User Resource Version 1.0</b></center></br>
+		 <p>Addition of candidates to health2.me can be uploaded via our REST API.  For each patient that you would like to insert into the system you must use a basic POST request.
+		 <p>Please note that you <b>must</b> have a valid agent account in order to add new patients into the system. You may reference our newAgentAPI.php at the bottom of this page.
+		 <p>The resource URL for making post requests
+		 </br><b>dev.health2.me/newUserAPI.php</b>
+		 <p></br>
+		 <font size='3'><b>Parameters</b></font>
+		 
+		 <center><table class='table table-bordered' style='width:100%;'>
+		 <tr>
+		 <td>name</br><i><font size='1'>Required</font></i></td><td>The first name of the patient to be added to the system.</td>
+		 </tr>
+		 <tr>
+		 <td>surname</br><i><font size='1'>Required</font></i></td><td>The last name of the patient to be added to the system.</td>
+		 </tr>
+		 <tr>
+		 <td>dob</br><i><font size='1'>Required</font></i></td><td>This parameter must contain the date of birth of the patient.</br>Format: mm/dd/yyyy</td>
+		 </tr>
+		 <tr>
+		 <td>gender</br><i><font size='1'>Required</font></i></td><td>This will indicate the gender of the patient.</td>
+		 </tr>
+		 <tr>
+		 <td>email</td><td>Enter the full email of the patient to be uploaded</td>
+		 </tr>
+		 <tr>
+		 <td>plan</br><i><font size='1'>Required</font></i></td><td>Enter the payment plan for the patient.</td>
+		 </tr>
+		 <tr>
+		 <td>phone</br><i><font size='1'>Required</font></i></td><td>Enter the phone number of the patient.  The number may include many special characters such as (555)-223(5555), but 5552235555 is preferred.</td>
+		 </tr>
+		 <tr>
+		 <td>agent</br><i><font size='1'>Required</font></i></td><td>Enter the unique agent ID in order to add patients to the system.  You can add agents using our add agent API.</td>
+		 </tr>
+		 <tr>
+		 <td>security</br><i><font size='1'>Required</font></i></td><td>Enter the unique security ID in order to add patients to the system.  This will be provided to you by Health2.me</td>
+		 </tr>
+		 <tr>
+		 <td>facility</br><i><font size='1'>Required</font></i></td><td>Enter the agent location.</td>
+		 </tr>
+		 </table></center></br>
+		 <font size='3'><b>Returned Errors</b></font>
+		 <center><table class='table table-bordered' style='width:100%;'>
+		 <tr>
+		 <td>"CODE":"1"</td><td>"SUCCESS":"Candidate has been successfully added to the system."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"101"</td><td>"ERROR":"Email is not valid."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"102"</td><td>"ERROR":"Phone number is not valid."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"201"</td><td>"ERROR":"Candidate phone is already known."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"202"</td><td>"ERROR":"Candidate email is already known."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"301"</td><td>"MISSING":"First name is required."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"302"</td><td>"MISSING":"Surname is required."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"303"</td><td>"MISSING":"Date of birth is required."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"304"</td><td>"MISSING":"Gender is required."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"305"</td><td>"MISSING":"Phone number is required."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"306"</td><td>"MISSING":"Security code is required."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"307"</td><td>"MISSING":"Agent ID is required."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"308"</td><td>"MISSING":"Facility location is required."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"309"</td><td>"MISSING":"Payment plan is required."</td>
+		 </tr>
+		 </table></center></br>
+		 <font size='3'><b>Example Code</b></font>
+		 <form method='post' action='http://dev.health2.me/newUserAPI.php'>
+ <input type='text' id='name' name='name' maxlength='50' size='25' placeholder='First Name'/>
+ <input type='text' id='surname' name='surname' maxlength='100' size='25' placeholder='Sir Name'/>
+ <input type='date' id='dob' name='dob' placeholder='Birth Date'/>
+ <input type='text' id='email' name='email' maxlength='255' size='25' placeholder='Email'/>
+ <input type='text' id='phone' name='phone' maxlength='20' size='20' placeholder='Phone'/>
+ <select name="plan">
+ <option value="" disabled selected>Select the Plan</option>
+<option value="0">Individual Plan</option>
+<option value="1">Family Plan</option>
+</select>
+ <table style='background-color:white;'><tr><td width='50px'><label for='male'>Male</label>
+ <input type='radio' class='radio' id='male' name='gender' value='1'/>
+ </td><td width='50px'><label for='female'>Female</label>
+ <input type='radio' class='radio' id='female' name='gender' value='0'/>
+</td></tr></table>
+ <p></br><input type='text' id='agent' name='agent' placeholder="Agent ID"/>
+ <input type='password' id='security' name='security' placeholder='Agent Security Code'/>
+ <select name="facility">
+ <option value="" disabled selected>Select the Facility</option>
+<option value="0">Columbia</option>
+<option value="1">Spain</option>
+</select>
+ <p></br><input class='btn' type='submit' name='addPatient' value='Add Patient' />
+ </form>
+ 
+ </br></br><hr></br></br>
+ 
+ <center><b>Health2.me API User Resource Version 1.0</b></center></br>
+		 <p>Addition of agents to health2.me can be uploaded via our REST API.  For each agent that you would like to insert into the system you must use a basic POST request.
+		 <p>The resource URL for making post requests
+		 </br><b>dev.health2.me/newAgentAPI.php</b>
+		 <p></br>
+		 <font size='3'><b>Parameters</b></font>
+		 
+		 <center><table class='table table-bordered' style='width:100%;'>
+		 <tr>
+		 <td>agent</br><i><font size='1'>Required</font></i></td><td>Enter the agent id/username.</td>
+		 </tr>
+		 <tr>
+		 <td>password</br><i><font size='1'>Required</font></i></td><td>Enter the agent password.</td>
+		 </tr>
+		 <tr>
+		 <td>password_repeat</br><i><font size='1'>Required</font></i></td><td>Repeat the agent password.</td>
+		 </tr>
+		 <tr>
+		 <td>email</br><i><font size='1'>Required</font></i></td><td>Add agent email.</td>
+		 </tr>
+		 <tr>
+		 <td>security</td><td>Enter the security code provided to you by health2.me for identity verification.</td>
+		 </tr>
+		 </table></center></br>
+		 <font size='3'><b>Returned Errors</b></font>
+		 <center><table class='table table-bordered' style='width:100%;'>
+		 <tr>
+		 <td>"CODE":"1"</td><td>"SUCCESS":"Agent has been successfully added to the system."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"101"</td><td>"ERROR":"Email is not valid."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"102"</td><td>"ERROR":"The passwords entered do not match."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"103"</td><td>"ERROR":"The agent id is already in the system."</td>
+		 </tr>
+		 <tr>
+		 <td>"CODE":"306"</td><td>"MISSING":"Security code is required."</td>
+		 </tr>
+		 </table></center></br>
+ 
+ <form method='post' action='http://dev.health2.me/newAgentAPI.php'>
+ <input type='text' id='agent' name='agent' maxlength='50' size='25' placeholder='Agent ID'/>
+ <input type='password' id='password' name='password' maxlength='100' size='25' placeholder='Password'/>
+ <input type='password' id='password_repeat' name='password_repeat' maxlength='100' size='25' placeholder='Repeat Password'/>
+ <input type='text' id='email' name='email' maxlength='255' size='25' placeholder='Email'/>
+ <input type='text' id='security' name='security' maxlength='255' size='25' placeholder='Security Code'/>"security"
+</br>
+<select name="facility">
+ <option value="" disabled selected>Select the Facility</option>
+<option value="0">Columbia</option>
+<option value="1">Spain</option>
+</select>
+ <p></br><input class='btn' type='submit' name='addAgent' value='Add Agent' />
+ </form>
+ </br></br>
+ <center><b><font size="9">Reset Agent Password</font></b></center>
+ <center><b>Under Construction</b></center>
+  <form method='post' action='http://dev.health2.me/agentPassAPI.php'>
+ <input type='text' id='agent' name='agent' maxlength='50' size='25' placeholder='Agent ID'/>
+ <input type='password' id='password' name='password' maxlength='100' size='25' placeholder='Password'/>
+ <input type='password' id='password_repeat' name='password_repeat' maxlength='100' size='25' placeholder='Repeat Password'/>
+ <input type='text' id='security' name='security' maxlength='255' size='25' placeholder='Security Code'/>"Reset Password"
+ <p></br><input class='btn' type='submit' name='reset' value='Reset Agent Password' />
+ </form>
+    </div> 
+        
+
+  

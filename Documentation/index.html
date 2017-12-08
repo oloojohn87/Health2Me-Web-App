@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Health2Me Technical Documentation</title>
+
+    <!-- Core CSS - Include with every page -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="font-awesome/css/font-awesome.css" rel="stylesheet">-->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Page-Level Plugin CSS - Dashboard -->
+    <link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="css/plugins/timeline/timeline.css" rel="stylesheet">
+
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="wrapper" >
+
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Health2Me Technical Documentation</a>
+            </div>
+            <!-- /.navbar-header -->
+
+  
+
+            <div class="navbar-default navbar-static-side" role="navigation" style="height:600px;">
+                <div class="sidebar-collapse" style="overflow-y:scroll;height:100%">
+                    <ul class="nav" id="side-menu" >
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li>
+                            <a href="index.html"><i class="fa fa-book fa-fw"></i> Manual</a>
+                        </li>
+                        <li>
+                            <a><i class="fa fa-book fa-fw"></i> Health2Me Features<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+		                                <li>
+		                                    <a href = "EMR.html">Member EMR Facility</a>
+                                        </li> 
+                                        <li>
+		                                    <a href="SendReferral.html">Send Referral</a>
+		                                </li>
+		                               <li>
+		                                    <a href = "TelemedPhone.html">Telemedicine Phone</a>
+                                        </li>
+                                        <li>
+		                                    <a href = "TelemedVideo.html">Telemedicine Video</a>
+                                        </li>
+                                       <li>
+		                                    <a href = "RequestAndSend.html">Request and Send</a>
+                                        </li>
+                                        <li>
+		                                    <a href = "MemberSummary.html">Member Summary</a>
+                                        </li>
+                                        <li>
+		                                    <a href = "MemberSearch.html">Member Search</a>
+                                        </li>
+                                        <li>
+		                                    <a href = "UploadAndDrop.html">Upload and Drop Files</a>
+                                        </li>
+                                         <li>
+		                                    <a href = "ProbeNotification.html">Probe Notification</a>
+                                        </li>
+		                                <li>
+		                                    <a href = "Deck.html">Deck</a>
+                                        </li>
+                                         <li>
+		                                    <a href = "Appointments.html">Setting Up Appointments with Doctors</a>
+                                        </li>
+                                        
+                                        <li>
+		                                    <a href = "DoctorSearchDirectory.html">Doctor Search Directory</a>
+                                        </li>
+                                
+                                        <li>
+		                                    <a href = "RecentActivity.html">Recent Activity</a>
+                                        </li>
+                                        <li>
+		                                    <a href = "SetupButton.html">Setup Button</a>
+                                        </li>
+                                        <li>
+		                                    <a href = "DoctorAccountConfiguration.html">Doctor Account Configuration</a>
+                                        </li>
+                                        <li>
+		                                    <a href = "DoctorGroup.html">Doctor Group Feature</a>
+                                        </li>
+								 </ul>
+                        </li>
+                        <li>
+                            <a><i class="fa fa-database fa-fw"></i> Database Structure<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a href="GoldenRules.html">Golden Rules of Report Access</a>
+		                                </li>
+		                               <li>
+		                                    <a>Important Tables<span class="fa arrow"></span></a>
+                                             <ul class="nav nav-second-level">
+		                                       <li>
+		                                          <a href="Database.html">Usuarios</a>
+		                                      </li>
+                                                 <li>
+		                                          <a href="Doctors.html">Doctors</a>
+		                                      </li>
+                                                 <li>
+		                                          <a href="Lifepin.html">LifePin</a>
+		                                      </li>
+                                                 <li>
+		                                          <a href="BasicEMRData.html">BasicEMRData</a>
+		                                      </li>
+                                              <li>
+		                                          <a href="AppointmentsTable.html">Appointments</a>
+		                                      </li>
+                                              <li>
+		                                          <a href="OngoingSessions.html">Ongoing_Sessions</a>
+		                                      </li>
+                                     
+								              </ul>
+		                                </li>
+		                               
+								 </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Documents<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                     <a href="Probes.html">Probes</a>
+                                </li>
+                                <li>
+                                    <a href="GithubCommit.html">GitHub Commit Procedure</a>
+                                </li>
+                                <li>
+                                    <a href="PhoneNumbers.html">Important Note for Phone Numbers</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                            <li>
+                                 <a href="Probes.html"><i class="fa fa-gears fa-fw"></i> Startup Procedure<span class="fa arrow"></span></a>
+								 <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a href="Processes.html">Processes</a>
+		                                </li>
+		                               <li>
+		                                    <a href="Apache.html">Apache</a>
+		                                </li>
+		                               <li>
+		                                    <a href="MySQL.html">MySQL</a>
+		                                </li>
+		                               <li>
+		                                    <a href="FTPServer.html">FTP Server</a>
+		                                </li>
+								 </ul>	 
+                            </li>
+                            <li>
+                                 <a href="Channels.html"><i class="fa fa-arrows-alt fa-fw"></i> Channels</a>
+                            </li>
+                            <li>
+                                 <a href="ProductionMigration.html"><i class="fa fa-arrows-alt fa-fw"></i>Production Migration</a>
+                            </li>
+							<li>
+                             	 <a href="Database.html"><i class="fa fa-medkit fa-fw"></i> DICOM viewer</a>
+							</li>
+                        
+                        <li>
+                             	 <a href="UbuntuInstallationSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Ubuntu Installation</a>
+							</li>
+                        <li>
+                             	 <a href="TurnServerInstallationSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Turn Server Installation</a>
+							</li>
+                        
+                            <li>
+                             	 <a href="UbuntuUpdateSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Server Restart and Package Update</a>
+							</li>
+                            <li>
+                             	 <a href="SessionHashing.html"><i class="fa fa-cog fa-fw"></i>Session Hashing</a>
+							</li>
+                        <li>
+                             	 <a><i class="fa fa-book fa-fw"></i> Libraries<span class="fa arrow"></span></a>
+                                 <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a>External Libraries<span class="fa arrow"></span></a>
+                                               <ul class="nav nav-second-level">
+                                                   <li>
+		                                              <a href="Libraries.html">Moment.js</a>
+		                                           </li>
+                                                   <li>
+		                                              <a href="TCPDF.html">TCPDF</a>
+		                                           </li>
+                                                   <li>
+		                                              <a href="SwiftMailer.html">Swift Mailer</a>
+		                                           </li>
+                                                   <li>
+		                                              <a href="Stripe.html">Stripe</a>
+		                                           </li>
+                                                   <li>
+		                                              <a href="Twilio.html">Twilio</a>
+		                                           </li>
+                                                   <li>
+		                                              <a href="GoogleWebRTC.html">Google WebRTC</a>
+		                                           </li>
+                                               </ul>
+		                                </li>
+		                               <li>
+		                                    <a>Internal Libraries<span class="fa arrow"></span></a>
+                                            <ul class="nav nav-second-level">
+                                                   <li>
+		                                              <a href="timebar.html">Timebar</a>
+		                                           </li>
+                                                   <li>
+		                                              <a href="timeline.html">Timeline</a>
+		                                           </li>
+                                               </ul>
+		                                </li>
+		                              
+								 </ul>	
+							</li>
+                            <li>
+                             	 <a href="H2MAPIs.html"><i class="fa fa-cog fa-fw"></i> Health2Me APIs</a>
+							</li>
+                   </ul>
+                    <!-- /#side-menu -->
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header  text-muted">Health2Me Technical Manual</h1>
+                    <h4><p class="text-primary">Doctors & Patients</p></h4>
+	
+					<p>Health2me works by facilitating the communication and networking of doctors and patients in a HIPAA compliant environment. The backbone of the system consists of doctor accounts and patient accounts that are made up of medical records. The system then allows doctors to communicate those records with their patients and with other doctors using a referral system.</p>
+
+					<p>Doctors accounts are stored in the <span style="color: #0b0;">doctors</span> table in the database. They can communicate with other doctors, their patients, and also patients that have been referred to them by other doctors. Doctors can also be part of a group of doctors. When a doctor is in a group, he/she can access patient information from other doctors in that group and vice versa. Groups are managed by a set of rules which can be found in <a href="Basic_Rules_for_showing_Reports_in_patientdetailMED.pdf">“Basic Rules for showing Reports in patientdetailMED”</a>.</p>
+
+					<p>Patients accounts are stored in the <span style="color: #0b0;">usuarious</span> table in the database. Patients can communicate with their doctors and doctors that they were referred to. Each patient has a set of medical records all which can be found in the <span style="color: #0b0;">lifepin</span> table in the database.</p>
+
+                    <p>The information of the patient (also called "Health Passport" has 2 basic components:
+                            <ul>
+                            <li> The Health Summary.</li>
+                            <li> The Set of Reports.</li>
+                            </ul>
+                        </br>
+                        The Health Summary is organized and edited by a file called <strong>medicalPassport.php</strong>. 
+                        <div style="height:15px; width:100%;"></div>   
+                        <div style="text-align:center; width:100%;">
+                            <img src="images/HealthSummary.png" style="width:600px; float:left: margin:0 atuto;"/>
+                        </div>
+                        <div style="height:15px; width:100%;"></div>   
+                         The organization of the Information for this section is very important. The following table describes the basic component, functions and PHP files that handle this:
+                        <div style="height:5px; width:100%;"></div>   
+                        <div style="text-align:center; width:100%;">
+                            <a href="Health Summary organization of information.pdf"><img src="images/HealthSummaryTable.png" style="width:900px;"/></a>
+                        </div>    
+                    </p>
+
+					<h4><p class="text-primary">Medical Records</p></h4>
+
+					<p>Medical records for the Health2me system are stored in the <span style="color: #0b0;">lifepin</span> table in the database where each entry represents a medical record. The actual file for the record (pdf, jpg, etc) is encrypted and stored in the Packages_Encrypted folder in the server. The path to the encrypted file for the record is stored in its entry in the <span style="color: #0b0;">lifepin</span> table where it can be obtained and decrypted as needed. More information on how encryption / decryption works can be found in <a href="Health2meSecurityEncryptionDetails.pdf">“Health2me Security Encryption Details”</a>.</p>
+
+					<p>Medical records have different types. (Demographics, Doctor Notes, Laboratory, Imaging, Patient Notes, Pictures, Superbill, and Summary).</p>
+
+					<p>When a doctor refers a patient to another doctor, all of the patient’s medical records are sent to that doctor as well. The sending doctor also has the option to highlight certain records that are important to that referral. Within our system, nothing is actually being sent since all of the records are already in our system. We just grant the receiving doctor’s account access to those records. This is done in the <span style="color: #0b0;">doctorslinkusers</span> table in the database.</p>
+
+					<p class="text-info">Record Privacy</p>
+
+					<p>Whenever a patient is referred to another doctor, all of that patient’s files are “sent” to the receiving doctor. However, some records can be marked as private in the database. This is marked as a flag in the IsPrivate column in the <span style="color: #0b0;">lifepin</span> data table. Private records can only be seen by the doctor who created the record. If another doctor that had that patient referred to them wants to see private records, they’ll need to ask the owner of the record for permission.</p>
+
+					<h4><p class="text-primary">Messaging</p></h4>
+
+					<p>Health2me has an internal messaging system that allows doctors and patients to communicate with each other directly within our system. These messages are stored in the <span style="color: #0b0;">messages_infrasture</span> table in the database for doctor to doctor messages, and in the <span style="color: #0b0;">messages_infrastuctureuser</span> table for doctor to patient and patient to doctor messages. These messages can then be retrieved from the database and displayed to the user as needed. Messages can also have attachments which are just a list of ids of medical records (from the <span style="color: #0b0;">lifepin</span> table) to include with the message. This will allow the receiver of the message to quickly view those medical records once they open the message.</p>
+
+					<h4><p class="text-primary">Technologies</p></h4>
+
+					<p>The main technologies used in the Health2me system are:</p>
+					<ul>
+						<li>HTML / CSS - front-end GUI</li>
+						<li>Javascript (with JQuery) - front end processing</li>
+						<li>PHP - back end processing</li>
+						<li>MYSQL - database for storage of system data</li>
+						<li>Apache - application server</li>
+					</ul>
+					<h4><p class="text-primary">Code Structure</p></h4>
+					
+					<p><a href="Processing_Diagram.png">Basic Processing Diagram</a></p>
+
+					<p class="text-info">Front End</p>
+ 
+					<p>In Health2me, front-end pages are loaded dynamically with php first and then displayed as html / css. We can then manipulate the page further using Javascript and JQuery for front-end processing.</p>
+					<ol>
+						<li>First, the basic information for the particular user, as well as other important information for the page, is obtained and stored with php before the page is loaded. This usually happens at the very top of the code.</li>
+						<li>Second, the actual GUI of the page is loaded with html / css. Some dynamic information can also be inserted here with embedded php calls. i.e. <span style="color: #f00;">&lt;input type=“text” value=“&lt;?php echo $username; ?&gt;” &gt;</span> inserts the current user’s username as the value for this input text field.</li>
+						<li>Finally, we have the javascript / jquery code at the bottom of the page which does all of the front-end processing. Here we can change the page by dynamically changing the page’s attributes and make asynchronous calls to the server to obtain data.</li>
+					</ol>
+					<p class="text-info">Back End</p>
+
+					<p>The back-end of the system is handled by PHP with a connection to our mysql database. Data can be queried from the database and also updated/inserted into the database from PHP. This data can then be encoded and stringified in to a JSON (Javascript Object Notation) object and then sent back to the front-end as needed.</p>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Core Scripts - Include with every page -->
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <!-- Page-Level Plugin Scripts - Dashboard -->
+    <script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="js/plugins/morris/morris.js"></script>
+
+    <!-- SB Admin Scripts - Include with every page -->
+    <script src="js/sb-admin.js"></script>
+
+    <!-- Page-Level Demo Scripts - Dashboard - Use for reference -->
+    <script src="js/demo/dashboard-demo.js"></script>
+
+</body>
+
+</html>

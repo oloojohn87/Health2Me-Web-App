@@ -1,0 +1,406 @@
+<?php
+session_start();
+$usuario = $_GET['usuario'];
+$medid = $_GET['medid'];
+$pass = $_SESSION['decrypt'];	
+
+CreaTimeline($usuario,$medid,$pass);
+
+function CreaTimeline($Usuario,$MedID,$pass)
+{
+ require("environment_detail.php");
+
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+
+
+	 $tbl_name="usuarios"; // Table name
+
+	 $link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+	 mysql_select_db("$dbname")or die("cannot select DB");	
+
+		//$queUsu = $_GET['Usuario'];
+		//$queMed = $_GET['IdMed'];
+	 $queUsu = $Usuario;
+	 $queMed = 0;
+
+
+     $sql="SELECT * FROM usuarios where Identif ='$queUsu'";
+     $q = mysql_query($sql);
+     $row=mysql_fetch_assoc($q);
+     
+     $Name = $row['Name'];
+     $Surname = $row['Surname'];
+     
+     // Meter tipos en un Array
+     $sql="SELECT * FROM tipopin";
+     $q = mysql_query($sql);
+     
+     $Tipo[0]='N/A';
+     while($row=mysql_fetch_assoc($q)){
+     	$Tipo[$row['Id']]=$row['NombreEng'];
+     }
+     
+     $Tipo[999]='N/A';
+     // Meter clases en un Array
+     $Clase[999]='Episode';
+     $Clase[0]='Episode';
+     $Clase[1]='Check or Preventive';
+     $Clase[2]='Isolated Report';
+     $Clase[3]='Drug Data';
+
+	 $email = $row['email'];
+     $hash = md5( strtolower( trim( $email ) ) );
+	 $avat = 'identicon.php?size=50&hash='.$hash;
+
+
+//             "media":"'$domaindev'/images/ReportsGeneric.png",
+
+
+$cadena='{
+    "timeline":
+    {
+        "headline":"Health Events",
+        "type":"default",
+        "text":"<p>User Id.: '.$queUsu.'</p>",
+        "asset": {
+            "media":"/images/ReportsGeneric.png", 
+            "credit":"(c) health2.me",
+            "caption":"Use side arrows for browsing"
+        },
+        "date": [               
+        ';
+
+
+
+//getting IdPin for blind reports
+
+//$blindReprtId=array();
+//$blindReprtId=blindReports($MedID,$queUsu);
+//BLOCKSLIFEPIN $result = mysql_query("SELECT * FROM blocks ORDER BY FechaInput DESC");
+
+$sql_query="select distinct(idDoctor) from doctorsgroups where idDoctor IN (select Idcreator FROM usuarios where Identif='$queUsu') or idGroup IN (select idGroup from doctorsgroups where idDoctor IN (select Idcreator FROM usuarios where Identif='$queUsu'))";
+	$res=mysql_query($sql_query);
+
+	$privateDoctorID=array();
+	$num=0;
+	while($rowp=mysql_fetch_assoc($res)){
+		$privateDoctorID[$num]=$rowp['idDoctor'];
+		$num++;
+	}
+	/*if($privateDoctorID==null)
+		$privateDoctorID[0]=$MedID;*/
+
+$sql_que="select Id from tipopin where Agrup=9";
+	$res=mysql_query($sql_que);
+
+	$privatetypes=array();
+	$num1=0;
+	while($rowpr=mysql_fetch_assoc($res)){
+		$privatetypes[$num1]=$rowpr['Id'];
+		$num1++;
+}
+#####changes for blind report#########
+/*$sql1="SELECT Idpin,Tipo FROM lifepin where IdUsu ='$queUsu' and Tipo NOT IN (select Id from tipopin where Agrup=9) and IdMed IS NOT NULL and (IdMed NOT IN ((select distinct(idDoctor) from doctorsgroups where idGroup IN (select idGroup from doctorsgroups where idDoctor= '$MedID'))) 
+and IdMed NOT IN (select distinct(idDoctor) from doctorsgroups where idGroup IN (select idGroup from doctorsgroups where idDoctor IN (Select idmed from doctorslinkdoctors where idmed2='$MedID' and IdPac='$queUsu'))))";
+//and IdMed NOT IN (Select idmed from doctorslinkdoctors where idmed2='$MedID' and IdPac='$queUsu'))";*/
+
+//Changes for bidirectional permission to view report
+
+$sql1="SELECT Idpin,Tipo FROM lifepin where (markfordelete IS NULL or markfordelete=0) and IdUsu ='$queUsu' and Tipo NOT IN (select Id from tipopin where Agrup=9) and IdMed !=0 and IdMed IS NOT NULL and IdMed!='$MedID' and IdMed NOT IN (select distinct(idDoctor) from doctorsgroups where idGroup IN (select idGroup from doctorsgroups where idDoctor='$MedID')) and IdMed NOT IN (select idmed from doctorslinkdoctors where idmed2='$MedID' and IdPac='$queUsu') and IdMed NOT IN (select distinct(idDoctor) from doctorsgroups where idGroup IN (select idGroup from doctorsgroups where idDoctor IN (Select idmed from doctorslinkdoctors where idmed2='$MedID' and IdPac='$queUsu'))) and IdMed NOT IN (select idmed2 from doctorslinkdoctors where idmed='$MedID' and IdPac='$queUsu') and IdMed NOT IN (select distinct(idDoctor) from doctorsgroups where idGroup IN (select idGroup from doctorsgroups where idDoctor IN (Select idmed2 from doctorslinkdoctors where idmed='$MedID' and IdPac='$queUsu')))";
+
+$q1=mysql_query($sql1);
+
+	$size=0;
+	$blindReportId=array();
+	while($row1=mysql_fetch_assoc($q1)){
+
+		$ReportId=$row1['Idpin'];
+		$type=$row1['Tipo'];
+		/*if($type==null)
+			$type=-1;*/
+		if(in_array($type,$privatetypes)){
+			if(!in_array($MedID,$privateDoctorID)){
+				continue;
+			}
+		}
+		$query="SELECT estado FROM doctorslinkusers where IdMed='$MedID' and IdUs='$queUsu' and Idpin='$ReportId' ";
+		$q11=mysql_query($query);
+		if($rowes=mysql_fetch_assoc($q11)){
+			$estad=$rowes['estado'];
+			if($estad==1){
+				$blindReportId[$size]=$ReportId;
+				$size++;
+			}
+		}else{
+			$blindReportId[$size]=$ReportId;
+			$size++;
+		}
+
+	}
+
+ $sql_que="SELECT IdPin FROM lifepin WHERE markfordelete=1 and IdUsu='$queUsu'";
+	$res=mysql_query($sql_que);
+
+	$deletedreports=array();
+	$num2=0;
+	if($res){
+	while($rowpr=mysql_fetch_assoc($res)){
+
+		$deletedreports[$num2]=$rowpr['IdPin'];
+		$num2++;
+	}}else{
+	$deletedreports[0]=0;
+	}
+
+$result = mysql_query("SELECT * FROM lifepin WHERE IdUsu='$queUsu' and emr_old=0 ORDER BY Fecha DESC ");
+
+$numero=mysql_num_rows($result) ;
+$n=0;
+
+while ($row = mysql_fetch_array($result))
+{    
+ 
+	$extensionR = substr($row['RawImage'],strlen($row['RawImage'])-3,3);
+	$ImageRaiz = substr($row['RawImage'],0,strlen($row['RawImage'])-4);
+	$type=$row['Tipo'];
+
+	if(!in_array($row['IdPin'], $blindReportId)){
+
+		  //For private report functionality
+		  if(in_array($type,$privatetypes)){
+     		if(!in_array($MedID,$privateDoctorID)){
+     				continue;
+			}
+		 }
+
+		 if(!in_array($row['IdPin'], $deletedreports)){
+		  if ($extensionR!='jpg')
+			{
+				decrypt_files($row['RawImage'],$MedID,$pass);
+				$selecURL ='temp/'.$MedID.'/PackagesTH_Encrypted/'.$ImageRaiz.'.png';
+				$selecURLAMP ='temp/'.$MedID.'/Packages_Encrypted/'.$ImageRaiz.$extensionR;
+			}
+			else {
+			if($extensionR == 'jpg')
+			{
+				decrypt_files($row['RawImage'],$MedID,$pass);
+				$selecURL ='temp/'.$MedID.'/PackagesTH_Encrypted/'.$row['RawImage'];
+				$selecURLAMP ='temp/'.$MedID.'/Packages_Encrypted/'.$row['RawImage'];
+			}
+			
+			else if	($row['CANAL']==7){
+				decrypt_files($row['RawImage'],$MedID,$pass);
+				$selecURL ='temp/'.$MedID.'/PackagesTH_Encrypted/'.$row['RawImage'];
+				$selecURLAMP ='temp/'.$MedID.'/Packages_Encrypted/'.$row['RawImage'];
+			} else {
+				decrypt_files($row['RawImage'],$MedID,$pass);
+				$subtipo = substr($row['RawImage'], 3 , 2);
+				if ($subtipo=='XX')  {decrypt_files($row['RawImage'],$MedID,$pass); $selecURL ='temp/'.$MedID.'/Packages_Encrypted/'.$row['RawImage']; }
+				else { $selecURL ='eMapLife/PinImageSetTH/'.$row['RawImage']; }
+				// COMPROBACIÓN DE EXISTENCIA DEL ARCHIVO (PARA LOS CASOS DE EMAPLIFE iOS o ANDROID QUE TODAVIA NO GENERAN THUMBNAILS Y NO REFERENCIAN AL DIRECTORIO -TH
+				$file = $selecURL;
+				$file_headers = @get_headers($file);
+				if($file_headers[0] == 'HTTP/1.1 404 Not Found') {
+			  	  	$exists = false;
+			  	  	$selecURL ='eMapLife/PinImageSet/'.$row['RawImage'];
+			  	  }
+			  	  else {
+				  	  $exists = true;
+				  	  }
+				}
+			}
+		}else{
+			$selecURL ='images/deletedfile.png';
+		    $selecURLAMP ='images/deletedfile.png';
+		}
+	}else{
+				 $selecURL ='images/lockedfile.png';
+				 $selecURLAMP ='images/lockedfile.png';
+		  }
+
+if (!$row['Tipo']){$indi = 999;}else{$indi = $row['Tipo'];};
+//echo $Tipo[$indi];
+//echo $Tipo[$indi];
+
+//if (!$row['EvRuPunt']){$indi2 = 999;}else{$indi2 = $row['EvRuPunt'];}; 
+
+     $Evento = $row['Evento'];
+     $sqlE="SELECT * FROM usueventos where IdUsu ='$queUsu' and IdEvento ='$Evento' ";
+     $qE = mysql_query($sqlE);
+     $rowE=mysql_fetch_assoc($qE);
+     $EventoALFA = $rowE['Nombre'];
+     
+     if (!$row['EvRuPunt']){
+    	 $indi2 = 999; 
+    	 $salida=$EventoALFA; 
+     }else{
+     	$indi2 = $row['EvRuPunt']; 
+     	$salida=$Clase[$indi2]; 
+     }; 
+
+if ($n>0) $cadena=$cadena.',';
+$n++;
+
+
+
+//$FechaFor =  date('j/n/y H:i:s',strtotime($row['Fecha']));
+$FechaFor =  date('n/j/Y H:i:s',strtotime($row['Fecha']));
+
+$cadena = $cadena.'
+            {
+                "startDate":"'.$FechaFor.'",
+                "endDate":"'.$FechaFor.'",
+                "headline":"'.$Tipo[$indi].'",
+                "text":"<p>'.$salida.'</p>",
+                "tag":"'.$salida.'",
+                "asset": {
+                    "media":"'.$selecURL.'",
+                    "thumbnail":"'.$selecURL.'",
+                    "credit":"(r) Author: '.$email.' ('.$Name.' '.$Surname.')",
+                    "caption":""
+                    }
+            }
+';
+
+
+}
+
+$cadena = $cadena.'
+       ],
+        "era": [
+            {
+                "startDate":"2013,12,10",
+                "endDate":"2013,12,11",
+                "headline":"Inmers Clinical Timeline",
+                "text":"<p>Powered by eMapLife</p>"
+            }
+
+        ]
+    }
+}';
+
+$jsondata = json_encode($cadena);
+
+//echo "***********************************************************************************";
+//echo $cadena;
+//echo "***********************************************************************************";
+
+/*
+                "startDate":"'.$row['Fecha'].'",
+                "endDate":"'.$row['Fecha'].'",
+                "headline":"'.$Tipo[$indi].'",
+                "text":"<p>'.$Clase[$indi2].'</p>",
+                "tag":"'.$Clase[$indi2].'",
+                "asset": {
+                    "media":"'.$selecURL.'",
+                    "thumbnail":"'.$selecURL.'",
+                    "credit":"Credit Name Goes Here",
+                    "caption":"Caption text goes here"
+                    }
+
+*/
+
+//$cadena = str_replace('\n','',$cadena);
+//$cadena = str_replace('\r','',$cadena);
+//$cadena = str_replace(' ','',$cadena);
+
+$countfile="jsondata2.txt";
+$fp = fopen($countfile, 'w');
+fwrite($fp, $cadena);
+fclose($fp);
+//sleep(5);
+}
+
+function blindReports($doctorid,$patientid){
+
+	require("environment_detail.php");
+	 $dbhost = $env_var_db['dbhost'];
+	 $dbname = $env_var_db['dbname'];
+	 $dbuser = $env_var_db['dbuser'];
+	 $dbpass = $env_var_db['dbpass'];
+
+	 $link11 = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+	 mysql_select_db("$dbname")or die("cannot select DB");
+
+	 $IdMed=$doctorid;
+	 $IdUsu=$patientid;
+	//$sql1="SELECT Idpin FROM lifepin where IdUsu ='$IdUsu' and IdMed IS NOT NULL and (IdMed NOT IN ((select distinct(idDoctor) from doctorsgroups where idGroup IN (select idGroup from doctorsgroups where idDoctor= '$IdMed'))) and IdMed NOT IN (Select idmed from doctorslinkdoctors where idmed2='$IdMed' and IdPac='$IdUsu'))";
+	//changes for the bidirectional 
+	$sql1="SELECT Idpin FROM lifepin where IdUsu ='$IdUsu' and IdMed IS NOT NULL and IdMed NOT IN ((select distinct(idDoctor) from doctorsgroups where idGroup IN (select idGroup from doctorsgroups where idDoctor= '$IdMed'))) and IdMed NOT IN (Select idmed from doctorslinkdoctors where idmed2='$IdMed' and IdPac='$IdUsu') and IdMed NOT IN (Select idmed2 from doctorslinkdoctors where idmed='$IdMED' and IdPac='$IdUsu')";
+	$q1=mysql_query($sql1);
+
+	$size=0;
+	$blindRepId=array();
+	while($row1=mysql_fetch_assoc($q1)){
+
+		$ReportId=$row1['Idpin'];
+		$query="SELECT estado FROM doctorslinkusers where IdMed='$IdMed' and IdUs='$IdUsu' and Idpin='$ReportId' ";
+		$q11=mysql_query($query);
+		if($rowes=mysql_fetch_assoc($q11)){
+			$estad=$rowes['estado'];
+			if($estad==1){
+				$blindRepId[$size]=$ReportId;
+				$size++;
+			}
+		}else{
+			$blindRepId[$size]=$ReportId;
+			$size++;
+		}
+
+	}
+
+
+	mysql_close($link11);
+	return $blindRepId;
+
+}
+
+
+function decrypt_files($rawimage,$queMed,$pass )
+{
+	$ImageRaiz = substr($rawimage,0,strlen($rawimage)-4);
+	$extensionR = substr($rawimage,strlen($rawimage)-3,3);
+
+	/*$filename = 'temp/'.$queMed.'/Packages_Encrypted/'.$rawimage;
+	if (file_exists($filename)) 
+	{
+		//do nothing
+		//echo "The file $filename exists";
+	}
+	else 
+	{
+		shell_exec('Decrypt.bat Packages_Encrypted '.$rawimage.' '.$queMed .' 2>&1');
+		//echo "PDF Generated";	
+	}*/
+
+	if($extensionR=='jpg')
+	{
+		//die("Found JPG Extension");
+		$extension='jpg';
+		//return;
+	}
+	else
+	{
+		$extension='png';
+	}
+	$filename = 'temp/'.$queMed.'/PackagesTH_Encrypted/'.$ImageRaiz.'.'.$extension;	
+	//echo $filename;
+	if (file_exists($filename)) 
+	{
+		//do nothing
+		//echo "The file $filename exists";	
+	}
+	else 
+	{
+		shell_exec('Decrypt.bat PackagesTH_Encrypted '.$ImageRaiz.'.'.$extension.' '.$queMed.' '.$pass);
+		//echo "Thumbnail Generated";
+	}
+
+
+}
+
+?>

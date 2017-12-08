@@ -1,0 +1,58 @@
+<?php
+ //   echo '<table><tr><td>TEST</td></tr></table>';
+//require "identicon.php";
+ 
+ require("environment_detail.php");
+ require_once('/realtime-notifications/pusherlib/lib/Pusher.php');
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="messages"; // Table name
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }	
+
+$medid = $_POST["medid"];
+$patid = $_POST["patid"];
+$date = $_POST["date"];
+$timezone = $_POST['timezone'];
+$video = $_POST['video'];
+$start_time = $_POST['start_time'];
+$end_time = $_POST['end_time'];
+
+$query = $con->prepare("INSERT INTO appointments (med_id, pat_id, date, start_time, end_time, timezone, video) 
+VALUES (?,?,?,?,?,?,?)");
+$query->bindValue(1, $medid, PDO::PARAM_INT);
+$query->bindValue(2, $patid, PDO::PARAM_INT);
+$query->bindValue(3, $date, PDO::PARAM_STR);
+$query->bindValue(4, $start_time, PDO::PARAM_STR);
+$query->bindValue(5, $end_time, PDO::PARAM_STR);
+$query->bindValue(6, $timezone, PDO::PARAM_STR);
+$query->bindValue(7, $video, PDO::PARAM_INT);
+$result = $query->execute();
+
+if($result)
+{
+    echo $query->lastInsertId(); 
+    $app_key = 'd869a07d8f17a76448ed';
+    $app_secret = '92f67fb5b104260bbc02';
+    $app_id = '51379';
+    $pusher = new Pusher($app_key, $app_secret, $app_id);
+    $pusher->trigger('doctorAppointmentScheduler', 'appointment_created', $medid);
+}
+else
+{
+    echo '-1';
+}
+    
+
+?>
+
+

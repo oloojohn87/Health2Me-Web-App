@@ -1,0 +1,116 @@
+<?php
+require("environment_detailForLogin.php");
+require("PasswordHash.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="doctors"; // Table name
+
+//$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+//mysql_select_db("$dbname")or die("cannot select DB");	
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false,PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+{
+  die('Could not connect: ' . mysql_error());
+}	
+
+
+
+
+$IdUsEmail = $_GET['email'];
+
+
+$confirm_code=md5(uniqid(rand()));
+
+
+$result = $con->prepare("select * from usuarios where email = ?");
+$result->bindValue(1, $IdUsEmail, PDO::PARAM_STR);
+$result->execute();
+
+$row = $result->fetch(PDO::FETCH_ASSOC);
+
+/*$result = mysql_query("Select * from usuarios where email = '$IdUsEmail'"); 
+$count=mysql_num_rows($result);
+$row = mysql_fetch_array($result);
+
+/*if($count==0){
+echo "Email ID doesn't exist in the System. Please contact Health2me support!";
+}else if($count>=2){
+echo "Multiple ID for this same email exist in the System. Please contact Health2me Support!";
+}else if($count==1){*/
+
+$Id=$row['Identif'];
+$IdUsFIXED=$row['IdUsFIXED'];
+$IdUsFIXEDNAME=$row['IdUsFIXEDNAME'];
+
+$result = $con->prepare("UPDATE usuarios SET  confirmcode = ? WHERE Identif = ?");
+$result->bindValue(1, $confirm_code, PDO::PARAM_STR);
+$result->bindValue(2, $Id, PDO::PARAM_INT);
+$result->execute();		
+
+// LLAMADA PARA VERIFICAR EL TELEFONO DEL PACIENTE: ****************************************************
+
+require_once 'MBCaller.php';
+//$a = SendCallVERIF (34608754342);
+
+// ENVÍA EL EMAIL AL PACIENTE: ****************************************************
+require_once 'lib/swift_required.php';
+
+$aQuien = $IdUsEmail;
+$Tema = 'Inmers Account Reset';
+
+$info_block = '<ul style="display:block;margin:15px 20px;padding:0;list-style:none;border-top:1px solid #eee">
+<li style="display:block;margin:0;padding:5px 0;border-bottom:1px solid #eee"><strong>Your Email:</strong>   <a href="mailto:'.$IdUsEmail.'" target="_blank">'.$IdUsEmail.'</a></li>
+<li style="display:block;margin:0;padding:5px 0;border-bottom:1px solid #eee"><strong>Your Number Id:</strong> '.$IdUsFIXED.' </li>
+<li style="display:block;margin:0;padding:5px 0;border-bottom:1px solid #eee"><strong>Your Name Id:</strong>       '.$IdUsFIXEDNAME.'</li>
+</ul>';
+
+$confirm_button = '<a href='.$domain.'/ResetPasswordPac.php?token='.$confirm_code.' style="cursor:auto; color:#ffffff;display:inline-block;font-family:\'Helvetica\',Arial,sans-serif;width:auto;white-space:nowrap;min-height:32px;margin:5px 5px 0 0;padding:0 22px;text-decoration:none;text-align:center;font-weight:bold;font-style:normal;font-size:15px;line-height:32px;border:0;border-radius:4px;vertical-align:top;background-color:#3498db" target="_blank"><span style="display:inline;font-family:\'Helvetica\',Arial,sans-serif;text-decoration:none;font-weight:bold;font-style:normal;font-size:15px;line-height:32px;border:none;background-color:#3498db;color:#ffffff">Yes, reset my password.</span></a>';
+
+$adicional ='<p>Please follow the link to verify your identity and complete the password reset process that was requested.</p>'.$info_block;
+
+$Sobre = $Tema;
+//$Body = '<p>Thanks for your interest in our services!</p><p>Please click on the following link to activate password reset for your account.</p><p>'.$domain.'/ResetPasswordPac.php?token='.$confirm_code.'</p>'.$adicional;
+
+$Body = '<a href="#"><img src="'.$domain.'/images/health2me_horizontal.png"></a></p><p>Thank you for your interest in our services!</p><p><h1>Reset Password</h1></p><p>'.$confirm_button.'</p>'.$adicional;
+
+/*$transporter = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
+  ->setUsername('newmedibank@gmail.com')
+  ->setPassword('ardiLLA98');*/
+
+    
+	 $transporter = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
+	  ->setUsername('dev.health2me@gmail.com')
+	  ->setPassword('health2me');
+
+$mailer = Swift_Mailer::newInstance($transporter);
+
+
+// Create the message
+$message = Swift_Message::newInstance()
+  
+  // Give the message a subject
+  ->setSubject($Sobre)
+
+  // Set the From address with an associative array
+  ->setFrom(array('no-reply@health2.me' => 'health2.me'))
+
+  // Set the To addresses with an associative array
+  ->setTo(array($aQuien))
+
+  ->setBody($Body, 'text/html')
+
+  ;
+
+
+$result = $mailer->send($message);
+
+echo "An email with reset password link has been sent. Please check your email and follow the instructions!"
+/*$salto="location:SignIn.html";
+header($salto);*/
+
+?>

@@ -1,0 +1,70 @@
+<html lang="en" style="background: #F9F9F9;"><head>
+</head>
+<body style= "font-family: Arial; 
+background: #FFFFFF;"    >    
+ 
+<h1>PHP Coding standards</h1>
+
+
+<h3>Comments :</h3>
+//for each php function or method
+/*********************************************************************/
+/*In: Variables coming in								*/
+/*Out: Variable returned from function					*/
+/*Desc: General description of what the function does	       	*/
+/********************************************************************/
+
+<h3>Functions Name Outside of Classes:</h3>
+Lowercase with words underscore delimited
+Abbreviations should be used sparingly so that code is readable.
+Try to minimize letter count.
+Try to minimize use of abbreviations.
+
+    Good:
+    'mcrypt_enc_self_test'
+    'mysql_list_fields'
+
+    Ok:
+    'mcrypt_module_get_algo_supported_key_sizes'
+    (could be 'mcrypt_mod_get_algo_sup_key_sizes'?)
+    'get_html_translation_table'
+    (could be 'html_get_trans_table'?)
+
+    Bad:
+    'hw_GetObjectByQueryCollObj'
+    'pg_setclientencoding'
+    'jf_n_s_i'
+
+
+<h3>Methods Name Inside of Classes:</h3>
+Methods can be camelCase.
+The initial word should be lower case and the words following the first should be upper case.
+
+    Good:
+    'connect()'
+    'getData()'
+    'buildSomeWidget()'
+
+    Bad:
+    'get_Data()'
+    'buildsomewidget'
+    'getI()'
+
+
+
+Variable Names:
+Variable names should be meaningful.
+Variables should be lowercase and underscore delimited.
+
+<h3>Class Names:</h3>
+CampelCaps starting with a capital letter.
+
+    Good:
+    'Curl'
+    'FooBar'
+
+    Bad:
+    'foobar'
+    ‘foo_bar'
+</body>
+</html>    

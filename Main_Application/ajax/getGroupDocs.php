@@ -1,0 +1,109 @@
+<?php
+
+ 
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="doctors"; // Table name
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }			
+
+$medid = $_GET['docid'];
+$groupid=$_GET['groupid'];
+
+$ArrayDoctors= array();
+$cnt=0;
+$res = $con->prepare("SELECT Idmed from group_roles where groupid=?");
+$res->bindValue(1, $groupid, PDO::PARAM_INT);
+$res->execute();
+
+while($row1 = $res->fetch(PDO::FETCH_ASSOC)){
+
+$ArrayDoctors[$cnt]=$row1['Idmed'];
+$cnt++;
+}
+
+//$ref_incharge=0;
+$res11 = $con->prepare("Select refincharge,owner from groups where id=?");
+$res11->bindValue(1, $groupid, PDO::PARAM_INT);
+$res11->execute();
+
+while($row12 = $res11->fetch(PDO::FETCH_ASSOC)){
+$ref_incharge=$row12['refincharge'];
+$ownerid=$row12['owner'];
+
+}
+
+
+$result = $con->prepare("SELECT dg.id, dg.idDoctor,dg.Role,d.Name, d.Surname from doctors d, doctorsgroups dg where dg.idGroup='$groupid' and dg.idDoctor=d.id");
+$result->execute();
+
+echo  '<table class="table table-mod" id="grouptable" style="height:100px; width:400px; overflow-y:hidden; table-layout: fixed; border: 1px SOLID #CACACA;">';
+echo '<thead><tr id="FILA" class="CFILAGroupDoc"><th class="chex-table"><input type="checkbox" id="maincheck" name="cc"/><label for="maincheck"><span></span></label></th>';
+echo '<th style="width:110px;">User details</th><th style="width:80px;">Doctor</th><th style="width:80px;">Staff</th><th style="width:120px;">Administrator</th><th style="width:100px;">Referral Incharge</th></tr></thead>';
+echo '<tbody>';
+
+while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
+$id=$row['idDoctor'];
+echo '<tr class="CFILAGroupDoc" id="'.$row['id'].'" style="height:10px; line-height:0;">';
+echo '<td class="check-table"><input type="checkbox" name="numbers[]" class="mc" value="0" id="checkcol'.$row['id'].'"/><label for="checkcol'.$row['id'].'"><span></span></label></td>';
+if($id==$ownerid){
+$ArrayDoctors[$cnt++]=$id;
+echo '<td style="background-color:#22AEFF; color:white;" class="CFILADocname" id="'.$id.'" title="This doctor is a Group Owner">'.$row['Name'].' '.$row['Surname'].'</td>';
+}else{
+echo '<td class="CFILADocname" id="'.$id.'">'.$row['Name'].' '.$row['Surname'].'</td>';
+}
+
+$role=$row['Role'];
+//echo '<td>'.$row['Surname'].'</td>';
+
+if($role==1){
+	//Doctor column
+	echo '<td class="CFILADocRole"><input type="checkbox" name="numbers[]" class="mc" value="1" id="CFILADocRole'.$row['id'].'" checked/><label for="CFILADocRole'.$row['id'].'"><span></span></label></td>';
+
+	//Staff column
+	echo '<td class="CFILAStaffRole"><input type="checkbox" name="numbers[]" class="mc" value="1" id="CFILAStaffRole'.$row['id'].'"/><label for="CFILAStaffRole'.$row['id'].'"><span></span></label></td>';
+
+}else if($role==2){
+	//Doctor column
+	echo '<td class="CFILADocRole"><input type="checkbox" name="numbers[]" class="mc" value="1" id="CFILADocRole'.$row['id'].'" /><label for="CFILADocRole'.$row['id'].'"><span></span></label></td>';
+
+	//Staff column
+	echo '<td class="CFILAStaffRole"><input type="checkbox" name="numbers[]" class="mc" value="1" id="CFILAStaffRole'.$row['id'].'" checked/><label for="CFILAStaffRole'.$row['id'].'"><span></span></label></td>';
+
+}
+
+//Administrator column
+if(in_array($id, $ArrayDoctors)){
+
+echo '<td class="CFILAAdminRole"><input type="checkbox" name="numbers[]" class="mc" value="1" id="CFILAAdminRole'.$row['id'].'" checked/><label for="CFILAAdminRole'.$row['id'].'"><span></span></label></td>';
+}else{
+echo '<td class="CFILAAdminRole"><input type="checkbox" name="numbers[]" class="mc" value="1" id="CFILAAdminRole'.$row['id'].'"/><label for="CFILAAdminRole'.$row['id'].'"><span></span></label></td>';
+
+}
+
+//Referral Incharge column
+if($id==$ref_incharge){
+	echo '<td class="CFILAReferralRole"><input type="checkbox" name="numbers[]" class="mc" value="1" id="CFILAReferralRole'.$row['id'].'" checked/><label for="CFILAReferralRole'.$row['id'].'"><span></span></label></td>';
+
+}else{
+	echo '<td class="CFILAReferralRole"><input type="checkbox" name="numbers[]" class="mc" value="1" id="CFILAReferralRole'.$row['id'].'"/><label for="CFILAReferralRole'.$row['id'].'"><span></span></label></td>';
+	
+}
+echo '</tr>';
+}
+
+echo '</tbody></table>';    
+    
+
+?>

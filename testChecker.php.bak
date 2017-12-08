@@ -1,0 +1,12 @@
+<?php
+require('getFullUsersMEDCLASS.php');
+
+$doc_id = 288;
+$mem_id = 1722;
+
+$checker = new checkPatientsClass();
+
+$checker->setters($mem_id, $doc_id);
+$checker->checker();
+$checker->display();
+?>

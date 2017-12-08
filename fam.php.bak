@@ -1,0 +1,27 @@
+<?php
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+// Connect to server and select databse.
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$fam1=$_GET['falive'];
+$fam2=$_GET['fcod'];
+$fam3=$_GET['faod'];
+$fam4=$_GET['frd'];
+$fam5=$_GET['malive'];
+$fam6=$_GET['mcod'];
+$fam7=$_GET['maod'];
+$fam8=$_GET['mrd'];
+$fam9=$_GET['srd'];
+$sql="INSERT INTO personal VALUES ('$fam1','$fam2','$fam3','$fam4','$fam5','$fam6','$fam7','$fam8','$fam9')";
+
+if(!mysql_query($sql))
+{
+die('Error: ' .mysql_error());
+}
+?>

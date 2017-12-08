@@ -1,0 +1,23 @@
+<?php
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+// Connect to server and select databse.
+$link = mysql_connect("$dbhost", "$dbuser", "$pass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$immu1=$_GET['iname'];
+$immu2=$_GET['idate'];
+$immu3=$_GET['iage'];
+$immu4=$_GET['ireaction'];
+
+$sql="INSERT INTO immu VALUES ('$immu1','$immu2','$immu3','$immu4')";
+
+if(!mysql_query($sql))
+{
+die('Error: ' .mysql_error());
+}
+?>

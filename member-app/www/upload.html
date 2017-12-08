@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=medium-dpi" />
+		<!-- changed from devic-dpi to medium-dpi" -->
+        <link rel="stylesheet" type="text/css" href="css/h2m.css" />
+      
+
+        <link rel="stylesheet" href="css/responsivemobilemenu.css" type="text/css"/>
+        <link rel="stylesheet" href="css/font-awesome-4.1.0/css/font-awesome.min.css">
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/responsivemobilemenu.js"></script>   
+        <script type="text/javascript" src="js/h2m_nav.js"></script>  
+		<script type="text/javascript" src="js/upload.js"></script>  
+  	
+        <title>Health2Me Member's App</title>
+    </head>
+    <body>
+        
+        <header>
+            <div id="header">
+        </header>
+		<div id="wrapper">
+			<div id="outer1">
+            <div id='history-container' >
+ 	          <div id="row1">
+                  <div id="box-1" class="h-box">
+                    <img src="img/imaging.svg">
+                      Demographic
+                  </div>
+                  <div id="box-2" class="h-box">
+                      <img src="img/doctor_notes.svg">
+                      Doctor's Note
+                  </div>
+                  <div id="box-3" class="h-box">
+                      <img src="img/laboratory.svg">
+                      Laboratory</div>
+                  <div id="box-4" class="h-box">
+                      <img src="img/imaging.svg">
+                      Summary
+                  </div>
+              </div>
+              <div id="row2">
+                  <div id="box-5" class="h-box">
+                      <img src="img/imaging.svg">
+                      Imaging
+                  </div>
+                  <div id="box-6" class="h-box">
+                      <img src="img/patient_notes.svg">
+                      <span>Patient Notes</span>
+                  </div>
+                  <div id="box-7" class="h-box">
+                       <img src="img/pictures_white.svg">
+                      Pictures
+                  </div>
+                  <div id="box-8" class="h-box">
+                      <img src="img/other.svg">
+                      Other
+                  </div>
+              </div>    
+            </div>
+			</div>
+			<div id="outer2">
+            	<div class='title-block'>
+                	Upload Reports
+            	</div>
+            	<div id='upload-container' class='content-block'>
+                	<div id="upload-icon" class="capture">
+                    	<i id="fa-upload-icon" class="fa fa-image fa-5x"></i>
+						<img src="" id="smallImage">
+                	</div>  
+					<!--<div id='cam'>-->
+                	<div id='cam' onclick='capturePhotoWithData();'>
+                    	<img src="img/dark_gray_cam.svg">
+                	</div>    
+				</div>  
+			</div>	
+          
+       <!--<div class="app">
+         
+            <div id="deviceready" class="blink">
+                <p class="event listening">Connecting to Device</p>
+                <p class="event received">Device is Ready</p>
+            </div>
+        </div>-->
+			
+		</div>    	
+        <footer>
+            <div id="footer"></div>
+        </footer>    
+        </div>
+        <script type="text/javascript">
+            app.initialize();
+        </script>
+			<link rel="stylesheet" type="text/css" href="css/upload.css" />
+    </body>
+</html>

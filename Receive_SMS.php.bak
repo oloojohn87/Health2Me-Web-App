@@ -1,0 +1,204 @@
+<?php
+header("content-type: text/xml");
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+require("environment_detail.php");
+require("push_server.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+if(strtolower($_GET['Body']) == 'yes' || strtolower($_GET['Body']) == 'no')
+{
+    
+    $body = strtolower($_GET['Body']);
+    $responder = $_GET['From'];
+    
+    $query = "select id,consultation_pat from doctors where phone like '%".substr($responder,strlen($responder)-10,strlen($responder))."'" ;
+    $result=mysql_query($query);
+    $row=mysql_fetch_array($result);
+    $doc = $row['id'];
+    $pat = $row['consultation_pat'];
+    $app_key = 'd869a07d8f17a76448ed';
+    $app_secret = '92f67fb5b104260bbc02';
+    $app_id = '51379';
+    $pusher = new Pusher($app_key, $app_secret, $app_id);
+    if($body == 'no')
+    {
+         
+        $pusher->trigger($pat, 'doc_response', 'n');
+        echo '<Response></Response>';
+    }
+    else
+    {
+        $pusher->trigger($pat, 'doc_response', 'y');
+        echo '<Response><Message>Please go to the Health2Me Home page to connect to your patient</Message></Response>';
+    }
+    
+    if($body == 'no')
+    {
+        mysql_query("UPDATE doctors SET in_consultation=0,telemed_type=0 WHERE id=".$doc);
+    }
+}
+else
+{
+    echo '<Response><Message>Thank You for updating your health information</Message></Response>';
+    
+    
+    
+    
+    $body = $_GET['Body'];
+    $responder = $_GET['From'];
+    //$msgDate = $_GET['date_sent'];
+    if ($body) 
+    {  
+        $lbody = strtolower($body);
+        $msgBody = str_replace(' ','',$lbody);
+        $response = 0;
+        if($msgBody=='verybad')
+        {
+            $response = 1;
+        }
+        else if($msgBody=='bad')
+        {
+            $response = 2;
+        }
+        else if($msgBody=='normal')
+        {
+            $response = 3;
+        }
+        else if($msgBody=='good')
+        {
+            $response = 4;
+        }
+        else if($msgBody=='verygood')
+        {
+            $response = 5;
+        }
+        else if($msgBody=='stop')
+        {
+            $response = 15;
+        }
+        else if($msgBody=='start')
+        {
+            $response = 16;
+        }
+        else 
+        {
+            //its an error message
+            writeERRORLog($responder,$body);
+            return;
+            
+        }
+        $probeID = 	getProbeIdFromPhoneNumber($responder);
+        if($probeID=="NOT_FOUND")
+        {
+            writeERRORLog($responder,$body);
+        }
+        else
+        {
+            //$query = "insert INTO proberesponse values($probeID,$response,now())";
+            //mysql_query($query);
+            
+            
+            //Get Name for Timezone
+            $query = "select name from timezones where id=(select timezone from probe where probeID=".$probeID.")";
+            $result=mysql_query($query);
+            $row=mysql_fetch_array($result);
+            $timezone=$row['name'];
+    
+            $query = "select now() as currentDateTime";
+            $result=mysql_query($query);
+            $row=mysql_fetch_array($result);
+            $date_str=$row['currentDateTime'];	
+            
+            //Convert current GMT to Patient Timezone bacause we are storing the patient response time in the database
+            $PatientDateTime = convertFromGMT($timezone,$date_str);
+            
+            if($response==15)
+            {
+                $query = "update probe set patientPermission=0 where probeID=$probeID";
+                $result = mysql_query($query);	
+            }else if($response==16)
+            {
+                $query = "update probe set patientPermission=1 where probeID=$probeID";
+                $result = mysql_query($query);	
+                return;
+            }
+            
+            
+            
+            $query = "select max(id) as maxid FROM sentprobelog where probeID=$probeID and method=3";
+            $result = mysql_query($query);
+            $row=mysql_fetch_array($result);
+            $targetid=$row['maxid'];
+            $query = "UPDATE sentprobelog set result=$response,requestTime='$PatientDateTime' where id=$targetid";
+            //writeERRORLog('',$query);
+            mysql_query($query);
+        }
+    }
+    
+}
+
+function getDoctorIDPatientName($probeID)
+{
+    require("environment_detail.php");
+            
+    $dbhost = $env_var_db['dbhost'];
+    $dbname = $env_var_db['dbname'];
+    $dbuser = $env_var_db['dbuser'];
+    $dbpass = $env_var_db['dbpass'];
+
+    $link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+    mysql_select_db("$dbname")or die("cannot select DB");
+    
+    $query = "select p.doctorID,concat(u.Name,' ',u.Surname) as fullname from probe p,usuarios u where p.patientID = u.identif and p.probeID=".$probeID;
+    $result = mysql_query($query);
+    $row=mysql_fetch_array($result);
+    $string=$row['doctorID']."::".$row['fullname'];
+    return $string;
+    
+    
+
+}
+
+
+function getProbeIdFromPhoneNumber($phonenumber)
+{
+    //$searchPhoneQuery = "select identif from usuarios where length(telefono)>0 and instr('".$phonenumber."',telefono)>0" ;
+    $searchPhoneQuery = "select identif from usuarios where telefono like '%".substr($phonenumber,strlen($phonenumber)-6,strlen($phonenumber))."'" ;
+    
+    $result=mysql_query($searchPhoneQuery);
+    $num_rows = mysql_num_rows($result);
+    if($num_rows==1)
+    {
+            $row=mysql_fetch_array($result);
+            $query="select probeid from probe where smsRequest=1 and patientid=".$row['identif'];
+            $res=mysql_query($query);
+            $num_rows = mysql_num_rows($res);
+            if($num_rows==1)
+            {
+                $row1=mysql_fetch_array($res);
+                return $row1['probeid'];
+            }
+    
+    }
+    return "NOT_FOUND";
+}
+
+function writeERRORLog($phonenumber,$body)
+{
+    $file = 'ReceivedSMSErrorLog.txt';
+    // Open the file to get existing content
+    $current = file_get_contents($file);
+    // Append a new person to the file
+    $current .= '\n'.$phonenumber.' '.$body;
+    // Write the contents back to the file
+    file_put_contents($file, $current);
+
+}
+?>

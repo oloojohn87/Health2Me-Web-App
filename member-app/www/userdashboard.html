@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=medium-dpi" />
+ 
+        <link rel="stylesheet" type="text/css" href="css/h2m.css" />
+        <link rel="stylesheet" type="text/css" href="css/userdashboard.css" />
+        <link rel="stylesheet" href="css/responsivemobilemenu.css" type="text/css"/>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<!--<script type="text/javascript" src="cordova.js"></script>-->
+<script type="text/javascript" src="js/responsivemobilemenu.min.js"></script>
+<script type="text/javascript" src="js/userdashboard.js"></script>    
+<script type="text/javascript" src="js/h2m_nav.js"></script> 
+
+        <title>Health2Me Member's App</title>
+    </head>
+    <body>
+    
+    <header>
+        <div id="header"></div>
+    </header>    
+	<div id="wrapper">
+    <div id="content">
+		<div id="outer1">
+			 <div class='title-block'>
+            Summary
+        </div>
+        <div id='summary-container' class='content-block'>
+        <div id='summary-outer'>
+ 		 <div id="ALTCanvas1">	   	               
+ 	   	               
+             <div id="top-cover" style="background-color:#fbfbfb; z-index:550; position:absolute;  width:90%; height:10px;"></div>  	                
+     	                
+            <div id="SumGraph2" style="width: 250px; height: 160px; margin-top: 10px; ">	
+                         <div style="background-color:#fbfbfb;z-index:999; position:absolute; left:100%;top:0%; width:50px; height:100%;"></div> 
+            <div class="SumBox" style="width:45%; height:45%; top:0%; left:0%; background-color:#54bc00; border-top-left-radius:10px;">	                       <img style="top:50%;left:45%;" class="SumBoxIcon" src="img/Adminx2_svg.png">	                       <div class="BannerIcon">2</div>	                    </div>        	                             <div class="SumBox" style="width:55%; height:45%; top:0%; left:45%; background-color:#2C3E50;  border-top-right-radius:10px;">	                        <img style="top:50%;left:45%;" class="SumBoxIcon" src="img/historyx2_svg.png">	                        <div class="BannerIcon">1</div>	                    </div>     	                             <div class="SumBox" style="width:30%; height:30%; top:45%; left:0%; background-color:#18BC9C;">	                        <img style="top:43%;left:48%;" class="SumBoxIcon" src="img/medicationx2_svg.png">	                        <div class="BannerIcon">1</div>	                   
+            </div>  	                    
+            <div class="SumBox" style="width:40%; height:30%; top:45%; left:30%; background-color:#E74C3C;">	                        <img style="top:43%;left:43%;" class="SumBoxIcon" src="img/familyx2_svg.png"></div>         	                    
+            <div class="SumBox" style="width:30%; height:55%; top:45%; left:70%; background-color:#3498DB;  border-bottom-right-radius:10px;">	                       <img style="top:45%;left:45%;" class="SumBoxIcon" src="img/habitsx2_svg.png">	                            <div class="BannerIcon">1</div>
+            </div>            	                    
+            <div class="SumBox" style="width:50%; height:25%; top:75%; left:0%; background-color:#F39C12;  border-bottom-left-radius:10px;">	                        <img style="top:48%;left:45%;" class="SumBoxIcon" src="img/immunox2_svg.png">	                        <div class="BannerIcon">34</div>
+            </div>    	                    
+            <div class="SumBox" style="width:20%; height:25%; top:75%; left:50%; background-color:#00FFFF;opacity:0.4"><img style="top:45%;left:40%;" class="SumBoxIcon" src="img/allergyx2_svg.png"></div>      	                    
+            <div class="ribbon-banner" id="ribbon-verified" href="#" style="display: block; width:220px; right:-63px; top:22px; background-color:#DB3469;"><span class="ribbon-lgtext">Verified</span><br> <span class="ribbon-smtext" style="font-size:8px;"> Dr. Kyle Austin a month ago<span class="ribbon-lgtext"></span></span></div>		                  </div> </div>  </div>           
+        </div>
+        </div>
+		<div id="outer2">
+        <div class='title-block'>
+            Medical History
+        </div>
+
+            <div id='donut-container' class='content-block'>
+            <canvas id="canvas" height=150></canvas>
+                
+            </div>
+        </div>    
+         </div>   
+		</div>
+        <!--<div class="app">
+         
+            <div id="deviceready" class="blink">
+                <p class="event listening">Connecting to Device</p>
+                <p class="event received">Device is Ready</p>
+            </div>
+        </div>-->
+        <footer>
+            <div id="footer"></div>
+        </footer>
+        
+           
+        <script type="text/javascript">
+            //app.initialize();
+        </script>
+    </body>
+</html>

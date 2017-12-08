@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Health2Me Technical Documentation</title>
+
+    <!-- Core CSS - Include with every page -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="font-awesome/css/font-awesome.css" rel="stylesheet">-->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Page-Level Plugin CSS - Dashboard -->
+    <link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="css/plugins/timeline/timeline.css" rel="stylesheet">
+
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+         <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Health2Me Technical Documentation</a>
+            </div>
+            <!-- /.navbar-header -->
+
+  
+
+            <div class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li>
+                            <a href="index.html"><i class="fa fa-book fa-fw"></i> Manual</a>
+                        </li>
+                        <li>
+                            <a><i class="fa fa-database fa-fw"></i> Database Structure<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a href="GoldenRules.html">Golden Rules of Report Access</a>
+		                                </li>
+		                               <li>
+		                                    <a>Important Tables<span class="fa arrow"></span></a>
+                                             <ul class="nav nav-second-level">
+		                                       <li>
+		                                          <a href="Database.html">Usuarios</a>
+		                                        </li>
+                                     
+								              </ul>
+		                                </li>
+		                               
+								 </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Documents<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                     <a href="Probes.html">Probes</a>
+                                </li>
+                                <li>
+                                    <a href="GithubCommit.html">GitHub Commit Procedure</a>
+                                </li>
+                                <li>
+                                    <a href="PhoneNumbers.html">Important Note for Phone Numbers</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                            <li>
+                                 <a href="Probes.html"><i class="fa fa-gears fa-fw"></i> Startup Procedure<span class="fa arrow"></span></a>
+								 <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a href="Processes.html">Processes</a>
+		                                </li>
+		                               <li>
+		                                    <a href="PhoneNumbers.html">Apache</a>
+		                                </li>
+		                               <li>
+		                                    <a href="PhoneNumbers.html">MySQL</a>
+		                                </li>
+		                               <li>
+		                                    <a href="PhoneNumbers.html">FTP Server</a>
+		                                </li>
+		                               
+								 </ul>	 
+                            </li>
+                            <li>
+                                 <a href="Channels.html"><i class="fa fa-arrows-alt fa-fw"></i> Channels</a>
+                            </li>
+							<li>
+                             	 <a href="Database.html"><i class="fa fa-medkit fa-fw"></i> DICOM viewer</a>
+							</li>
+                        <li>
+                             	 <a href="Database.html"><i class="fa fa-medkit fa-fw"></i> DICOM viewer</a>
+							</li>
+                        
+                        <li>
+                             	 <a href="UbuntuInstallationSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Ubuntu Installation</a>
+							</li>
+                        <li>
+                             	 <a href="TurnServerInstallationSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Turn Server Installation</a>
+							</li>
+                        
+                        <li>
+                             	 <a href="UbuntuUpdateSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Server Restart and Package Update</a>
+				        </li>    
+                        <li>
+                             	 <a href="SessionHashing.html"><i class="fa fa-cog fa-fw"></i>Session Hashing</a>
+							</li>
+                        <li>
+                             	 <a><i class="fa fa-book fa-fw"></i> Libraries<span class="fa arrow"></span></a>
+                                 <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a>External Libraries<span class="fa arrow"></span></a>
+                                               <ul class="nav nav-second-level">
+                                                   <li>
+		                                              <a href="timebar.html">Timebar</a>
+		                                           </li>
+                                                   <li>
+		                                              <a href="Libraries.html">Moment.js</a>
+		                                           </li>
+                                               </ul>
+		                                </li>
+		                               <li>
+		                                    <a>Internal Libraries<span class="fa arrow"></span></a>
+		                                </li>
+		                              
+								 </ul>	
+							</li>
+                        <li>
+                             	 <a href="H2MAPIs.html"><i class="fa fa-cog fa-fw"></i> Health2Me APIs</a>
+							</li>
+                   
+                   </ul>
+                    <!-- /#side-menu -->
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">Session Hashing</h2>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                
+
+
+<h4 class="text-primary">Why Session Hashing is necessary?<span style="margin-left:20px;"></span></h4>
+<p><br>->The main purpose of session hashing to achieve more security in Health2Me application.</br>
+<br>->The premise behind session hashing is that a user cannot access any php page without first logging into our system.</br>
+</p>
+<h4 class="text-primary">How it Works? <span style="margin-left:20px;"></span></h4>
+<p><br>->On login.php(doctors) and loginUSER.php(member) when the user logs in these two php pages create a 255 character string of random characters and numbers.  They are stored in usuarios table for members and under doctors table for doctors.  The column is named session_hash.</br>
+<br>->After the user's credentials are validated and the session hash is created, the user is then redirected to UserDashboard.php(members) and MainDashboard.php(doctors)</br>
+<br>->On the above mentioned php pages there is a database connection.  Because the database connection contains the following...
+</br>
+<br>->require_once("environment_detail.php")</br>
+<br>->All we need to do is call the class within environment_details.php...
+
+include_once("checkSessionHash.php");
+$checkSessionHash = new checkSessionHash();
+$checkSessionHash->setters();
+$ignore = 'no';
+$checkSessionHash->hashChecker($ignore);</br>
+<br>->This class checks the hashed session variable and cross references it with the table that the session hash is stored.</br>
+<br>->If the hashes do not match it means that there was a 'break' in the session hash chain.  Anytime there is a break in the hashing chain.  It means that there was unauthorized access to that page... Or the user did not login first to access this page.</br>
+<br>->This prevents XSS attacks as well as session hijacking.</br>
+<h4 class="text-primary"> Detailed Working  <span style="margin-left:20px;"></span></h4>
+<p><br>->//GENERATE SESSION HASH......
+               $charset='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+               $str = '';
+               $length = 255;
+                       $count = strlen($charset);
+                       while ($length--) {
+                               $str .= $charset[mt_rand(0, $count-1)];
+                       }
+               $new_hash = $str;</br>
+<br>->This generates a new session hash for login.php(doctors) and loginUSER.php(members</br>
+<br>'session_hash' is stored in usuarios table for members and doctors table for doctors</br>
+<br>This class is added to environment_details.php...
+//THIS CREATES SESSION HASHING//////////////
+include_once("checkSessionHash.php");
+$checkSessionHash = new checkSessionHash();
+$checkSessionHash->setters();
+$ignore = 'no';
+$checkSessionHash->hashChecker($ignore);
+////////////////////////////////////////////</br>
+<br>Anywhere that environment_details.php is included, which is required for database connections, will automatically check the last hash used and recreate a new 255 character hash to check for next query</br>
+<br>This is a COMPLETELY hands off class.  DO NOT ALTER THIS CLASS, it will alter the class system wide and cause errors.</br>
+<br>Just include environment_details.php before you make a database connection and the hashing is handled for you automatically.</br>
+</p>
+
+
+</br>
+<p><i class="fa fa-wrench fa-fw" style="margin-right:10px;"></i><span>This page created by <span class="text-primary">Pallab Hazarika</span> on <span class="text-info">Oct 21, 2014</span></span></p>
+<!--<p><i class="fa fa-edit fa-fw" style="margin-right:10px;"></i><span>This page last edited by <span class="text-primary">Javier Vinals</span> on <span class="text-info">June 26, 2014</span></span></p> -->
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Core Scripts - Include with every page -->
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <!-- Page-Level Plugin Scripts - Dashboard -->
+    <script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="js/plugins/morris/morris.js"></script>
+
+    <!-- SB Admin Scripts - Include with every page -->
+    <script src="js/sb-admin.js"></script>
+
+    <!-- Page-Level Demo Scripts - Dashboard - Use for reference -->
+    <script src="js/demo/dashboard-demo.js"></script>
+
+</body>
+
+</html>

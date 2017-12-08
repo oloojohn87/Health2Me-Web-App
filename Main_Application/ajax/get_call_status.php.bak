@@ -1,0 +1,16 @@
+<?php
+
+require_once("Services/Twilio.php"); // Loads the library
+$API_VERSION = '2010-04-01';
+$AccountSid = "AC109c7554cf28cdfe596e4811c03495bd";
+$AuthToken = "26b187fb3258d199a6d6edeb7256ecc1";
+
+$client = new Services_Twilio($AccountSid, $AuthToken);
+
+$call = $client->account->calls->get($_GET['sid']);
+$call_status = $call->status;
+$call_status = str_replace("-", " ", $call_status);
+$call_status = ucwords($call_status);
+echo $call_status;
+
+?>

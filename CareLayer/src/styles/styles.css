@@ -1,0 +1,78 @@
+/*
+ *  Author:         Bruno Lima
+ *  Date Created:   June 15, 2015
+ *  Description:    Application Styles
+ */
+
+#header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#footer {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#content{
+    width: 1000px;
+    height: 700px;
+    margin: auto;
+    margin-top: 100px;
+    z-index: 0;
+}
+
+
+/* CSS Transitions */
+
+.slideDownFade-appear{
+    opacity: 0.01;
+    transform: translate(0, -100px);
+    transform: translate3d(0, -100px, 0);
+}
+.slideDownFade-appear.slideDownFade-appear-active{
+    opacity: 1;
+    transform: translate(0, 0);
+    transform: translate3d(0, 0, 0);
+    transition-property: transform, opacity;
+	transition-duration: 500ms;
+    transition-timing-function: ease-out;
+}
+
+.expand-enter {
+    max-height: 0;
+    overflow: hidden;
+	transition: max-height 800ms;
+}
+.expand-enter.expand-enter-active {
+    max-height: 120;
+}
+.expand-leave {
+    max-height: 120;
+    transition: max-height 800ms;
+}
+.expand-leave.expand-leave-active {
+    max-height: 0;
+    overflow: hidden;
+}
+
+.switchPage-enter{
+    opacity: 0.4;
+    transform: translate(0, 0);
+    transform: translate3d(0, 0, 0);
+}
+.switchPage-enter.switchPage-enter-active{
+    opacity: 1;
+    transform: translate(0, 0);
+    transform: translate3d(0, 0, 0);
+    transition-property: transform, opacity;
+	transition-duration: 300ms;
+    transition-timing-function: ease-out;
+}
+

@@ -1,0 +1,23 @@
+<?php
+
+require("environment_detail.php");
+require("PasswordHash.php");
+$dbhost = $env_var_db['dbhost'];
+$dbname = $env_var_db['dbname'];
+$dbuser = $env_var_db['dbuser'];
+$dbpass = $env_var_db['dbpass'];
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$doc_id = $_POST['doc_id'];
+
+if(isset($_POST['new_pw']))
+{
+    $new_pw = $_POST['new_pw'];
+    $hash = create_hash($new_pw);
+    $hash_info = explode(":", $hash);
+    mysql_query("UPDATE doctors SET IdMEDRESERV='".$hash_info[3]."', salt='".$hash_info[2]."' WHERE id=".$doc_id);
+    echo $hash;
+}
+?>

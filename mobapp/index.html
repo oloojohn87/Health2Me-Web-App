@@ -1,0 +1,61 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Page Title</title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+
+        <script type="text/javascript">
+            
+        $(document).on("pageinit", function(){
+		
+			//window.setTimeout(function(){ $("#login").click();}, 2000);
+            /*settimeOut(function(){
+			$("#login").trigger ('click');},4000);
+            }); */   
+            //apply overrides here
+        });
+    </script>
+
+</head> 
+<body> 
+
+<div data-role="page" data-theme="d">
+
+	<div data-role="header" data-theme="a">
+		<h1></h1>
+	</div><!-- /header -->
+
+	<div data-role="content" data-theme="d">	
+		
+       <!-- <div id="splashscreen" style="border:solid; float:left: margin-top:100px; margin-left:50px; width:200px; height:100px;"> -->
+		
+		<div id="splashscreen" style="text-align:center;margin-top:30%"><img src="Health2(RGB).png" alt="" > </div>
+		
+		<div style="text-align:center;margin-top:20%">
+		<a href="signIn.html" data-role="button" data-transition="flip" data-inline="true" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" data-ajax="false" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-inline ui-btn-up-c">
+		<span class="ui-btn-inner ui-btn-corner-all" data-theme="c"><span class="ui-btn-text">Private Users Access</span></span></a>		
+		</div>
+		
+		<!-- </div> --->
+	</div><!-- /content -->
+
+    <div data-role="footer" data-id="foo1" data-position="fixed">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="javascript:void(0)"></a></li>
+			<!--<li><a href="b.html">Capture</a></li>
+			<li><a href="c.html">Reports</a></li>
+			<li><a href="d.html"> b</a></li>-->
+		</ul> 
+	</div><!-- /navbar -->
+</div><!-- /footer -->
+
+</div><!-- /page -->
+
+</body>
+</html>

@@ -1,0 +1,1 @@
+update bpinview set latitude='29.7397' , longitude='-95.8302' , country='United States' , region='Texas' , city='Katy' where id=10906

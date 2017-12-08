@@ -1,0 +1,31 @@
+<?php
+session_start();
+ini_set("display_errors", 0);
+require("environment_detail.php");
+$dbhost = $env_var_db['dbhost'];
+$dbname = $env_var_db['dbname'];
+$dbuser = $env_var_db['dbuser'];
+$dbpass = $env_var_db['dbpass'];
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$query = "select * from ongoing_sessions where userid=".$_SESSION['MEDID'];
+$result=mysql_query($query);
+$count=mysql_num_rows($result);
+if($count==1)
+{
+	shell_exec("logout.bat ".$_SESSION['MEDID']);
+}
+
+$query = "delete from ongoing_sessions where userid=".$_SESSION['MEDID']." and ip='".$_SERVER['REMOTE_ADDR']."'";
+mysql_query($query);
+
+unset($_SESSION['Acceso']); 
+//unset($_SESSION['decrypt']);
+
+if(isset($_SESSION['UserID'])){
+//unset($_SESSION['UserID']);
+session_destroy();
+}
+?>

@@ -1,0 +1,41 @@
+<?php
+require "Services/Twilio.php";
+
+$queNum = $_GET['numero']; 
+/* Set our AccountSid and AuthToken */
+    $AccountSid = "ACc8d7e18334aea996eee97355a50fe672";
+    $AuthToken = "484f8b70a66fe46fdb49f44900f891ec";
+ 
+/* Your Twilio Number or an Outgoing Caller ID you have previously validated
+    with Twilio */
+$from = '34518880185';
+ 
+/* Number you wish to call */
+//$to= '34608754342';
+$to= $queNum;
+  
+ 
+/* Directory location for callback.php file (for use in REST URL)*/
+$url = 'http://www.health2.me/';
+ 
+/* Instantiate a new Twilio Rest Client */
+$client = new Services_Twilio($AccountSid, $AuthToken);
+
+/*
+if (!isset($_REQUEST['called'])) {
+    $err = urlencode("Must specify your phone number");
+    header("Location: index.php?msg=$err");
+    die;
+}
+*/
+ 
+/* make Twilio REST request to initiate outgoing call */
+//$call = $client->account->calls->create($from, $to, $url . 'callback.php?number=' . $_REQUEST['called']);
+  $call = $client->account->calls->create($from, $to, $url . 'callback.php?number=' . $to);
+ 
+ 
+/* redirect back to the main page with CallSid */
+$msg = urlencode("Connecting... ".$call->sid);
+//header("Location: index.php?msg=$msg");
+
+ ?>

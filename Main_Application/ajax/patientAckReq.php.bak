@@ -1,0 +1,45 @@
+<?php
+define('INCLUDE_CHECK',1);
+require "logger.php";
+require("environment_detail.php");
+
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+
+$tbl_name="doctorslinkusers"; // Table name
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+
+$Token = $_GET['Confirm'];
+
+$result = mysql_query("SELECT * FROM doctorslinkusers where Confirm='$Token'");
+$countA=mysql_num_rows($result);
+$rowA = mysql_fetch_array($result);
+$successC ='NO';
+if($countA==1){
+	$successC ='YES';
+	$IdEntry = $rowA['id'];
+	$IdUsu = $rowA['IdUs'];
+	$TempoEmail = $rowA['TemporaryEmail'];
+	$TempoPhone = $rowA['TemporaryPhone'];
+	$TempoPass = $rowA['TempoPass'];
+	$q = mysql_query("UPDATE doctorslinkusers SET Confirm = '*******' , Fecha = NOW(), estado = '2' WHERE id ='$IdEntry' ");   
+	$q = mysql_query("UPDATE usuarios SET TempoPass = '$TempoPass', email='$TempoEmail', telefono='$TempoPhone' WHERE Identif ='$IdUsu' ");   
+	
+	echo '<h2 style="color:blue;">Health2Me Patient Portal</h2>';
+	echo '<h3>Connection Confirmed</h3>';
+	echo '<p style="font-size:8px;">********************* (Entry = '.$IdEntry.')</p>';
+}
+else
+{
+echo "Confirmation token not valid.";
+if ($Token!='1111') die;
+}
+
+
+?>

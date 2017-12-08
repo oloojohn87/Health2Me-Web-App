@@ -1,0 +1,149 @@
+<?php
+class displayExitClass{
+
+public function displayFunction($exitType){
+echo "
+<!DOCTYPE html>
+<html lang='en'  class='body-error'><head>
+    <meta charset='utf-8'>
+    <title>health2.me</title>
+    <!--<meta name='viewport' content='width=device-width, initial-scale=1.0'>-->
+    <meta name='description' content=''>
+    <meta name='author' content=''>
+
+    <!-- Le styles -->
+    <link href='css/style.css' rel='stylesheet'>
+    <link href='css/bootstrap.css' rel='stylesheet'>
+    
+    <link rel='apple-touch-icon' href='images/icon.png'/>
+    
+    <link rel='stylesheet' href='css/jquery-ui-1.8.16.custom.css' media='screen'  />
+    <link rel='stylesheet' href='css/fullcalendar.css' media='screen'  />
+    <link rel='stylesheet' href='css/chosen.css' media='screen'  />
+    <link rel='stylesheet' href='css/datepicker.css' >
+    <link rel='stylesheet' href='css/colorpicker.css'>
+    <link rel='stylesheet' href='css/glisse.css?1.css'>
+    <link rel='stylesheet' href='css/jquery.jgrowl.css'>
+    <link rel='stylesheet' href='js/elfinder/css/elfinder.css' media='screen' />
+    <link rel='stylesheet' href='css/jquery.tagsinput.css' />
+    <link rel='stylesheet' href='css/demo_table.css' >
+    <link rel='stylesheet' href='css/jquery.jscrollpane.css' >
+    <link rel='stylesheet' href='css/validationEngine.jquery.css'>
+    <link rel='stylesheet' href='css/jquery.stepy.css' />
+    
+	<link rel='stylesheet' href='css/icon/font-awesome.css'>
+    <link rel='stylesheet' href='css/bootstrap-responsive.css'>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src='http://html5shim.googlecode.com/svn/trunk/html5.js'></script>
+    <![endif]-->
+    <!--[if lte IE 8]><script type='text/javascript' src='js/excanvas.min.js'></script><![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel='shortcut icon' href='images/icons/favicon.ico'>
+    
+    
+    
+  </head>
+
+  <body>
+
+
+	<!--Header Start-->
+	<div class='header' >
+    		
+           <a href='index.html' class='logo'><h1>I</h1></a>
+           
+           <div class='pull-right'>
+           
+         
+          
+          </div>
+    </div>
+    <!--Header END-->
+    
+
+     
+     <div class='error-bg'>
+      <div class='error-s'>
+        <!--<div class='error-number'>Health2me</div>-->
+        <div class='error-number'><img src='images/health2meLOGO.png' width='350' /img></div>";
+		if($exitType == 4){
+        echo "<div class='error-number' style='font-size:20px; margin-top:0px; padding:0px; border:0ox;'>unlocking health</div>";
+		echo "<!--<div class='error-number' style='font-size:20px; margin:0px; padding:0px; border:0px;'>social health networking</div>-->";
+		}else{
+		echo "<div class='error-number' style='font-size:20px; margin-top:15px;'>unlocking health</div>";
+		echo "<!--<div class='error-number' style='font-size:20px; margin-top:15px;'>social health networking</div>-->";
+		}
+        
+        echo "<div class='error-text' style='margin-top:10px;'>version 1.1</div>";
+		
+		if($exitType == 1){
+		echo "<div class='error-text'>Incorrect credentials for login.</div>";
+		}elseif($exitType == 2){
+		echo "<div class='error-text'>MEDICAL USER NOT VALID. Incorrect credentials for login.</div>";
+		}elseif($exitType == 3){
+		echo "<div class='error-text'>USER DATA INCOMPLETE. No Doctor assigned to this User.</div>";
+		}elseif($exitType == 4){
+		echo "<div class='error-text' style='margin-top:10px;'>You have already activated dropbox cloud Channel.</div>";
+		}elseif($exitType == 5){
+		echo "<div class='error-text' style='margin-top:10px;'>You do not have permission to access this page.</div>";
+		}elseif($exitType == 6){
+        echo "<div class='error-text' style='margin-top:10px;'>Password reset error. Please contact Health2me support</div>";  
+        }elseif($exitType == 7){
+        echo "<div class='error-text' style='margin-top:10px;'>The member information you entered has already been created.  Please refer to forgot password link on login page.</div>";  
+        }
+		if($exitType != 4){
+		echo "<a class='error-text' href='index.html' style='color: #2eb82e; text-decoration: underline;'><center>Click here to return Inmers Homepage</center></a>";
+        }
+		
+      echo "</div>
+     </div>
+
+    
+ 
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src='js/jquery.min.js'></script>
+    <script src='js/jquery-ui.min.js'></script>
+   
+    <script src='js/bootstrap.min.js'></script>
+    <script src='js/bootstrap-datepicker.js'></script>
+    <script src='js/bootstrap-colorpicker.js'></script>
+    <script src='js/google-code-prettify/prettify.js'></script>
+   
+    <script src='js/jquery.flot.min.js'></script>
+    <script src='js/jquery.flot.pie.js'></script>
+    <script src='js/jquery.flot.orderBars.js'></script>
+    <script src='js/jquery.flot.resize.js'></script>
+    <script src='js/graphtable.js'></script>
+    <script src='js/fullcalendar.min.js'></script>
+    <script src='js/chosen.jquery.min.js'></script>
+    <script src='js/autoresize.jquery.min.js'></script>
+    <script src='js/jquery.tagsinput.min.js'></script>
+    <script src='js/jquery.autotab.js'></script>
+    <script src='js/elfinder/js/elfinder.min.js' charset='utf-8'></script>
+	<script src='js/tiny_mce/tiny_mce.js'></script>
+    <script src='js/validation/languages/jquery.validationEngine-en.js' charset='utf-8'></script>
+	<script src='js/validation/jquery.validationEngine.js' charset='utf-8'></script>
+    <script src='js/jquery.jgrowl_minimized.js'></script>
+    <script src='js/jquery.dataTables.min.js'></script>
+    <script src='js/jquery.mousewheel.js'></script>
+    <script src='js/jquery.jscrollpane.min.js'></script>
+    <script src='js/jquery.stepy.min.js'></script>
+    <script src='js/jquery.validate.min.js'></script>
+    <script src='js/raphael.2.1.0.min.js'></script>
+    <script src='js/justgage.1.0.1.min.js'></script>
+	<script src='js/glisse.js'></script>
+    
+	<script src='js/application.js'></script>
+
+
+  </body>
+</html>
+";
+}
+}

@@ -1,0 +1,36 @@
+<?php
+session_start();
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+ 
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$idp = $_GET['idp'];
+$height = $_GET['height'];
+$weight = $_GET['weight'];
+$hbp = $_GET['hbp'];
+$lbp = $_GET['lbp'];
+$daterec = $_GET['daterec'];
+
+if($daterec=='')
+{
+	$query = "insert into changing_personal_history(idpatient,height,weight,hbp,lbp,date_rec) values($idp,'$height','$weight','$hbp','$lbp',now())";
+}
+else
+{
+	$query = "insert into changing_personal_history(idpatient,height,weight,hbp,lbp,date_rec) values($idp,'$height','$weight','$hbp','$lbp','$daterec')";
+}
+
+if(mysql_query($query))
+{
+	echo 'success';
+}
+
+
+
+?>

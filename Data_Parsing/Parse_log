@@ -1,0 +1,74 @@
+Service started executing at 20130614_204045
+Job with ID 1091 started at 20130614_204107
+Script returned Error for Job ID 1091
+Service Exiting
+Service started executing at 20130614_204349
+Service Exiting
+Service started executing at 20130614_204602
+Job with ID 1091 started at 20130614_204603
+Service started executing at 20130614_204743
+Job with ID 1091 started at 20130614_204808
+Script returned Error for Job ID 1091
+Service Exiting
+Service started executing at 20130614_205632
+Service Exiting
+Service started executing at 20130614_205736
+Job with ID 1091 started at 20130614_205737
+     Data Extracted
+     Extracted Data written to database
+     Auto-Parsing suggested ID 1081
+     Updated column 'suggestedid in Lifepin'
+     Control returned from Date Parsing
+     Pending Table Entry Deleted
+Error connecting to database
+Service Exiting
+Service started executing at 20130614_210657
+Job with ID 1091 started at 20130614_210658
+Script returned Error for Job ID 1091
+Service Exiting
+Service started executing at 20130614_210744
+Service Exiting
+Service started executing at 20130614_210757
+Job with ID 1091 started at 20130614_210758
+     Data Extracted
+     Extracted Data written to database
+     Auto-Parsing suggested ID 1081
+     Updated column 'suggestedid in Lifepin'
+     Control returned from Date Parsing
+     Pending Table Entry Deleted
+     Status inserted into Processed_Status Table
+Error connecting to database
+Service Exiting
+Service started executing at 20130614_211506
+Job with ID 1091 started at 20130614_211506
+     Data Extracted
+     Extracted Data written to database
+     Auto-Parsing suggested ID 1081
+     Updated column 'suggestedid in Lifepin'
+     Control returned from Date Parsing
+     Pending Table Entry Deleted
+     Status inserted into Processed_Status Table
+     Set A_S=1 for the Job
+Service Exiting
+Service started executing at 20130614_221038
+Service Exiting
+Service started executing at 20130614_221210
+Job with ID 1093 started at 20130614_221211
+     Data Extracted
+     Extracted Data written to database
+     Auto-Parsing suggested ID 1089
+     Updated column 'suggestedid in Lifepin'
+     Control returned from Date Parsing
+     Pending Table Entry Deleted
+     Status inserted into Processed_Status Table
+     Set A_S=1 for the Job
+Job with ID 1092 started at 20130614_221222
+     Data Extracted
+     Extracted Data written to database
+     Auto-Parsing suggested ID 1088
+     Updated column 'suggestedid in Lifepin'
+     Control returned from Date Parsing
+     Pending Table Entry Deleted
+     Status inserted into Processed_Status Table
+     Set A_S=1 for the Job
+Service Exiting

@@ -1,0 +1,343 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<script src="jquery-lang-js-master/js/jquery-cookie.js" charset="utf-8" type="text/javascript"></script>
+<script src="jquery-lang-js-master/js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
+<script type="text/javascript">
+	var lang = new Lang('en');
+	window.lang.dynamic('th', 'jquery-lang-js-master/js/langpack/th.json');
+
+
+//alert($.cookie('lang'));
+
+var langType = $.cookie('lang');
+
+if(langType == 'th'){
+window.lang.change('th');
+//alert('th');
+}
+
+if(langType == 'en'){
+window.lang.change('en');
+//alert('en');
+}
+	
+
+</script>
+<?php
+ ini_set("display_errors", 0);
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="doctors"; // Table name
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }	
+
+$queUsu = $_POST['Doctor'];
+$NReports = $_POST['NReports'];
+$daysExplore=empty($_GET['days']) ? 30: $_GET['days'];
+$withGroup = 0;
+if (isset($_POST['Group']))
+{
+    $withGroup = $_POST['Group'];
+}
+
+
+$cadena = '';
+$cadena_added = 0;
+// First create an array with all Patient Ids that have activity (report created, messages, stages)
+// This is "MyPatients" array: A) Patients created by me, plus B) Patients referred to me, plus C) Patients created by other members of my group
+$result = '';
+if ($withGroup == 1)
+{
+    $result = $con->prepare("SELECT IdGroup FROM doctorsgroups WHERE IdDoctor = ?");
+	$result->bindValue(1, $queUsu, PDO::PARAM_INT);
+	$result->execute();
+	
+    $row = $result->fetch(PDO::FETCH_ASSOC);
+    $MyGroup = $row['IdGroup'];
+    $query = $con->prepare("SELECT * FROM usuarios WHERE (IdCreator = ? or Identif IN (SELECT IdPac FROM doctorslinkdoctors WHERE IdMED2 = ?)) OR (IdCreator IN (SELECT IdDoctor FROM doctorsgroups WHERE IdGroup = ?)) ORDER BY Surname ASC");
+	$query->bindValue(1, $queUsu, PDO::PARAM_INT);
+	$query->bindValue(2, $queUsu, PDO::PARAM_INT);
+	$query->bindValue(3, $MyGroup, PDO::PARAM_INT);
+}
+else
+{
+    $query = $con->prepare("SELECT * FROM usuarios WHERE (IdCreator = ? or Identif IN (SELECT IdPac FROM doctorslinkdoctors WHERE IdMED2 = ?)) ORDER BY Surname ASC");
+	$query->bindValue(1, $queUsu, PDO::PARAM_INT);
+	$query->bindValue(2, $queUsu, PDO::PARAM_INT);
+}
+
+$result = $query->execute();
+$count = $query->rowCount();
+$counter1 = 0 ;
+while ($row2 = $query->fetch(PDO::FETCH_ASSOC)) 
+{
+	$UsIds[$counter1] = $row2['Identif'];
+	$UsName[$counter1] = (htmlspecialchars($row2['Name']));
+	$UsSurname[$counter1] = (htmlspecialchars($row2['Surname']));
+	$UsEmail[$counter1] = (htmlspecialchars($row2['email']));
+	$counter1++;
+}
+$numberpatients = $counter1;
+$n=0;
+
+//echo $numberpatients;
+//echo $query; 
+$cadena = array();
+
+$html = '<div style="width:100%;"><table style="background-color:white; width:100%;"><tr style="border-bottom:1px solid #cacaca; height:25px; background-color:#cacaca; color:white;"><td style="width:20px; padding-left:15px;"><p style="margin-bottom:0px;"><span style="font-size:14px;" lang="en">item</span></p></td><td style="width:100px; padding-left:15px;"><p style="margin-bottom:0px;"><span style="font-size:14px;" lang="en">Member NAME</span></p></td><td style="width:10px;" lang="en">Rep</td><td style="width:5px;"></td><td style="width:10px;" lang="en">Msg</td><td style="width:40px;" lang="en">Time</td></tr>';	
+
+$query_str = "SELECT Content,DateTimeSTAMP,VIEWIdMed,VIEWIdUser FROM bpinview USE INDEX(I1) WHERE (";
+for($i = 0; $i < $counter1; $i++)
+{
+    if($i != 0)
+    {
+        $query_str .= " OR ";
+    }
+    $query_str .= "VIEWIdUser=".$UsIds[$i];
+}
+$bpin_arr = array();
+$query_str .= ") AND DATEDIFF(NOW(), DateTimeSTAMP) <= '$daysExplore' ORDER BY DateTimeSTAMP DESC";
+
+
+$resultREPS = mysql_query($query_str);
+while ($rowREPS = mysql_fetch_array($resultREPS)) 
+{
+    $arr = array("Content" => $rowREPS["Content"], "DateTimeSTAMP" => $rowREPS["DateTimeSTAMP"],
+                 "VIEWIdMed" => $rowREPS["VIEWIdMed"], "VIEWIdUser" => $rowREPS["VIEWIdUser"]);
+    array_push($bpin_arr, $arr);
+}
+while ($n < $numberpatients)
+{
+	$IdPatient = $UsIds[$n];
+
+	// Check if any of this patients has new reports
+	$UpReports=0;
+	$UpReportsOTHER=0;
+	$NewestReport='';
+	$NewestReportOTHER='';
+	for ($k = 0 ; $k < count($bpin_arr); $k++)
+    {
+        if ($bpin_arr[$k]["VIEWIdUser"] == $IdPatient)
+        {
+            // Check NEW reports
+            if ($bpin_arr[$k]['Content'] == 'Report Uploaded' || $bpin_arr[$k]['Content'] == 'Report Uploaded (EMR)') 
+            {
+                $UpReports++;
+                if ($bpin_arr[$k]['VIEWIdMed'] !=  $queUsu) 
+                {
+                    $UpReportsOTHER++; $NewestReportOTHER = $bpin_arr[$k]['DateTimeSTAMP'];
+                }                         
+                else
+                {
+                    $NewestReport = $bpin_arr[$k]['DateTimeSTAMP'];
+                }
+            }
+        }
+	}
+
+	// Check if any of this patients has new MESSAGES from DOCTORS
+
+	$resultMES = $con->prepare("SELECT sender_id,receiver_id,fecha,attachments,status FROM message_infrasture WHERE patient_id = ? AND DATEDIFF(NOW(), fecha) <= ? ORDER BY fecha DESC");
+	$resultMES->bindValue(1, $IdPatient, PDO::PARAM_INT);
+	$resultMES->bindValue(2, $daysExplore, PDO::PARAM_STR);
+	$resultMES->execute();
+	
+	$MessagesReceived=0;
+	$MessagesReceivedNEW=0;
+	$NewestdateMessage=0;
+	while ($rowMES = $resultMES->fetch(PDO::FETCH_ASSOC)) {
+		if ($rowMES['status'] == 'new') { $MessagesReceivedNEW++; $NewestdateMessage = $rowMES['fecha'];}
+		$MessagesReceived++;
+	}
+
+
+	// ADD DATA TO THE JSON ARRAY
+    if (($UpReports > 0 || $MessagesReceivedNEW > 0) && $cadena_added < 10)
+    {      
+        $now = time(); // or your date as well
+        $DateRep = '';//strtotime($referral_date);
+        $DateRep0 = '';
+        $DateMes = '';
+        
+        if (SanDate($NewestReport) > '')
+        {
+            $DateRep = strtotime($NewestReport); 
+        }
+        else 
+        {
+            $DateRep = strtotime('01-01-2000');
+        }
+        $TimeDifRep = ($now - $DateRep)/3600;
+        if (SanDate($NewestReportOTHER) > '') 
+        {
+            $DateRepO = strtotime($NewestReportOTHER);  
+        }
+        else 
+        {
+            $DateRepO = strtotime('01-01-2000');
+        }
+        $TimeDifRepO = ($now - $DateRepO)/3600;
+        if (SanDate($NewestdateMessage) > '') 
+        {
+            $DateMes = strtotime($NewestdateMessage); 
+        }
+        else
+        {
+            $DateMes = strtotime('01-01-2000');
+        }
+        $TimeDifMes = ($now - $DateMes)/3600;
+        
+        $WhatLabel = '';
+        $validDif = '';
+        if ($TimeDifRep >= $TimeDifMes) 
+        {
+            if ($TimeDifMes < 24) 
+            {
+                $WhatLabel = 'hours';
+                $validDif = floor($TimeDifMes);
+            }
+            else
+            {
+                $WhatLabel = 'days';
+                $validDif = floor($TimeDifMes/24);
+            }
+            
+        } 
+        else 
+        {
+            if ($TimeDifRep < 24)
+            {
+                $WhatLabel = 'hours';
+                $validDif = floor($TimeDifRep);
+            }
+            else
+            {
+                $WhatLabel = 'days';
+                $validDif = floor($TimeDifRep/24);
+            }
+        }
+        
+        $cadena_added++;
+        $arr = array(   
+                "id" => $IdPatient,
+                "name" => $UsName[$n],
+                "surname" => $UsSurname[$n],
+                "email" => $UsEmail[$n],
+                "UpReports" => $UpReports,
+                "NewestReport" => SanDate($NewestReport),
+                "UpReportsOTHER" => $UpReportsOTHER,
+                "NewestReportOTHER" => SanDate($NewestReportOTHER),
+                "MessagesReceived" => $MessagesReceived,
+                "MessagesReceivedNEW" => $MessagesReceivedNEW,
+                "NewestdateMessage" => SanDate($NewestdateMessage),
+                "validDif" => $validDif,
+                "WhatLabel" => $WhatLabel
+                );    
+        array_push($cadena, $arr);
+        
+    }
+
+	$n++;
+}
+
+// sort $cadena array here
+if(count($cadena) > 0)
+{
+    for($x = 0; $x < count($cadena) - 1; $x++)
+    {
+        for($y = $x + 1; $y < count($cadena); $y++)
+        {
+            if((($cadena[$x]["WhatLabel"] == "days" && $cadena[$y]["WhatLabel"] == "hours") || ($cadena[$x]["WhatLabel"] == $cadena[$y]["WhatLabel"] && ($cadena[$x]["validDif"] > $cadena[$y]["validDif"]))))
+            {
+                $temp_val = $cadena[$x];
+                $cadena[$x] = $cadena[$y];
+                $cadena[$y] = $temp_val;
+            }
+        }
+    }
+}
+
+for($i = 0; $i < count($cadena); $i++)
+{
+    $WhatColor = '';
+    switch(true)
+    {
+        case ($cadena[$i]["validDif"] >= 0 && $cadena[$i]["validDif"] <= 2): 	
+            $WhatColor = 'black';
+            break;
+        case ($cadena[$i]["validDif"] > 2 && $cadena[$i]["validDif"] <= 7): 	
+            $WhatColor = 'grey';
+            break;
+        case ($cadena[$i]["validDif"] > 7 && $cadena[$i]["validDif"] < 30): 	
+            $WhatColor = '#cacaca';
+            break;
+        case ($cadena[$i]["validDif"] >= 30): 					
+            $WhatColor = '#e9e9e9';
+            break;
+        default:								
+            $WhatColor = 'blue';
+            break;
+    }
+    $iconRepColor = '';
+    if ($cadena[$i]["UpReports"] > 0 || $cadena[$i]["UpReportsOTHER"] > 0) 
+    {
+        $iconRepColor = '#22aeff'; 
+    }
+    else 
+    {
+        $iconRepColor = '#e9e9e9';
+    }
+    if ($cadena[$i]["MessagesReceived"] > 0 ) 
+    {
+        $iconMesColor = '#22aeff';
+    }
+    else 
+    {
+        $iconMesColor = '#e9e9e9';
+    }
+    
+    if ($i < (count($cadena)-1)) 
+    {
+        $html .= '<tr style="border-bottom:1px solid #cacaca; height:30px;">';
+    }
+    else 
+    {
+        $html .='<tr style="height:30px; border:none;">';
+    }
+    
+    $html .= '<td style=" width:20px; color:#22aeff; font-size:12px;" title="Type of activity">';
+    $html .= '<div style="width:100%; text-align:center; font-size:14px; color:'.$iconMesColor.';"><icon class="icon-envelope " title="BLUE means there are NEW MESSAGES"></icon></div>';
+    $html .= '<div style="width:100%; text-align:center; margin-top:-5px; font-size:14px; color:'.$iconRepColor.';"><icon class="icon-folder-open" title="BLUE means there are NEW REPORTS"></icon></div></td>';
+    $html .= '<td style="width:100px; padding:6px; "><a href="patientdetailMED-new.php?IdUsu='.$cadena[$i]["id"].'" style="text-decoration:none;"><div style="line-height:1; color: #54bc00; font-size:12px; width:100%;">'.$cadena[$i]["name"].'</div><div style="color: #54bc00; font-size:14px; width:100%; margin-top:0px;"> '.strtoupper($cadena[$i]["surname"]).'</div></a></td>';						
+    $html .= '<td style="width:10px; color:#22aeff; font-size:12px; " title="sdf">';
+    $html .= $cadena[$i]["UpReports"].'/'.$cadena[$i]["UpReportsOTHER"].'</td>';
+    $html .= '<td style="width:5px;"></td>';
+
+    $html .= '<td style="width:10px; color:#22aeff; font-size:12px; " title="sdf">';
+    $html .= $cadena[$i]["MessagesReceived"].'/'.$cadena[$i]["MessagesReceivedNEW"].'</td>';
+    
+    $html .= '<td style="width:40px; text-align:center; color: white; background-color:'.$WhatColor.'; "><div style="width:100%; font-size:18px;" title="Time since last recorded activity for this patient">'.$cadena[$i]["validDif"].'</div><div style="width:100%; font-size:10px; margin-top:-5px;">'.$cadena[$i]["WhatLabel"].'</div></td></tr>';
+}
+
+$html .= '</table></div>';
+
+//$encode = json_encode($cadena);
+//echo $encode; 
+echo $html;
+
+function SanDate($entrydate)
+{
+	$newDate = date("m/d/Y H:i:s", strtotime($entrydate));
+	return $newDate;
+}
+
+?>

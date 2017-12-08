@@ -1,0 +1,47 @@
+Cannot Identify Server at 20141108_050128
+Service started executing  at 20141108_050128
+Error connecting to database at 20141108_050128
+Service Exiting  at 20141108_050128
+Cannot Identify Server at 20141108_050719
+Service started executing  at 20141108_050719
+Error connecting to database at 20141108_050719
+Service Exiting  at 20141108_050719
+Cannot Identify Server at 20141108_050814
+Service started executing  at 20141108_050814
+Error connecting to database at 20141108_050814
+Service Exiting  at 20141108_050814
+Cannot Identify Server at 20141108_051234
+Service started executing  at 20141108_051234
+Job with ID 28584 started  at 20141108_051240
+     Starting Thread at 20141108_051240
+     Thread finished execution  at 20141108_051245
+     Pending_documents Table Entry Deleted at 20141108_051245
+     Status inserted into Processed_documents Table at 20141108_051245
+-------converting PDF to PNG------- at 20141108_051245
+-------completed PDF to PNG converstion------- at 20141108_051245
+-------DocToPDF Process complete. Updated the lifepin Idpin 28584------- at 20141108_051245
+Service Exiting  at 20141108_051245
+Cannot Identify Server at 20141108_070939
+Service started executing  at 20141108_070939
+Job with ID 28584 started  at 20141108_070945
+     Starting Thread at 20141108_070945
+     Thread finished execution  at 20141108_070950
+     Pending_documents Table Entry Deleted at 20141108_070950
+     Status inserted into Processed_documents Table at 20141108_070950
+-------converting PDF to PNG------- at 20141108_070950
+-------Thread PDF to PNG complete------- at 20141108_070950
+-------completed PDF to PNG converstion------- at 20141108_070950
+-------DocToPDF Process complete. Updated the lifepin Idpin 28584------- at 20141108_070950
+Service Exiting  at 20141108_070950
+Cannot Identify Server at 20141108_071631
+Service started executing  at 20141108_071632
+Job with ID 28585 started  at 20141108_071632
+     Starting Thread at 20141108_071632
+     Thread finished execution  at 20141108_071632
+     Pending_documents Table Entry Deleted at 20141108_071632
+     Status inserted into Processed_documents Table at 20141108_071632
+-------converting PDF to PNG------- at 20141108_071632
+-------Thread PDF to PNG complete------- at 20141108_071632
+-------completed PDF to PNG converstion------- at 20141108_071632
+-------DocToPDF Process complete. Updated the lifepin Idpin 28585------- at 20141108_071632
+Service Exiting  at 20141108_071632

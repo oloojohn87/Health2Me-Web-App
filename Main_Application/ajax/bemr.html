@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <title>Health2me Patient Detail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/bootstrap1.css" rel="stylesheet">
+	<link href="css/EMRStyle.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/jquery-ui-1.8.16.custom.css" media="screen"  />
+    <link rel="stylesheet" href="css/fullcalendar.css" media="screen"  />
+    <link rel="stylesheet" href="css/chosen.css" media="screen"  />
+    <link rel="stylesheet" href="css/datepicker.css" >
+    <link rel="stylesheet" href="css/colorpicker.css">
+    <link rel="stylesheet" href="css/glisse.css?1.css">
+    <link rel="stylesheet" href="css/jquery.jgrowl.css">
+    <link rel="stylesheet" href="js/elfinder/css/elfinder.css" media="screen" />
+    <link rel="stylesheet" href="css/jquery.tagsinput.css" />
+    <link rel="stylesheet" href="css/demo_table.css" >
+    <link rel="stylesheet" href="css/jquery.jscrollpane.css" >
+    <link rel="stylesheet" href="css/validationEngine.jquery.css">
+    <link rel="stylesheet" href="css/jquery.stepy.css" />
+    
+	<link rel="stylesheet" href="css/icon/font-awesome.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.css">
+    <link rel="stylesheet" href="css/jvInmers.css">
+
+    <link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
+
+
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="images/icons/favicon.ico">
+  </head>
+
+
+	<!--Header Start-->
+	<div class="header" >
+    		
+           <a href="bemr.html" class="logo"><h1>Health2me</h1></a>
+           
+           <div class="pull-right">
+           
+           <!--Notifications Start-->  
+           <div class="notifications-head">
+           
+           <!--Messages Start-->
+           <div class="btn-group m_left hide-mobile" >
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+    	     	<span class="notification">531</span><span class="triangle-1"></span><i class="icon-comments"></i><span class="caret"></span>
+            </a>
+            <div class="dropdown-menu">
+            
+              <span class="triangle-2"></span>
+              <div class="ichat">
+               <div class="ichat-messages">
+               	<div class="ichat-title">
+                  <div class="pull-left">New Messages</div>
+                  <div class="pull-right"><span>Update 4*</span></div>
+                  <div class="clear"></div>
+                </div>
+                
+                <div class="imessage">
+                  <div class="iavatar"><img src="images/doctors/michaelrlICON.jpg" alt=""></div>
+                  <div class="imes">
+                  	<div class="iauthor">Dr. Michael rl</div>
+                    <div class="itext">All right. Thank you.</div>
+                  </div>
+                  <div class="idelete"><a href="#"><span><i class="icon-remove"></i></span></a></div>
+                  <div class="clear"></div>
+                </div>
+                <div class="imessage">
+                  <div class="iavatar"><img src="images/users/6.jpg" alt=""></div>
+                  <div class="imes">
+                  	<div class="iauthor">Emma Clark</div>
+                    <div class="itext">Can I help you?</div>
+                  </div>
+                  <div class="idelete"><a href="#"><span><i class="icon-remove"></i></span></a></div>
+                  <div class="clear"></div>
+                </div>
+                <div class="imessage">
+                  <div class="iavatar"><img src="images/users/2.jpg" alt=""></div>
+                  <div class="imes">
+                  	<div class="iauthor">Blake Washington</div>
+                    <div class="itext">Can I help you?</div>
+                  </div>
+                  <div class="idelete"><a href="#"><span><i class="icon-remove"></i></span></a></div>
+                  <div class="clear"></div>
+                </div>
+                
+                <div class="ichat-link"><a href="#">InBox</a> <a href="#">OutBox</a> <a href="#">Spam</a> <a href="#">Trash</a>
+                <div class="clear"></div>
+                </div>
+                
+                </div>
+                <a href="#" class="iview">View all</a><a href="#" class="imark">Mark all read</a>
+               
+              </div>
+            
+            </div>
+          </div>
+          <!--Messages END--> 
+          
+          <!--Recent Activity Start-->
+           <div class="btn-group pull-left hide-mobile" >
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+    	     	<span class="notification">77</span><span class="triangle-1"></span><i class="icon-bell"></i><span class="caret"></span>
+            </a>
+            <div class="dropdown-menu">
+            
+              <span class="triangle-2"></span>
+              <div class="ichat">
+               <div class="ichat-messages">
+               	<div class="ichat-title">
+                  <div class="pull-left">Recent Activity</div>
+                  <div class="pull-right"><span>Update 14*</span></div>
+                  <div class="clear"></div>
+                </div>
+                
+                <div class="r_activity">
+                <div class="imessage">
+                  <div class="r_icon"><a href="#"><i class="icon-camera"></i></a></div>
+                  <div class="r_info">
+                  	<div class="r_name"><strong>Alan Cook</strong> a new photo</div>
+                    <div class="r_text"><i class="icon-time"></i> 3 hours ago</div>
+                    <div class="r_link"><a href="#">View...</a></div>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <div class="imessage">
+                  <div class="r_icon"><a href="#"><i class="icon-thumbs-up"></i></a></div>
+                  <div class="r_info">
+                  	<div class="r_name"><strong>Isaac Donaldson</strong> like: BMW E36</div>
+                    <div class="r_text"><i class="icon-time"></i> 5 hours ago</div>
+                    <div class="r_link"><a href="#">View...</a></div>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                <div class="imessage">
+                  <div class="r_icon"><a href="#"><i class="icon-user"></i></a></div>
+                  <div class="r_info">
+                  	<div class="r_name">Registered new user</div>
+                    <div class="r_text"><i class="icon-time"></i> 15th of May - 06:21</div>
+                    <div class="r_link"><a href="#">View...</a></div>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+                </div>
+               
+                
+                </div>
+                <a href="#" class="iview">View all</a><a href="#" class="imark">Mark all read</a>
+               
+              </div>
+            
+            </div>
+          </div>
+          <!--Recent Activity END--> 
+            
+          </div><!--Notifications END-->
+            
+           <!--Button User Start-->
+		   <div class="btn-group pull-right" >
+           
+            <a class="btn btn-profile dropdown-toggle" id="button-profile" data-toggle="dropdown" href="#">
+              <span class="name-user"><strong>Welcome</strong>,Alan Cook</span> 
+			  <span class="avatar"><img src="images/users/1.jpg" alt="" ></span> 
+              <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu" id="prof_dropdown">
+            <div class="item_m"><span class="caret"></span></div>
+            <ul class="clear_ul" >
+              <li><a href="#"><i class="icon-globe"></i> Home</a></li>
+              <li><a href="#"><i class="icon-comments"></i> Messages</a></li>
+              <li><a href="#"><i class="icon-cog"></i> Settings</a></li>
+              <li><a href="index.html"><i class="icon-off"></i> Sign Out</a></li>
+            </ul>
+            </div>
+          </div>
+          <!--Button User END-->  
+
+          
+          </div>
+    </div>
+    <!--Header END-->
+
+  
+    <!--Content Start-->
+	<div id="content" style="padding-left:0px; background: #F9F9F9; height:2100px;">
+   
+	 <!--SpeedBar Start--->
+     <div class="speedbar">
+     <div class="speedbar-content">
+     
+     <ul class="menu-speedbar">
+         <li><a href="Demographics.html">Dashboard</a></li>
+    	 <li><a href="">Patients</a></li>
+         <li><a href="">Connections</a></li>
+         <li><a href="">Configuration</a></li>
+         <li><a href="">Doctors</a></li>
+         <li><a href="">Centers</a></li>
+         <li><a href="index.html" style="color:yellow;">Sign Out</a></li>
+
+     </ul>
+
+     
+     </div>
+     </div>
+     <!--SpeedBar END-->
+
+     <!--Search Start-->   
+     <div class="search">
+     <form class="search-form">
+     	<input type="text" name="" value="" placeholder="Enter keywords">
+     </form>
+	 <div class="clear"></div>	
+     </div>
+     <!--Search END-->
+
+     <!--CONTENT MAIN START-->
+
+     
+     <!--CONTENT MAIN START-->
+	 
+     <div class="content" >
+ 
+        <!--NOTES Start-->
+        
+ 
+        <div class="clearfix" style="margin-bottom:20px;"></div>
+       
+        
+
+         <!--Upload Box Start-->
+        <div class="grid" style="width:70%; margin:0 auto;">
+		
+     		   <input type="hidden" id="IdUsuP" value="<? echo $IdUsu ?>" />
+          <div class="span9" style="margin-top:20px">
+		  <span class="label label-info" id="EtiTML" style="margin-top:20px; margin-bottom:5px; font-size:30px;">Basic EMR</span>
+          <ul id="myTab" class="nav nav-tabs tabs-main">
+            <li class="active"><a href="#summary" data-toggle="tab">Demographics</a></li>
+            <li><a href="#notification" data-toggle="tab">Personal</a></li>
+            <li><a href="#buttons" data-toggle="tab">Family</a></li>
+            <li><a href="#past" data-toggle="tab">Past DX</a></li>
+            <li><a href="#medication" data-toggle="tab">Medication</a></li>
+            <li><a href="#immunization" data-toggle="tab">Inmunization</a></li>
+            <li><a href="#allergies" data-toggle="tab">Allergies</a></li>
+			<li><a href="#physician" data-toggle="tab">Notes</a></li>
+          </ul>
+		  
+          <div id="myTabContent" class="tab-content tabs-main-content">
+		  
+              <div class="tab-pane fade in active tab-overflow-main" style="margin-top:15px;" id="summary">
+                 <span class="label label-info" style="left:0px; margin-left:0px; font-size:25px;">Demographics</span>   
+                 <div class="summary-items">
+				 <form>
+				 <div class="grid" style="padding:10px; height:320px;">
+             
+                 <div class="biodata">
+			<div class="biodataCol1">
+				<div class="marginbot10">  
+					<div class="labeldiv">Name</div>
+					<div class="inputdiv"><input type="text" name="Name" class="validate[required,minSize[4] span" placeholder="Name" id="name" style="height:20px;width:200px" /></div>
+				</div>
+				<div class="marginbot10">
+					<div class="labeldiv">Middle Initial</div>
+					<div class="inputdiv"><input type="text" name="MiddleI" class="validate[required,minSize[4] span" placeholder="MI" id="middleInitial" size="2" maxlength="2" style="height:20px;width:60px"/></div>
+				</div>
+				<div class="marginbot10">
+					<div class="labeldiv">Surname</div>
+					<div class="inputdiv"><input type="text" name="Surname" class="validate[required,minSize[4] span" placeholder="Surname" id="surname" size="25" maxlength="25" style="height:20px;width:200px"/></div>
+				</div>
+				<div class="marginbot10">
+					<div class="labeldiv">Gender</div>
+					<div class="inputdiv">
+						<select name="Gender" id="gender" onchange="showhideDiv()" style="height:30px;width:90px">
+							<option value="">Select</option>
+							<option value="female">Female</option>
+							<option value="male">Male</option>
+						</select>
+					</div>
+				</div>
+				<div class="marginbot10">
+					<div class="labeldiv">DoB</div>
+					<div class="inputdiv">
+						<input type="text" id="datepicker" name="DoB" style="height:20px;width:90px" />
+					</div>
+				</div>
+			</div>
+			<div class="biodataCol2">
+				<div class="marginbot10">
+					<div class="labeldiv2">Address</div>
+					<div class="inputdiv2"><input type="text" name="Address" id="addr" size="25" maxlength="25" style="height:20px;width:200px" class="validate[required,minSize[4] span" placeholder="Address" /></div>
+				</div>
+				<div class="marginbot10">
+					<div class="labeldiv2">Address2</div>
+					<div class="inputdiv2"><input type="text" name="Address2" id="addr2" size="25" maxlength="2" style="height:20px;width:200px" class="validate[required,minSize[4] span" placeholder="Address2"/></div>
+				</div>
+				<div class="marginbot10">
+					<div class="labeldiv2">City</div>
+					<div class="inputdiv2"><input type="text" name="City" id="City" size="25" maxlength="25" style="height:20px;width:200px" class="validate[required,minSize[4] span" placeholder="City"/></div>
+				</div>
+				<div class="marginbot10">
+					<div class="labeldiv2">State</div>
+					<div class="inputdiv2">
+						<input type="text" name="State" id="State" size="25" maxlength="25" style="height:20px;width:100px" class="validate[required,minSize[4] span" placeholder="State" />
+					</div>
+				</div>
+			</div>
+			<div class="biodataCol3">
+				<div class="marginbot10">&nbsp;</div>
+				<div class="marginbot10">&nbsp;</div>
+				<div class="marginbot10">&nbsp;</div>
+				<div class="marginbot10">&nbsp;</div>
+				<div class="marginbot8">&nbsp;</div>
+				<div class="marginbot10">
+					<div class="labeldiv3">Country</div>
+					<div class="inputdiv">
+						<input type="text" name="Country" id="country" size="25" maxlength="25"style="height:20px;width:200px" class="validate[required,minSize[4] span" placeholder="Country" />
+					</div>
+				</div>
+				
+			</div>
+			<div class="biodateNotes">
+				<label class="notesclass">Notes</label><textarea cols="800" rows="3"  name="Notes" id="notes"style="height:100px;width:300px"class="validate[required,minSize[4] span" placeholder="Notes"></textarea>
+			
+			</div>
+			</div>
+			
+            </div>
+			<div class="btnAdd3"><input type="submit"  id="AddDemo" name="AddDemo" onclick="demoenter()" value="Save" class="btn btn-primary"/></div>	
+            </form>
+			</div>
+			
+            </div>
+			
+			
+				
+              <div class="tab-pane tab-overflow-main" style="margin-top:15px;" id="notification">
+			  <span class="label label-info" style="left:0px; margin-left:0px; font-size:25px;">Personal History</span>
+				<div class="clearfix" style="margin-bottom:20px;"></div>
+				<form>
+				<div class="grid" style="padding:10px; height:260px;">
+                <div class="personalhist">
+				<div class="marginbot10">
+					<div class="labeldiv">Fractures and Other Traumas</div>
+					<div class="inputdiv">
+						<input type="text" name="Fractures" id="fractures" size="75" style="height:20px;width:650px" class="validate[required,minSize[4] span" placeholder="Fractures and Traumas" />
+					</div>
+				</div>
+				<div class="marginbot10">
+					<div class="labeldiv">Surgeries</div>
+					<div class="inputdiv">
+						<input type="text" name="Surgeries" id="Surgeries" size="75" style="height:20px;width:650px" class="validate[required,minSize[4] span" placeholder="Surgeries" />
+					</div>
+				</div>
+				<div class="marginbot10">
+					<div class="labeldiv">Other Known Medical Event</div>
+					<div class="inputdiv">
+						<input type="text" name="OtherKnown" id="okmedeve" size="75" style="height:20px;width:650px" class="validate[required,minSize[4] span" placeholder="Other Known medical Events" />
+					</div>
+				</div>
+				<div class="marginbot10" id="obhistDiv" style="display:none;">
+					<div class="labeldiv">Obestetric History</div>
+					<div class="inputdiv">
+						<input type="text" name="Obsteric" id="obhist" size="75" style="height:20px;width:650px" class="validate[required,minSize[4] span" placeholder="Obsteric History"/>
+					</div>
+				</div>
+				
+				<div class="marginbot10">
+					<div class="labeldiv">Other medical data</div>
+					<div class="inputdiv">
+						<input type="text" name="OtherMed" id="othrmdata" size="75" style="height:20px;width:650px" class="validate[required,minSize[4] span" placeholder="Other Medical Data"/>
+					</div>
+					
+				</div>
+			</div>
+			</div>
+			<div class="btnAdd3"><input type="submit"  id="Addpers" name="Addpers" onclick="persenter()" value="Save" class="btn btn-primary"/></div>			
+            </form>
+			</div>
+            
+			  
+            <div class="tab-pane tab-overflow-main" style="margin-top:15px;" id="buttons">
+			  <span class="label label-info" style="left:0px; font-size:25px;">Family History</span>
+			  <div class="grid" style="padding:10px; height:170px;">
+			   <form>
+				<div><table style="width: 100%; height: 176px; margin-bottom: 0px;">
+				<tr>
+					<td>Father</td>
+					<td><input id="Checkbox1" type="checkbox" onclick="disablefields();" style="display:inline;" /> Alive</td>
+					<td><input id="text1" type="text" class="validate[required,minSize[4] span" placeholder="Cause of Death"/></td>
+					<td><input id="text2" type="text" class="validate[required,minSize[4] span" placeholder="Age of Death" /></td>
+					<td><input id="text3" type="text" class="validate[required,minSize[4] span" placeholder="Relevent Diseases"/></td>
+				</tr>
+				<tr>
+					<td>Mother</td>
+					<td><input id="Checkbox2" type="checkbox" onclick="disablefields()" style="display:inline;" /> Alive </td>
+					<td><input id="text4" type="text" class="validate[required,minSize[4] span" placeholder="Cause of Death" /></td>
+					<td><input id="text5" type="text" class="validate[required,minSize[4] span" placeholder="Age of Death" /></td>
+					<td><input id="text6" type="text" class="validate[required,minSize[4] span" placeholder="Relevant Diseases" /></td>
+				</tr>
+				<tr>
+					<td>Siblings</td>
+					<td colspan="4"><input id="text7" type="text" class="validate[required,minSize[4] span" placeholder="Relevent Diseases"/></td>
+				</tr>
+				</table>
+				<div class="btnAdd3"><input type="submit"  id="AddFamily" name="AddFamily" onclick="familyenter()" value="Save" class="btn btn-primary"/></div>
+				</div>
+				</form>
+				</div>
+			</div>
+          <div class="tab-pane tab-overflow-main" style="margin-top:15px;" id="past">
+		  <span class="label label-info" style="left:0px; margin-left:0px; font-size:25px;">Past DX</span>
+		  <div class="grid" style="padding:10px; height:200px;">
+            <div class="columnsDiv">
+				<div class="innerColumns" name="NameDX">DX Name</div>
+				<div class="innerColumns" name="ICDCODE">ICD CODE</div>
+				<div class="innerColumns" name="DateStart">Date Start</div>
+				<div class="innerColumns" name="DateStop">Date Stop</div>
+			</div>
+			<div class="btnAdd"><input type="button" id="AddPastDX" name="AddPastDX" value="Add" class="btn btn-primary"  onclick="openpopup(this.id)"  /></div>
+			</div>
+		</div>
+		<div class="tab-pane tab-overflow-main" style="margin-top:15px;" id="medication">
+		<span class="label label-info" style="left:0px; margin-left:0px; font-size:25px;">Medication</span>
+		<div class="grid" style="padding:10px; height:200px;">
+		<div class="columnsDiv">
+				<div class="innerColumnsMed">Drug Name</div>
+				<div class="innerColumnsMed">Drug Code</div>
+				<div class="innerColumnsMed">Dossage</div>
+				<div class="innerColumnsMed">Number per Day</div>
+				<div class="innerColumnsMed">Date Start</div>
+				<div class="innerColumnsMed">Date Stop</div>
+			</div>
+			<div class="btnAdd"><input type="button" id="AddMedications" name="AddMedications" value="Add" class="btn btn-primary"  onclick="openpopup(this.id)"  /></div>
+		</div>
+		</div>
+		<div class="tab-pane tab-overflow-main" style="margin-top:15px;" id="immunization">
+		<span class="label label-info" style="left:0px; margin-left:0px; font-size:25px;">Immunization</span>
+		<div class="grid" style="padding:10px; height:200px;">
+		<div class="columnsDiv">
+				<div class="innerColumns">Name</div>
+				<div class="innerColumns">Date</div>
+				<div class="innerColumns">Age</div>
+				<div class="innerColumns">Reaction</div>
+			</div>
+			<div class="btnAdd"><input type="button" id="AddImmunization" name="AddImmunization" value="Add" class="btn btn-primary" onclick="openpopup(this.id)" /></div>
+		</div>
+		</div>
+		<div class="tab-pane tab-overflow-main" style="margin-top:15px;" id="allergies">
+		<span class="label label-info" style="left:0px; margin-left:0px; font-size:25px;">Allergies</span>
+		<div class="grid" style="padding:10px; height:200px;">
+		<div class="columnsDiv">
+				<div class="innerColumns">Alergy Name</div>
+				<div class="innerColumns">Type</div>
+				<div class="innerColumns">Date Recorded</div>
+				<div class="innerColumns">Description</div>
+			</div>
+			<div class="btnAdd"><input type="button" id="AddAllergies" name="AddAllergies" value="Add" class="btn btn-primary"  onclick="openpopup(this.id) " /></div>
+		</div>
+		</div>
+		<div class="tab-pane tab-overflow-main" style="margin-top:15px;" id="physician">
+		<span class="label label-info" style="left:0px; margin-left:0px; font-size:25px;">Physician Notes</span>
+		<div class="grid" style="padding:10px; height:250px;">
+		<div class="columnsDiv1">
+            <div class="innerColumns1">Date</div>
+            <div class="innerColumns1">Text</div>
+			</div>
+		<span style="font: bold 18px Arial, Helvetica, sans-serif; color: #3D93E0; cursor: auto; margin-left:0px; ">Notes: </span>
+		<div><p>
+        <textarea class="TextArea1" name="S1" rows="6"></textarea>
+		<div class="btnAdd"><input type="button" id="AddPhysical" name="AddPhysical" value="Add" class="btn btn-primary" onclick="openpopup(this.id) " /></div></p></div>
+		</div>
+        </div>
+        </div>   
+       </div>
+        <!--Upload Box END-->
+        <div class="clearfix" style="margin-bottom:20px;"></div>
+    
+                      
+        <!--NOTES END-->
+
+
+                       
+     </div>
+     <!--CONTENT MAIN END-->
+
+    </div>
+	</div>
+    <!--Content END-->
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+     
+<script type="text/javascript">
+$(function() {
+$( "#datepicker" ).datepicker({
+showOn: "button",
+buttonImage: "images/calendar.gif",
+buttonImageOnly: true
+});
+});
+function inputFocus(i){
+    if(i.value==i.defaultValue){ i.value=""; i.style.color="#000"; }
+}
+function inputBlur(i){
+    if(i.value==""){ i.value=i.defaultValue; i.style.color="#ccc"; }
+}
+function openpopup(val)
+{
+//alert(val);
+if(val == 'AddPastDX')
+{
+myWindow=window.open('dxpopup.php','_blank', 'width=500,height=300');
+myWindow.focus();
+}
+else if(val == 'AddMedications')
+{
+myWindow=window.open('medpopup.php','_blank', 'width=500,height=350');
+myWindow.focus();
+}
+else if(val == 'AddImmunization')
+{
+myWindow=window.open('Immupopup.php','_blank', 'width=500,height=300');
+myWindow.focus();
+}
+else if(val == 'AddAllergies')
+{
+myWindow=window.open('Allerpopup.php','_blank', 'width=500,height=300');
+myWindow.focus();
+}
+else if(val == 'AddPhysical')
+{
+myWindow=window.open('physpopup.php','_blank', 'width=500,height=250');
+myWindow.focus();
+}
+}
+
+function showhideDiv()
+{
+	var gender = document.getElementById('gender').value;
+	//alert(gender);
+	if(gender == 'female')
+	   document.getElementById('obhistDiv').style.display = 'block';
+	 else
+		document.getElementById('obhistDiv').style.display = 'none';
+}
+function disablefields(){ 
+if (document.getElementById('Checkbox1').checked == 1){ 
+document.getElementById('text1').disabled='disabled'; 
+document.getElementById('text2').disabled='disabled'; 
+document.getElementById('text3').disabled='disabled'; 
+}else{ 
+document.getElementById('text1').disabled=''; 
+document.getElementById('text2').disabled=''; 
+document.getElementById('text3').disabled=''; 
+} 
+if (document.getElementById('Checkbox2').checked == 1){ 
+document.getElementById('text4').disabled='disabled'; 
+document.getElementById('text5').disabled='disabled'; 
+document.getElementById('text6').disabled='disabled'; 
+}else{ 
+document.getElementById('text4').disabled=''; 
+document.getElementById('text5').disabled=''; 
+document.getElementById('text6').disabled=''; 
+} 
+} 
+</script>
+<script type="text/javascript">
+function demoenter()
+{
+name = $('#name').val();
+middle=$('#middleInitial').val();
+Surname=$('#surname').val();
+Gender=$('#gender').val();
+bday=$('#datepicker').val();
+address=$('#addr').val();
+address2=$('#addr2').val();
+city=$('#City').val();
+state=$('#State').val();
+Country=$('#country').val();
+Notes=$('#notes').val();
+queUrl ='demo.php?namedemo='+name+'&middleinit='+middle+'&sur='+Surname+'&gend='+Gender+'&dob='+bday+'&addr='+address+'&addr2='+address2+'&citydemo='+city+'&statedemo='+state+'&countrydemo='+Country+'&notesdemo='+Notes;
+	var sal2 = LanzaAjax (queUrl);
+	//alert (queUrl);
+	//alert (sal2);
+	alert('data entered');
+	alert (sal2);
+}
+function LanzaAjax (DirURL)
+		{
+		var RecTipo = 'SIN MODIFICACIÓN';
+	    $.ajax(
+           {
+           url: DirURL,
+           dataType: "html",
+           async: false,
+           complete: function(){ //alert('Completed');
+                    },
+           success: function(data) {
+                    if (typeof data == "string") {
+                                RecTipo = data;
+                                }
+                     }
+            });
+		return RecTipo;
+		} 
+</script>
+<script type="text/javascript">
+function persenter()
+{
+fracture = $('#fractures').val();
+surgery = $('#Surgeries').val();
+known= $('#okmedeve').val();
+obst = $('#obhist').val();
+medical = $('#othrmdata').val();
+			//alert (tbox + '  ' + dtp);
+queUrl ='pers.php?frac='+fracture+'&surg='+surgery+'&oknown='+known+'&obs='+obst+'&omed'+medical;
+	var sal2 = LanzaAjax (queUrl);
+	alert('Data Entered');
+
+}
+function LanzaAjax (DirURL)
+		{
+		var RecTipo = 'SIN MODIFICACIÓN';
+	    $.ajax(
+           {
+           url: DirURL,
+           dataType: "html",
+           async: false,
+           complete: function(){ //alert('Completed');
+                    },
+           success: function(data) {
+                    if (typeof data == "string") {
+                                RecTipo = data;
+                                }
+                     }
+            });
+		return RecTipo;
+		} 
+</script>
+<script type="text/javascript">
+function familyenter()
+{
+fa = $('#Checkbox1').val();
+fc=$('#text1').val();
+fad=$('#text2').val();
+fr=$('#text3').val();
+ma=$('#Checkbox2').val();
+mc=$('#text4').val();
+mad=$('#text5').val();
+mr=$('#text6').val();
+sr=$('#text7').val();
+			//alert (tbox + '  ' + dtp);
+queUrl ='fam.php?falive='+fa+'&fcod='+fc+'&faod='+fad+'&frd='+fr+'&malive'+ma+'&mcod'+mc+'&maod'+mad+'&mrd'+mr+'&srd'+sr;
+	var sal2 = LanzaAjax (queUrl);
+	alert('Data Entered');
+
+}
+function LanzaAjax (DirURL)
+		{
+		var RecTipo = 'SIN MODIFICACIÓN';
+	    $.ajax(
+           {
+           url: DirURL,
+           dataType: "html",
+           async: false,
+           complete: function(){ //alert('Completed');
+                    },
+           success: function(data) {
+                    if (typeof data == "string") {
+                                RecTipo = data;
+                                }
+                     }
+            });
+		return RecTipo;
+		}    
+</script>
+
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/bootstrap-colorpicker.js"></script>
+    <script src="js/google-code-prettify/prettify.js"></script>
+   
+    <script src="js/jquery.flot.min.js"></script>
+    <script src="js/jquery.flot.pie.js"></script>
+    <script src="js/jquery.flot.orderBars.js"></script>
+    <script src="js/jquery.flot.resize.js"></script>
+    <script src="js/graphtable.js"></script>
+    <script src="js/fullcalendar.min.js"></script>
+    <script src="js/chosen.jquery.min.js"></script>
+    <script src="js/autoresize.jquery.min.js"></script>
+    <script src="js/jquery.tagsinput.min.js"></script>
+    <script src="js/jquery.autotab.js"></script>
+    <script src="js/elfinder/js/elfinder.min.js" charset="utf-8"></script>
+	<script src="js/tiny_mce/tiny_mce.js"></script>
+    <script src="js/validation/languages/jquery.validationEngine-en.js" charset="utf-8"></script>
+	<script src="js/validation/jquery.validationEngine.js" charset="utf-8"></script>
+    <script src="js/jquery.jgrowl_minimized.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/jquery.mousewheel.js"></script>
+    <script src="js/jquery.jscrollpane.min.js"></script>
+    <script src="js/jquery.stepy.min.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/raphael.2.1.0.min.js"></script>
+    <script src="js/justgage.1.0.1.min.js"></script>
+	<script src="js/glisse.js"></script>
+    
+	<script src="js/application.js"></script>
+
+
+  </body>
+</html>
+

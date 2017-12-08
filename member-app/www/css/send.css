@@ -1,0 +1,172 @@
+/*This file used in 
+	send.html
+*/  
+#outer1 {
+	/*background:red;
+	margin-left:10px;
+	margin-right:10px;*/
+}	
+#container1 {
+	overflow-y: hidden;
+	-webkit-overflow-scrolling: touch;
+	text-align: center;
+}
+#droppable {
+	margin:0;
+	overflow-x:scroll;
+	overflow-y:auto;
+	display:block;
+	line-height:60px;
+	height:60%;
+	vertical-align:top;
+}	
+#send-reports {
+    padding-top: 0px;
+    margin-right:auto;
+    margin-left:auto;
+	display:inline-block;
+	width:100%;
+} 
+#send-reports input {
+    display:inline-block;
+    padding-top:15px;
+    margin-top:10px;
+	margin-bottom:5px;
+    margin-right:auto;
+    margin-left:auto;
+}
+#doctor-email {
+	display:inline-block;
+	
+}
+
+#send-container {
+	display:inline-block;
+	bottom: 0px;
+	margin:0px;
+	padding:0px;
+}	
+/*email request button*/
+ #send-doc {
+     display:inline-block;
+     border:0px;
+     color:#FFF;
+     border-radius:6px;
+     height: 35px; 
+     width: 100px;
+     margin-top:5px;
+     background-color:rgb(84, 194, 66); ;
+     font-family: "Helvetica Neue";
+	 vertical-align:bottom;
+ } 
+@media screen and (orientation:landscape) {
+	/* Landscape styles */
+		
+	#doctor-email {
+		width:40%;
+		margin-right:15px;
+	}
+	#send-doc {
+		width:50px;
+	}	 
+}
+#container2 {
+	margin:0;
+	padding:0; 
+	margin-left:48px;
+	margin-right:48px;
+	overflow-x: auto;
+	overflow-y: hidden;
+	-webkit-overflow-scrolling: touch;
+}
+#StreamContainerAll{
+	background-color:#fbfbfb;
+	margin-right: 10px;
+	margin-left:10px;
+}  
+#cam {
+    width: 50%;
+    margin: 0 auto;
+    background-color:#e5e5e5;
+    padding-left: 10px;
+    padding-right: 10px;
+}    
+#cam img{
+    width:40px;
+    margin-top:15px;
+    
+}  
+#upload-icon {
+    position:relative;
+    top: 10px;
+    padding: 10px;
+    width: 50%;
+    margin: 0 auto;
+    background-color:#c7c7c7;
+    border-color:#717171;
+    display:block;
+}    
+#send_button{
+    background-color:rgb(34,174,255);
+    //background-image:url("../img/upload_white.svg")
+}    
+#left-scroll {
+    position:absolute;
+    left:10px;
+    top:80px;
+    display:block;
+    z-index: 100;
+    padding: 10px;
+    color:rgb(34,174,255);
+} 
+#left-scroll,#right-scroll:hover {
+    cursor:pointer;   
+}    
+#right-scroll {
+    position:absolute;
+    right:10px;
+    top:80px;
+    display:block;
+    z-index:100;
+    padding: 10px;
+    color:rgb(34,174,255);
+    border:0px;
+} 
+#draggableHelper{
+	z-index:1000;
+	overflow:visible;
+}	
+.note-footer { 
+	border: 1px solid #22aeff;
+}	
+.thumbnail  {
+  width:20%;
+  height:auto;
+  z-index:1;
+  font-size:5px;
+}
+.thumbnail .queIMG {
+	height:50px;
+	width:100%;
+}	
+.thumbnail .queTIP {
+	position:absolute;
+	margin:0;
+	padding:0;
+	display:none;
+}	
+.thumbnail .note-header{
+	display:none;
+}
+.thumbnail .label-style {
+	position:absolute;
+	line-height:10px;
+	display:none;
+}	
+.thumbnail .date {
+	position:absolute;
+	margin:0;
+	padding:0;
+	height:10px;
+	display:none;
+}	

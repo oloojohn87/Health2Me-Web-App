@@ -1,0 +1,51 @@
+<?php
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="doctors"; // Table name
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }			
+
+$UserID = $_GET['User'];
+
+$AdminData = 0;
+$PastDx = 0;
+$Count = array_fill(0, 12, 0);
+
+$result = $con->prepare("SELECT * FROM lifepin WHERE IdUsu = ?");
+$result->bindValue(1, $UserID, PDO::PARAM_INT);
+$result->execute();
+
+$TotalReports = 0;
+while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+	$TotalReports++;
+	$Group = substr($row['Tipo'], 0, 1);
+	$Count[$Group]++;
+};
+
+$cadena = '';
+$m = 1;
+while ($m < 10) {
+		if ($m>1) $cadena.=',';
+		$cadena.='
+	    {
+	        "number":"'.$Count[$m].'"
+	        }';    
+		$m++;
+};
+
+$encode = json_encode($cadena);
+echo '{"items":['.($cadena).']}'; 
+
+
+
+?>

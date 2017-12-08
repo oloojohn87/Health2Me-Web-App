@@ -1,0 +1,41 @@
+<?php
+require("environment_detail.php");
+$dbhost = $env_var_db['dbhost'];
+$dbname = $env_var_db['dbname'];
+$dbuser = $env_var_db['dbuser'];
+$dbpass = $env_var_db['dbpass'];
+
+$tbl_name="usuarios"; // Table name
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$patient_id = $_GET['patient_id'];
+$doctor_id = $_GET['doctor_id'];
+$Add_doctor_id = $_GET['Add_doctor_id'];
+$MType = $_GET['MType'];
+$TMessage = $_GET['TMessage'];
+$IconText = $_GET['IconText'];
+$SubText = $_GET['SubText'];
+$MainText = $_GET['MainText'];
+$ColorText = $_GET['ColorText'];
+$LinkText = $_GET['LinkText'];
+
+
+$sql="SELECT * FROM doctorslinkdoctors where Idpac ='$patient_id' and (IdMED='$doctor_id' or IdMED2='$doctor_id') and estado=2 ";
+$q = mysql_query($sql);
+if($q){
+	$row=mysql_fetch_assoc($q);
+	if($row['IdMED2']==$doctor_id){
+	    $otherdoc=$row['IdMED'];
+		$referral_id=$row['id'];
+		
+	}else if($row['IdMED']==$doctor_id) {
+		$otherdoc=$row['IdMED2'];
+		$referral_id=$row['id'];			
+	}
+}
+
+$q2 = mysql_query("INSERT INTO onscreentray SET IdUser ='$patient_id', IdDoctor ='$otherdoc', IdDoctorADD ='$doctor_id', MType='$MType', Message='$TMessage', IconText='$IconText', SubText='$SubText', MainText='$MainText', MColor='$ColorText', MLink='$LinkText', MRead='0' , DateTimeStamp=NOW() ");
+
+?>

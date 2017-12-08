@@ -1,0 +1,23 @@
+<?php
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+// Connect to server and select databse.
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$dx1=$_GET['NameDX'];
+$dx2=$_GET['ICDCODE'];
+$dx3=$_GET['DateStart'];
+$dx4=$_GET['DateStop'];
+
+$sql="INSERT INTO dx VALUES ('$dx1','$dx2','$dx3','$dx4')";
+
+if(!mysql_query($sql))
+{
+die('Error: ' .mysql_error());
+}
+?>

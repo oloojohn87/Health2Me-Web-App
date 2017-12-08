@@ -1,0 +1,53 @@
+<!-- H2M HEADER -->
+
+<div class="header" >
+
+    <!-- Logo -->
+    <a href="index.html" class="logo"><h1>health2.me</h1></a>
+
+    <!-- Dropdown for languages -->
+    <div style="margin-top:11px;float:left; margin-left:50px;" class="btn-group">
+        <button id="lang1" type="button" class="dropdown-toggle language_button" data-toggle="dropdown">
+             <i class="icon-caret-down" style="float: right; margin-right: 8px; margin-top: 5px;"></i>Language
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li class="language_item" ng-click="userCtrl.changeLanguage('en')" language-button lang="en">English</li>
+            <li class="language_item" ng-click="userCtrl.changeLanguage('es')" language-button lang="es">Espa&ntilde;ol</li>
+        </ul>
+    </div>
+
+    <!-- Right Menu Dropdown -->
+    <div class="pull-right">
+        <div class="btn-group pull-right" >
+            <a class="btn btn-profile dropdown-toggle" id="button-profile" data-toggle="dropdown" href="#">
+                <span class="name-user"><strong lang="en">{{'WELCOME' | translate}}</strong> Dr. {{userCtrl.user.first_name}} {{userCtrl.user.last_name}}</span> 
+                <span class="avatar" style="background-color: #FFF;"><img ng-src="{{userCtrl.user.identicon}}" alt="" ></span> 
+                <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu" id="prof_dropdown" role="menu">
+                <div class="item_m"><span class="caret"></span></div>
+                <ul class="clear_ul">
+                    <li><a href="MainDashboard.php"><i class="icon-globe" lang="en"></i> {{'HOME' | translate}}</a></li>
+                    <li><a href="medicalConfiguration.php"><i class="icon-cog" lang="en"></i> {{'SETTINGS' | translate}}</a></li>
+                    <li><a href="logout.php"><i class="icon-off" lang="en"></i> {{'SIGN_OUT' | translate}}</a></li>
+                </ul>
+            </div>
+        </div> 
+    </div>
+
+</div>
+
+<!-- Main Menu -->
+<div class="speedbar">
+    <div class="speedbar-content">
+        <ul class="menu-speedbar">
+            <li><a href="MainDashboard.php" lang="en">{{'HOME' | translate}}</a></li>
+            <li ng-show="userCtrl.user.canAccessDashboard"><a lang="en" href="dashboard.php"  lang="en">{{'DASHBOARD' || translate}}</a></li>
+            <li><a href="patients.php" class="act_link"  lang="en" >{{'MEMBERS' | translate}}</a></li>
+            <li ng-show="userCtrl.user.privilege == 1"><a href="medicalConnections.php"  lang="en">{{'DOCTOR_CONNECTIONS' | translate}}</a></li>
+            <li ng-show="userCtrl.user.privilege == 1"><a href="PatientNetwork.php"  lang="en">{{'MEMBER_NETWORK' | translate}}</a></li>
+            <li><a href="medicalConfiguration.php" lang="en">{{'CONFIGURATION' | translate}}</a></li>
+            <li><a href="logout.php" style="color:yellow;" lang="en">{{'SIGN_OUT' | translate}}</a></li>
+        </ul>
+    </div>
+</div>

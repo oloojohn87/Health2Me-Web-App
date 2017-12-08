@@ -1,0 +1,173 @@
+<?php
+session_start();
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+ 
+  echo $domain;
+?>
+<!DOCTYPE html>
+<html lang="en" style="background: #F9F9F9;"><head>
+    <meta charset="utf-8">
+    <title>Inmers - Center Management Console</title>
+    <link rel="icon" type="image/ico" href="favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/jquery-ui-1.8.16.custom.css" media="screen"  />
+    <link rel="stylesheet" href="css/fullcalendar.css" media="screen"  />
+    <link rel="stylesheet" href="css/chosen.css" media="screen"  />
+    <link rel="stylesheet" href="css/datepicker.css" >
+    <link rel="stylesheet" href="css/colorpicker.css">
+    <link rel="stylesheet" href="css/glisse.css?1.css">
+    <link rel="stylesheet" href="css/jquery.jgrowl.css">
+    <link rel="stylesheet" href="js/elfinder/css/elfinder.css" media="screen" />
+    <link rel="stylesheet" href="css/jquery.tagsinput.css" />
+    <link rel="stylesheet" href="css/demo_table.css" >
+    <link rel="stylesheet" href="css/jquery.jscrollpane.css" >
+    <link rel="stylesheet" href="css/validationEngine.jquery.css">
+    <link rel="stylesheet" href="css/jquery.stepy.css" />
+    
+	<link rel="stylesheet" href="css/icon/font-awesome.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.css">
+
+
+ 
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="images/icons/favicon.ico">
+    
+    <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37863944-1']);
+  _gaq.push(['_setDomainName', 'health2.me']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+  </head>
+
+  <body style="background: #F9F9F9; padding:20px;">
+ 
+	  <h2> Reset Demo for H2m </h2>
+	  <p>
+	  Output Console:
+	  </p>
+	  
+	  <div id="RConsole" style="margin:20px; width:600px; height:400px; border:1px solid #cacaca; background-color:light-grey; overflow:scroll;"></div>
+<!-- $('#RConsole').append("<strong>"+rounds+"</strong>"); -->
+	  <div id="BotReset" style="margin-left:0px; margin-top:0px; float:left; " class="pull-left"><a href="#" class="btn" title="Send Invitation" style="width:80px;">Review</a> </div>	              					
+  </body>
+  
+      <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+	<script type="text/javascript" src="js/storyjs-embed.js"></script>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+   
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/bootstrap-colorpicker.js"></script>
+    <script src="js/google-code-prettify/prettify.js"></script>
+   
+    <script src="js/jquery.flot.min.js"></script>
+    <script src="js/jquery.flot.pie.js"></script>
+    <script src="js/jquery.flot.orderBars.js"></script>
+    <script src="js/jquery.flot.resize.js"></script>
+    <script src="js/graphtable.js"></script>
+    <script src="js/fullcalendar.min.js"></script>
+    <script src="js/chosen.jquery.min.js"></script>
+    <script src="js/autoresize.jquery.min.js"></script>
+    <script src="js/jquery.tagsinput.min.js"></script>
+    <script src="js/jquery.autotab.js"></script>
+    <script src="js/elfinder/js/elfinder.min.js" charset="utf-8"></script>
+	<script src="js/tiny_mce/tiny_mce.js"></script>
+    <script src="js/validation/languages/jquery.validationEngine-en.js" charset="utf-8"></script>
+	<script src="js/validation/jquery.validationEngine.js" charset="utf-8"></script>
+    <script src="js/jquery.jgrowl_minimized.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/jquery.mousewheel.js"></script>
+    <script src="js/jquery.jscrollpane.min.js"></script>
+    <script src="js/jquery.stepy.min.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/raphael.2.1.0.min.js"></script>
+    <script src="js/justgage.1.0.1.min.js"></script>
+	<script src="js/glisse.js"></script>
+    
+	<script src="js/application.js"></script>
+    <script language="JavaScript" src="http://j.maxmind.com/app/geoip.js"></script>
+     
+  <!--  <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.0.min.js"></script>--->
+    <script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
+
+  
+    <script type="text/javascript" >
+	
+	var TipoG = 0;
+   
+    $(document).ready(function() {
+
+	$("#BotReset").live('click',function() {
+		   
+		   if (TipoG == 0 ) 
+		   	{
+			   	var cadena = '<?php echo $domain;?>/ResetDemo.php?Tipo=n';
+			   	TipoG = 1;
+			   	$("#BotReset").css('background-color','RED');
+			   	$("#BotReset").html('<a href="#" class="btn" title="Send Invitation" style="width:80px;"><i class="icon-remove"></i>RESET</a> ');
+
+		 	}
+		 	else
+		 	{
+			   	var cadena = '<?php echo $domain;?>/ResetDemo.php?Tipo=s';
+		 	}
+		 	//alert (cadena);
+		   
+		 	//alert (cadena);
+		    var RecTipo = LanzaAjax (cadena);
+			$('#RConsole').append("<strong>"+RecTipo+"</strong>"); 
+		    $('#RConsole').append("<br>");
+		              					
+		    });	
+			
+	});
+	
+	  	function LanzaAjax (DirURL)
+		{
+		var RecTipo = 'SIN MODIFICACIÓN';
+	    $.ajax(
+           {
+           url: DirURL,
+           dataType: "html",
+           async: false,
+           complete: function(){ //alert('Completed');
+                    },
+           success: function(data) {
+                    if (typeof data == "string") {
+                                RecTipo = data;
+                                }
+                     }
+            });
+		return RecTipo;
+		}    
+
+	</script>
+
+</html>	  
+
+	

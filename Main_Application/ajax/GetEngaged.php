@@ -1,0 +1,81 @@
+<?php
+/*KYLE
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="doctors"; // Table name
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$queUsu = $_GET['Doctor'];
+$NReports = $_GET['NReports'];
+$daysExplore=empty($_GET['days']) ? 30: $_GET['days'];
+
+
+$cadena = '';
+
+$Num_Own_Patients = 0;
+$Num_Group_Patients = 0;
+$Num_Own_Reports = 0;
+$Num_Group_Reports = 0;
+$IdMed = $queUsu;
+$resultPRE = mysql_query("SELECT distinct(IdUs) FROM doctorslinkusers WHERE IdPin IS NULL and (Idmed='$IdMed' or IdMED IN (Select distinct(idDoctor) from doctorsgroups where idGroup IN (select idGroup from doctorsgroups where idDoctor= '$IdMed'))) and Estado IN (2,null)");
+$Num_Group_Patients = mysql_num_rows($resultPRE);
+$Num_Active=0;
+while ($rowS = mysql_fetch_array($resultPRE))
+{
+    $User_Reports = 0;
+    $IdUsu = $rowS['IdUs'];
+    $resultREPORT = mysql_query("SELECT IdPin FROM lifepin WHERE IdUsu = '$IdUsu'");
+    $User_Reports = mysql_num_rows($resultREPORT);
+    $Num_Group_Reports = $Num_Group_Reports + $User_Reports;
+    
+    $checkActive = mysql_query("SELECT Password FROM usuarios WHERE Identif = '$IdUsu'");
+	$rowActive = mysql_fetch_array($checkActive);
+	if ($rowActive['Password'] >'') $Num_Active++;
+
+    //echo $Num_Group_Reports.' ****************';
+  }
+$resultPRE = mysql_query("SELECT distinct(IdUs) FROM doctorslinkusers WHERE IdPin IS NULL and Idmed='$IdMed' and Estado IN (2,null)");
+$Num_Own_Patients = mysql_num_rows($resultPRE);
+while ($rowS = mysql_fetch_array($resultPRE))
+{
+    $User_Reports = 0;
+    $IdUsu = $rowS['IdUs'];
+    $resultREPORT = mysql_query("SELECT IdPin FROM lifepin WHERE IdUsu = '$IdUsu'");
+    $User_Reports = mysql_num_rows($resultREPORT);
+    $Num_Own_Reports = $Num_Own_Reports + $User_Reports;
+   // echo $Num_Own_Reports.' ----------------';
+  }
+ 
+// Rebuilt sections follow: (I am not overwritting previous code just in case we need to trace back in the future)
+$result = mysql_query("SELECT IdGroup FROM doctorsgroups WHERE IdDoctor = '$queUsu'");
+$row = mysql_fetch_array($result);
+$MyGroup = $row['IdGroup'];
+$query = "SELECT * FROM usuarios WHERE (IdCreator = '$queUsu' or Identif IN (SELECT IdUs FROM doctorslinkusers WHERE IdMED = '$queUsu')  OR Identif IN (SELECT IdPac FROM doctorslinkdoctors WHERE IdMED2 = '$queUsu')) OR (IdCreator IN (SELECT IdDoctor FROM doctorsgroups WHERE IdGroup = '$MyGroup')) ORDER BY Surname ASC";
+$result = mysql_query($query);
+$count=mysql_num_rows($result);
+$Num_Own_Patients = $count;
+$resultREPORT = mysql_query("SELECT IdPin FROM lifepin WHERE IdCreator = '$queUsu'");
+$countREPORT=mysql_num_rows($resultREPORT);
+$Num_Own_Reports = $countREPORT;
+      
+//	if ($n>0) $cadena.=',';    
+$cadena.='
+{
+    "NPatients":"'.$Num_Own_Patients.'",
+    "NActive":"'.$Num_Active.'",
+    "NPatientsTotal":"'.$Num_Group_Patients.'",
+    "NReports":"'.$Num_Own_Reports.'",
+    "NReportsTotal":"'.$Num_Group_Reports.'"
+    }';    
+
+$encode = json_encode($cadena);
+echo '{"items":['.($cadena).']}'; 
+
+
+?>

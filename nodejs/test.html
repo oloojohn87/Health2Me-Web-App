@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>Node.JS Test</title>
+        <script type="text/javascript" src="../js/jquery.min.js"></script>
+        
+    </head>
+    
+    <body>
+    
+        <script>
+            $(document).ready(function()
+            {
+                $.post('http://dev.health2.me:4226/recentActivity', {Doctor: 2543, NReports: 3, Group: 0}, function(data, status)
+                {
+                    console.log(data);
+                });
+            });
+        </script>
+    </body>
+    
+</html>

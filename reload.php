@@ -1,0 +1,41 @@
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Inmers Dashboard (BETA)</title>  
+    
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="/js/jquery.dataTables.js" type="text/javascript"></script>
+       
+    <link rel="stylesheet" type="text/css" href="css/estilosbasicos.css" />  
+    <link rel="stylesheet" type="text/css" href="css/demo_table_jui.css" />  
+    <link rel="stylesheet" type="text/css" href="css/jquery-ui-1.8.4.custom.css" /> 
+    </head>
+<?php
+
+echo '<table id="datatables" class="display" style="font-family: arial; font-size:12px;"><thead><tr><th>Origin</th><th>User Id</th><th>Date</th><th>File</th><th>Date Rec</th></tr></thead><tbody>';
+
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+//KYLE$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");					
+//BLOCKSLIFEPIN $result = mysql_query("SELECT * FROM blocks");
+$result = mysql_query("SELECT * FROM lifepin");
+
+while ($row = mysql_fetch_array($result)) {
+
+echo '<tr><td>'.$row['IdMEDEmail'].'</td>';
+echo '<td>'.$row['IdUsFIXED'].'</td>';
+echo '<td>'.$row['FechaEmail'].'</td>';
+echo '<td>'.$row['RawImage'].'</td>';
+echo '<td>'.$row['FechaInput'].'</td></tr>';
+
+}
+
+echo '</tbody></table>';
+
+
+?>

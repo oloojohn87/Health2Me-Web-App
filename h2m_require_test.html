@@ -1,0 +1,18 @@
+<html>
+<head>
+<title>Blah Blah Inc</title>	
+<script data-main="js/common" src="js/require.js"</script>
+<script>
+
+console.log("test");	
+require(['common'],function(){
+	console.log("test2");
+	require(['definitions']);
+});
+</script>	
+</head>
+<body>
+<h1>Hello<span id="foo"></span></h1>	
+</body>
+
+</html>

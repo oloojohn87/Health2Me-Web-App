@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=medium-dpi" />
+       
+
+        <link rel="stylesheet" href="css/responsivemobilemenu.css" type="text/css"/>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <!--<script type="text/javascript" src="cordova.js"></script>-->
+        <script type="text/javascript" src="js/responsivemobilemenu.min.js"></script>   
+        <script type="text/javascript" src="js/h2m_nav.min.js"></script> 
+        <script type="text/javascript" src="js/request.js"></script> 
+		 <!--<link rel="stylesheet" type="text/css" href="css/h2m.css" />-->
+         <link rel="stylesheet" type="text/css" href="css/request.css" />
+
+        <title>Health2Me Member's App</title>
+	<style>
+	
+		
+	</style>	
+    </head>
+    <body>
+        <header>
+            <div id="header"></div>   
+        </header>
+        <div id="wrapper">
+        <div class='title-block'>
+            Request Reports
+        </div>
+        	<div id='container1' class='content-block'>
+            	<div id='request-message'>Your request has been sent.</div>
+            	<div id='request-reports'>
+                	<label>Email of Doctor : </label>
+                	<input id='doctor-email' type="text" name="doctor-email">
+                	<button id="email-request-doc">REQUEST REPORTS</button>
+            	</div>
+        	</div>
+		
+        <!--<div class="app">
+         
+            <div id="deviceready" class="blink">
+                <p class="event listening">Connecting to Device</p>
+                <p class="event received">Device is Ready</p>
+            </div>
+        </div>-->
+        </div>
+        <footer>
+            <div id="footer"></div>
+        </footer>
+        
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript">
+            app.initialize();
+        </script>
+    </body>
+</html>

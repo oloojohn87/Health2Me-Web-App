@@ -1,0 +1,259 @@
+<html style="background: #F9F9F9;"><head>
+    <meta charset="utf-8">
+    <title lang="en">Health2Me- Device API Link Console</title>
+    <link rel="icon" type="image/ico" href="favicon.ico"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/jquery-ui-1.8.16.custom.css" media="screen"  />
+    <link rel="stylesheet" href="css/fullcalendar.css" media="screen"  />
+    <link rel="stylesheet" href="css/chosen.css" media="screen"  />
+    <link rel="stylesheet" href="css/datepicker.css" >
+    <link rel="stylesheet" href="css/colorpicker.css">
+    <link rel="stylesheet" href="css/glisse.css?1.css">
+    <link rel="stylesheet" href="css/jquery.jgrowl.css">
+    <link rel="stylesheet" href="js/elfinder/css/elfinder.css" media="screen" />
+    <link rel="stylesheet" href="css/jquery.tagsinput.css" />
+    <link rel="stylesheet" href="css/demo_table.css" >
+    <link rel="stylesheet" href="css/jquery.jscrollpane.css" >
+    <link rel="stylesheet" href="css/validationEngine.jquery.css">
+    <link rel="stylesheet" href="css/jquery.stepy.css" />
+    <link rel="stylesheet" type="text/css" href="css/googleAPIFamilyCabin.css">
+      <script type="text/javascript" src="js/42b6r0yr5470"></script>
+	<link rel="stylesheet" href="css/icon/font-awesome.css">
+ <!--   <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="css/bootstrap-responsive.css">
+	<link rel="stylesheet" href="css/toggle-switch.css">
+    <link rel="stylesheet" href="css/doctor_styles.css">
+    <link rel="stylesheet" href="build/css/intlTelInput.css">
+	
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lte IE 8]><script type="text/javascript" src="/js/excanvas.min.js"></script><![endif]-->
+ 
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/icons/favicon.ico">
+	
+    
+	<!-- Create language switcher instance and set default language to en-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+    <script src="jquery-lang-js-master/js/jquery-cookie.js" charset="utf-8" type="text/javascript"></script>    
+    <script src="jquery-lang-js-master/js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
+    
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/jquery.easing.1.3.js"></script>
+    <script src="build/js/intlTelInput.js"></script>
+    <script src="js/isValidNumber.js"></script>	
+    <script src="js/jquery.cookie.js"></script>
+
+    
+    
+    <script type="text/javascript">
+	var lang = new Lang('en');
+	window.lang.dynamic('th', 'jquery-lang-js-master/js/langpack/th.json');
+
+
+function delete_cookie( name ) {
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+}
+
+function setCookie(name,value,days) {
+confirm('Would you like to switch languages?');
+delete_cookie('lang');
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name+"="+value+expires+"; path=/";
+	
+	pageRefresh(); 
+}
+
+function setCookie2(name,value,days) {
+//confirm('Would you like to switch languages?');
+delete_cookie('lang');
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name+"="+value+expires+"; path=/";
+	
+	 
+}
+
+function pageRefresh(){
+location.reload();
+}
+
+//alert($.cookie('lang'));
+
+var langType = $.cookie('lang');
+
+if(langType == 'th'){
+var language = 'th';
+}else{
+var language = 'en';
+}
+
+if(langType == 'th'){
+setTimeout(function(){
+window.lang.change('th');
+lang.change('th');
+//alert('th');
+}, 2000);
+}else if(langType == 'en'){
+setTimeout(function(){
+window.lang.change('en');
+lang.change('en');
+//alert('th');
+}, 2000);
+} else {
+setCookie('lang', 'en', 30);
+}
+</script>
+	
+</head>
+  
+<body style="background: #F9F9F9;">
+
+    
+    
+</body>
+
+<script type="text/javascript" >    
+ var ConnData;  
+ var icdarray;  
+    
+$(document).ready(function() {
+       
+  $('#ICDBox').live('click',function()	{          
+		   $("#modalICDSearch").dialog({bgiframe: true, width: 400, height: 400, modal: true,title:"ICD10 LookUp"});
+       });
+ 
+  $('#ButtonSearchICD').live('click',function(){
+		
+        var tosearch = $('#ICDLABox').val();
+		var Codes = GetICD10Code(tosearch);
+		var longit = Object.keys(Codes).length;	   	  
+		var n=0;
+           
+           
+		$('#ICDList').empty();
+		while (n < longit)
+		{
+			$('#ICDList').append($('<option>', {
+				value: Codes[n].ICD10Code,
+				text: Codes[n].disName
+			}));
+			
+			n++;
+		}
+        
+    });
+        
+  $('#ICDList').live('change', 'select', function() {
+	    console.log($(this).val()); // the selected options’s value
+	
+		$('#SelCode').html($(this).val());
+	    // if you want to do stuff based on the OPTION element:
+	    //var opt = $(this).find('option:selected')[0];
+		var opt = $("#ICDList option:selected").text();
+		$('#SelOption').html(opt);
+	    // use switch or if/else etc.
+	});
+	
+  $('#ButtonUpdateICDCode').live('click',function()	{
+		var Wvalue = $('#SelCode').html();
+		var Woption = $('#SelOption').html();
+		$('#ICDBox').val(Wvalue);
+		$('#DiagnosticBox').val(Woption);
+		$('#modalICDSearch').dialog('close');
+	});
+	
+
+});
+
+    
+    function GetICD10Code(searchW)
+	{		
+		var ICDCodes = '';	
+		var ICDArr = Array();	
+        var queUrl = 'xmlread.php?search_string='+searchW;
+        $.ajax({
+            url: queUrl,
+            dataType: "json",
+            async: false,
+            success: function(data)
+            {
+                ConnData = data.items; 
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) { 
+            alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+            }       
+         });
+         return ConnData;
+    }
+
+</script>
+
+<!-- Adjust to point at the copy of the Temboo JavaScript SDK on your server -->
+<script src="js/temboo.js"></script>
+
+<script>
+// Instantiate the client proxy
+// You may need to adjust the path to reflect the URI of your server proxy
+var temboo = new TembooProxy('/proxy-server');
+
+// Add the browseActivities Choreo
+var browseActivitiesChoreo = temboo.addChoreo('jsBrowseActivities');
+
+// Add inputs
+browseActivitiesChoreo.setInput('ConsumerSecret', '01dd5107bd8e45b1b9d015eb567407b5');
+browseActivitiesChoreo.setInput('ConsumerKey', '5741b6ad4379465199cc215ce19af64a');
+
+// Success callback
+var showResult = function(outputs, outputFilters) {
+    // Display outputs
+    if(outputFilters) {
+    	// Display named output filters
+        for(var name in outputFilters) {
+            console.log(name + ':');
+            for(var item in outputs[name]) {
+                console.log('    ' + outputs[name][item]);
+            }
+        }
+    } else {
+    	// Display raw outputs
+        for(var name in outputs) {
+            console.log(name + ': ' + outputs[name]);
+        }
+    }
+};
+
+// Error callback
+var showError = function(error) {
+    if(error.type === 'DisallowedInput') {
+        console.log('Temboo DisallowedInput-'+error.type + ' error: ' + error.inputName);
+    } else {
+        console.log('Temboo -'+error.type + ' error: ' + error.message);
+    }
+};
+
+// Run the Choreo, specifying success and error callback handlers
+browseActivitiesChoreo.execute(showResult, showError);
+</script>    
+    
+    
+</html>

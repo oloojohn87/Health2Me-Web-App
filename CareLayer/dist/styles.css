@@ -1,0 +1,27 @@
+
+
+#header {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#footer {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#content{
+    width: 1000px;
+    height: 700px;
+    border: 1px solid #E8E8E8;
+    border-radius: 5px;
+    margin: auto;
+    margin-top: 100px;
+    z-index: 0;
+}

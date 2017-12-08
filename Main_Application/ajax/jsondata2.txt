@@ -1,0 +1,151 @@
+{
+    "timeline":
+    {
+        "headline":"Health Events",
+        "type":"default",
+        "text":"<p>User Id.: 2623</p>",
+        "asset": {
+            "media":"/images/ReportsGeneric.png", 
+            "credit":"(c) health2.me",
+            "caption":"Use side arrows for browsing"
+        },
+        "date": [               
+        
+            {
+                "startDate":"2/18/2015 00:00:00",
+                "endDate":"2/18/2015 00:00:00",
+                "headline":"Physician Report (in general)",
+                "text":"<p>Isolated Report</p>",
+                "tag":"Isolated Report",
+                "asset": {
+                    "media":"temp/131/PackagesTH_Encrypted/eML038b3caedde178004032e8e9561fffde6.png",
+                    "thumbnail":"temp/131/PackagesTH_Encrypted/eML038b3caedde178004032e8e9561fffde6.png",
+                    "credit":"(r) Author: JvinalsXXX@gmail.com (javier.vinals)",
+                    "caption":""
+                    }
+            }
+,
+            {
+                "startDate":"2/18/2015 00:00:00",
+                "endDate":"2/18/2015 00:00:00",
+                "headline":"Lab Tests (in general)",
+                "text":"<p></p>",
+                "tag":"",
+                "asset": {
+                    "media":"temp/131/PackagesTH_Encrypted/eML20000715113c058029111a6902c25d888ff2408c93.png",
+                    "thumbnail":"temp/131/PackagesTH_Encrypted/eML20000715113c058029111a6902c25d888ff2408c93.png",
+                    "credit":"(r) Author: almudenalage@gmail.com (almudena.lage)",
+                    "caption":""
+                    }
+            }
+,
+            {
+                "startDate":"2/18/2015 00:00:00",
+                "endDate":"2/18/2015 00:00:00",
+                "headline":"Physician Report (in general)",
+                "text":"<p></p>",
+                "tag":"",
+                "asset": {
+                    "media":"temp/131/PackagesTH_Encrypted/eML200007151141e009b6031a316b1fad555cfdb7070e.png",
+                    "thumbnail":"temp/131/PackagesTH_Encrypted/eML200007151141e009b6031a316b1fad555cfdb7070e.png",
+                    "credit":"(r) Author: almudenalage@gmail.com (almudena.lage)",
+                    "caption":""
+                    }
+            }
+,
+            {
+                "startDate":"2/17/2015 18:13:38",
+                "endDate":"2/17/2015 18:13:38",
+                "headline":"Static Information (in general)",
+                "text":"<p></p>",
+                "tag":"",
+                "asset": {
+                    "media":"temp/131/PackagesTH_Encrypted/2623.png",
+                    "thumbnail":"temp/131/PackagesTH_Encrypted/2623.png",
+                    "credit":"(r) Author: almudenalage@gmail.com (almudena.lage)",
+                    "caption":""
+                    }
+            }
+,
+            {
+                "startDate":"2/17/2015 00:00:00",
+                "endDate":"2/17/2015 00:00:00",
+                "headline":"Imaging Tests  (in general)",
+                "text":"<p></p>",
+                "tag":"",
+                "asset": {
+                    "media":"temp/131/PackagesTH_Encrypted/eML20000715119aae7b97e02f394279181caaa31d7976.png",
+                    "thumbnail":"temp/131/PackagesTH_Encrypted/eML20000715119aae7b97e02f394279181caaa31d7976.png",
+                    "credit":"(r) Author: almudenalage@gmail.com (almudena.lage)",
+                    "caption":""
+                    }
+            }
+,
+            {
+                "startDate":"2/16/2015 00:00:00",
+                "endDate":"2/16/2015 00:00:00",
+                "headline":"Imaging Tests  (in general)",
+                "text":"<p></p>",
+                "tag":"",
+                "asset": {
+                    "media":"temp/131/PackagesTH_Encrypted/eML200007151165f51ca961b7c15c4d2a0a0d714a49f6.png",
+                    "thumbnail":"temp/131/PackagesTH_Encrypted/eML200007151165f51ca961b7c15c4d2a0a0d714a49f6.png",
+                    "credit":"(r) Author: almudenalage@gmail.com (almudena.lage)",
+                    "caption":""
+                    }
+            }
+,
+            {
+                "startDate":"8/27/2014 00:00:00",
+                "endDate":"8/27/2014 00:00:00",
+                "headline":"Imaging Tests  (in general)",
+                "text":"<p></p>",
+                "tag":"",
+                "asset": {
+                    "media":"temp/131/PackagesTH_Encrypted/eML2000071511548d191df88d50b584e6e905306123fc.png",
+                    "thumbnail":"temp/131/PackagesTH_Encrypted/eML2000071511548d191df88d50b584e6e905306123fc.png",
+                    "credit":"(r) Author: almudenalage@gmail.com (almudena.lage)",
+                    "caption":""
+                    }
+            }
+,
+            {
+                "startDate":"8/24/2014 00:00:00",
+                "endDate":"8/24/2014 00:00:00",
+                "headline":"Imaging Tests  (in general)",
+                "text":"<p></p>",
+                "tag":"",
+                "asset": {
+                    "media":"temp/131/PackagesTH_Encrypted/eML2000071511991c67a0d582402508f4d7ea4924c302.png",
+                    "thumbnail":"temp/131/PackagesTH_Encrypted/eML2000071511991c67a0d582402508f4d7ea4924c302.png",
+                    "credit":"(r) Author: almudenalage@gmail.com (almudena.lage)",
+                    "caption":""
+                    }
+            }
+,
+            {
+                "startDate":"7/19/2013 00:00:00",
+                "endDate":"7/19/2013 00:00:00",
+                "headline":"Imaging Tests  (in general)",
+                "text":"<p></p>",
+                "tag":"",
+                "asset": {
+                    "media":"temp/131/PackagesTH_Encrypted/eML20000715112f78aa1edadc2fa27f8086c904cce1b4.png",
+                    "thumbnail":"temp/131/PackagesTH_Encrypted/eML20000715112f78aa1edadc2fa27f8086c904cce1b4.png",
+                    "credit":"(r) Author: almudenalage@gmail.com (almudena.lage)",
+                    "caption":""
+                    }
+            }
+
+       ],
+        "era": [
+            {
+                "startDate":"2013,12,10",
+                "endDate":"2013,12,11",
+                "headline":"Inmers Clinical Timeline",
+                "text":"<p>Powered by eMapLife</p>"
+            }
+
+        ]
+    }
+}

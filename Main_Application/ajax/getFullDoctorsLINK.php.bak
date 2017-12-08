@@ -1,0 +1,64 @@
+<?php
+ //   echo '<table><tr><td>TEST</td></tr></table>';
+//require "identicon.php";
+ 
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="usuarios"; // Table name
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$queUsu = $_GET['Usuario'];
+$NReports = $_GET['NReports'];
+$MEDID = $_GET['MEDID'];
+//$queUsu = 32;
+
+
+$result = mysql_query("SELECT * FROM doctors WHERE Surname like '%$queUsu%' LIMIT 10");
+
+echo  '<table class="table table-mod" id="TablaPac">';
+echo '<thead><tr id="FILA" class="CFILA"><th>Id-Fixed</th><th>Center</th><th></th><th>First Name</th><th>Last Name</th><th>Username</th><th>Linked?</th></tr></thead>';
+echo '<tbody>';
+
+while ($row = mysql_fetch_array($result)) {
+
+$email = $row['IdMEDEmail'];
+$default = "http://www.somewhere.com/homestar.jpg";
+$size = 29;
+$grav_url = "http://www.gravatar.com/avatar/" . md5( strtolower( trim( $email ) ) ) . "?d=" . urlencode( $default ) . "&s=" . $size;
+$hash = md5( strtolower( trim( $email ) ) );
+$avat = 'identicon.php?size=29&hash='.$hash;
+
+$ImgCentro = 'images/doctors/'.$row['ImageLogo'];
+
+$IdUs= $row['id'];
+echo '<tr class="CFILA" id="'.$row['id'].'"><td>'.$row['IdMEDEmail'].'</td>';
+echo '<td><div class="avatar" style="border:none;  margin: 0 auto;"><img src="'.$ImgCentro.'" /></div></td>';
+echo '<td><div class="avatar" style="border:none;  margin: 0 auto;"><img src="'.$avat.'" /></div></td>';
+echo '<td>'.(htmlspecialchars($row['Name'])).'</td>';
+echo '<td>'.(htmlspecialchars($row['Surname'])).'</td>';
+echo '<td>'.(htmlspecialchars($row['IdMEDEmail'])).'</td>';
+
+$result2 = mysql_query("SELECT * FROM doctorslinkusers WHERE IdUs ='$IdUs' and IdMED = '$MEDID'LIMIT 10");
+$count=mysql_num_rows($result2);
+if ($count>0)
+{
+echo '<td style="text-align:center;"><div class="fam-accept" style="margin-right:10px;"></td></tr>';
+}else
+{
+echo '<td style="text-align:center;" ><div class="view-button" style="display: inline-block;"id="'.$IdUs.'"><a href="#" class="btn  btn-mini" >Link</a></div></td></tr>';
+}
+
+
+//<div class="fam-accept" style="margin-right:10px;">
+}
+
+echo '</tbody></table>';    
+    
+
+?>

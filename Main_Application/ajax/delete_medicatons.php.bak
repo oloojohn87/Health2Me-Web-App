@@ -1,0 +1,27 @@
+<?php
+ 
+ 
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+ 
+ $id = $_GET['id'];
+ 
+ 
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+
+$query = "update medications set del=1 where idmedication=$id";
+//echo $query;
+if(mysql_query($query))
+{
+	echo 'success';
+}
+else
+{
+	echo 'failure';
+}

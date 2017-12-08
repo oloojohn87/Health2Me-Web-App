@@ -1,0 +1,58 @@
+<?php
+require("environment_detail.php");
+$dbhost = $env_var_db['dbhost'];
+$dbname = $env_var_db['dbname'];
+$dbuser = $env_var_db['dbuser'];
+$dbpass = $env_var_db['dbpass'];
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$path_parts = "";
+$erase = false;
+$erase_file = "";
+$is_recording = false;
+if(isset($_POST['file']))
+{
+    $path_parts = pathinfo($_POST['file']);
+}
+if(isset($_POST['erase']))
+{
+    $erase = true;
+}
+if(isset($_POST['erase_file']))
+{
+    $erase_file = $_POST['erase_file'];
+}
+if(isset($_POST['recording']))
+{
+    $is_recording = $_POST['recording'];
+}
+
+if($erase)
+{
+    set_time_limit (27);
+    sleep(25);
+    echo unlink($erase_file);
+}
+else if($is_recording)
+{
+    $enc_result = mysql_query("select pass from encryption_pass where id = (select max(id) from encryption_pass)");
+    $row_enc = mysql_fetch_array($enc_result);
+    $enc_pass=$row_enc['pass'];
+    $cmd = 'echo "'.$enc_pass.'" | "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\bin\"openssl.exe aes-256-cbc -pass stdin -d -in recordings/'.$path_parts['basename'].' -out temp/'.$path_parts['basename'].'.mp3';
+    exec($cmd);
+    
+    echo 'temp/'.$path_parts['basename'].'.mp3';
+}
+else
+{
+    $enc_result = mysql_query("select pass from encryption_pass where id = (select max(id) from encryption_pass)");
+    $row_enc = mysql_fetch_array($enc_result);
+    $enc_pass=$row_enc['pass'];
+    $cmd = 'echo '.$enc_pass.' | "C:\Program Files (x86)\Apache Software Foundation\Apache2.2\bin\"openssl.exe aes-256-cbc -pass stdin -d -in '.$path_parts['dirname'].'/'.$path_parts['basename'].' -out temp/'.$path_parts['basename'];
+    exec($cmd);
+    
+    echo 'temp/'.$path_parts['basename'];
+}
+?>

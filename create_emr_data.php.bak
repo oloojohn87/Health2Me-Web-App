@@ -1,0 +1,76 @@
+<?php
+//session_start();
+require("environment_detail.php");
+//require("h2pdf.php");
+
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+ 
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$idPatient = $_GET['idp'];
+$dob = $_GET['dob'];
+$sexo = $_GET['gender']; //to be updated in usuarios
+$address = $_GET['address'];
+$address2 = $_GET['address2'];
+$city = $_GET['city'];
+$state = $_GET['state'];
+$country = $_GET['country'];
+$notes = $_GET['notes'];
+$fractures = $_GET['fractures'];
+$surgeries = $_GET['surgeries'];
+$otherknown = $_GET['otherknown'];
+$obstetric = $_GET['obstetric'];
+$othermed = $_GET['other'];
+$fatheralive = $_GET['fatheralive'];
+$fcod = $_GET['fcod'];
+$faod = $_GET['faod'];
+$frd = $_GET['frd'];
+$motheralive = $_GET['motheralive'];
+$mcod = $_GET['mcod'];
+$maod = $_GET['maod'];
+$mrd = $_GET['mrd'];
+$siblingsrd = $_GET['srd'];
+
+$phone = $_GET['phone'];
+$insurance = $_GET['insurance'];
+
+if(!$faod)
+{
+	$faod='null';
+}
+
+if(!$maod)
+{
+	$maod = 'null';
+}
+
+
+$query = "update usuarios set sexo=$sexo where identif=$idPatient";
+mysql_query($query); 
+
+
+$query = "insert into basicemrdata values($idPatient,'$dob','$address','$address2','$city','$state','$country','$notes','$fractures','$surgeries','$otherknown','$obstetric','$othermed',$fatheralive,'$fcod',$faod,'$frd',$motheralive,'$mcod',$maod,'$mrd','$siblingsrd','$phone','$insurance')";
+
+//echo $query;
+
+
+																																													
+
+
+
+if(mysql_query($query))
+{
+
+	echo 'success';
+	//create_emr_pdf($idPatient,$_SESSION['MEDID']);
+	return;
+}
+echo 'failure';
+
+
+?>

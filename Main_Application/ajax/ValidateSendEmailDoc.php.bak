@@ -1,0 +1,168 @@
+<?php
+//Code for validating doctor email entered by patient and sending mail further to the doctor
+
+require("environment_detail.php");
+$dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$email = $_GET['emailId'];
+$user = $_GET['user'];
+
+// Connect to server and select databse.
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }		
+
+//Selecting the Name, Surname and IdMEDEmail if the doctor email which the patient enetered is present in DB
+$query1 = $con->prepare("select id,Name,Surname,IdMEDEmail from doctors where IdMEDEmail = ? AND salt is not null");
+$query1->bindValue(1, $email, PDO::PARAM_STR);
+$query1->execute();
+
+$row1 = $query1->fetch(PDO::FETCH_ASSOC);
+$doctorName = $row1['Name'];
+$doctorSurname = $row1['Surname'];
+$doctorId = $row1['id'];
+
+echo $doctorId;
+
+$count1 = $query1->rowCount();
+
+
+//Finding whether the doctor exists in the nonh2m_doctors table
+
+$query1 = $con->prepare("select count(*) as count from nonh2m_doctors where IdMEDEmail = ?");
+$query1->bindValue(1, $email, PDO::PARAM_STR);
+$query1->execute();
+
+$row1 = $query1->fetch(PDO::FETCH_ASSOC);
+$count2 = $row1['count'];
+
+
+$confirm_code = md5(uniqid(rand()));
+
+$query2 = $con->prepare("select email,identif,Alias from usuarios where Identif = ?");
+
+$query2->bindValue(1, $user, PDO::PARAM_INT);
+$query2->execute();
+$row2 = $query2->fetch(PDO::FETCH_ASSOC);
+
+$alias = $row2['Alias'];
+$splittedString = explode(".",$alias);
+$userName = $splittedString[0];
+$userSurname = $splittedString[1];
+$userId = $row2['identif'];
+$emailUser = $row2['email'];
+
+// The doctor is a user of the H2M system if we have a row and count is 1
+if($count1 == 1 && $count2 == 0) 
+{
+         $query = $con->prepare("insert into message_infrastructureuser (subject,content,tofrom,receiver_id,fecha,patient_id,status) values('Send Mail','Mail from Patient','to',?,now(),?,'new')");
+		 $query->bindValue(1, $doctorId, PDO::PARAM_INT);
+		 $query->bindValue(2, $userId, PDO::PARAM_INT);
+		 $query->execute();
+    
+         echo "domain is ".$domain;
+         require_once 'lib/swift_required.php';
+         $Content = file_get_contents('templates/SendMessageFromPatientToDoc.html');
+         $Var3 = $userName." ".$userSurname;
+         $Var4 = $doctorName;
+         $Var5 = $doctorSurname;
+
+         $Content = str_replace("**Var3**",$Var3,$Content);
+         $Content = str_replace("**Var4**",$Var4,$Content);
+         $Content = str_replace("**Var5**",$Var5,$Content);
+         $Content = str_replace("**Var11**",$emailUser,$Content);
+         $body = $Content;
+
+         $subject = 'View Medical Records Of: '.$userName.' '.$userSurname;
+
+         $transporter = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
+          ->setUsername('dev.health2me@gmail.com')
+          ->setPassword('health2me');
+
+         $mailer = Swift_Mailer::newInstance($transporter);
+
+
+         $message = Swift_Message::newInstance()
+          ->setSubject($subject)
+          ->setFrom(array('hub@inmers.us' => $userName.' '.$userSurname.' via Health2Me'))
+          ->setTo(array($email))
+          ->setBody($body, 'text/html')
+          ;
+
+         $result = $mailer->send($message);
+}
+
+
+
+else
+    if($count1 == 0 && $count2 == 1)
+      {
+            // If the doctor is not into the doctors table then insert him there
+            if($count1 == 0)
+              {
+                $query3 = $con->prepare("INSERT INTO doctors SET IdMEDEmail = ?,previlege=2,token=?");
+                $query3->bindValue(1, $email, PDO::PARAM_STR);
+                $query3->bindValue(2, $confirm_code, PDO::PARAM_STR);
+                $query3->execute();
+              }
+
+            $query4 = $con->prepare("select id from doctors where idmedemail = ?");
+            $query4->bindValue(1, $email, PDO::PARAM_STR);
+            $query4->execute();
+
+            $row4 = $query4->fetch(PDO::FETCH_ASSOC);
+            $doctorId = $row4['id'];
+
+            $temp_access = $con->prepare("INSERT INTO temporary_doctor_access SET doctorId = ?, patientId = ?, sendTime = NOW(), expirationTime = NOW() + INTERVAL 1 DAY");
+            $temp_access->bindValue(1, $doctorId, PDO::PARAM_INT);
+            $temp_access->bindValue(2, $userId, PDO::PARAM_INT);
+            $temp_access->execute();
+
+             require_once 'lib/swift_required.php';
+             $Content = file_get_contents('templates/SendMessageFromPatientToNonH2MDoc.html');
+             $Var3 = $userName." ".$userSurname;
+             //$Var4 = $doctorName; // Commented out the Var4 and Var5 as there is no entry for the nonH2M doctor in the database 
+             //$Var5 = $doctorSurname;
+             $Var7 = $doctorId;
+             $Var8 = $user;
+             $Var9 = $confirm_code;
+
+             $Content = str_replace("**Var3**",$Var3,$Content);
+             //$Content = str_replace("**Var4**",$Var4,$Content);
+             //$Content = str_replace("**Var5**",$Var5,$Content);
+             $Content = str_replace("**Var7**",$Var7,$Content);
+             $Content = str_replace("**Var8**",$Var8,$Content);
+             $Content = str_replace("**Var9**",$Var9,$Content);
+             $Content = str_replace("**Var11**",$emailUser,$Content);
+
+             $body = $Content;
+
+             $subject = 'View Medical Records Of: '.$userName.' '.$userSurname;
+
+             $transporter = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
+              ->setUsername('dev.health2me@gmail.com')
+              ->setPassword('health2me');
+
+            $mailer = Swift_Mailer::newInstance($transporter);
+
+
+            $message = Swift_Message::newInstance()
+              ->setSubject($subject)
+              ->setFrom(array('hub@inmers.us' => $userName.' '.$userSurname.' via Health2Me'))
+              ->setTo(array($email))
+              ->setBody($body, 'text/html')
+              ;
+
+            $result = $mailer->send($message);
+
+            echo $result;
+
+        }
+?>

@@ -1,0 +1,152 @@
+/*This file used in 
+	record.html
+*/
+#history-container {
+    height:180px; 
+    font-size: 10px;
+	position:relative;
+
+} 
+
+#outer1 {
+	height:35%;
+}	
+#outer2{
+	height:62%	
+}	
+#row1,#row2 {
+    display:block;  
+    width:100%;
+}    
+.h-box {
+    height:85px;
+    width:25%;
+    display:inline-block;
+    color: white;
+    line-height:3;
+    text-align:center;
+    margin:auto;
+	cursor:pointer;
+}
+#wrapper {
+    height:100%;   
+}    
+#content {
+   
+}    
+#container1 {
+    
+}
+
+#StreamContainerAll{
+	background-color:#fbfbfb;
+	margin-right: 10px;
+	margin-left:10px;
+}	
+#container2 {
+	margin:0;
+	margin-right:48px;
+	margin-left:48px;
+	padding:0;
+	overflow-x: scroll;
+	overflow-y: hidden;
+	-webkit-overflow-scrolling: touch;
+}
+.h-box img {
+    display:block;
+    padding:5px;
+    margin:0 auto;
+    margin-top:20px;
+    width:30px;
+    position:relative;
+}    
+#box-1 {
+    background-color:#037e00;
+    float:left;
+}  
+#box-2 {
+    background-color:#dfb408;
+    float:left;
+} 
+#box-3 {
+    background-color:#48a25a;
+    float:left;
+} 
+#box-4 {
+    background-color:#ffa500;
+   	float:left;
+} 
+#box-5 {
+    background-color:#19b0ff;
+    float:left;
+} 
+#box-6 {
+    background-color:#696969;
+    float:left;
+} 
+#box-7 {
+    background-color:#5f9ea0;
+    float:left;
+} 
+#box-8 {
+    background-color:#801082;
+    float:left;
+} 
+#upload-container {
+    position:relative;
+}  
+#cam {
+    width: 50%;
+    margin: 0 auto;
+    background-color:#e5e5e5;
+    padding-left: 10px;
+    padding-right: 10px;
+}    
+#cam img{
+    width:40px;
+    margin-top:15px;
+}  
+#upload-icon {
+    position:relative;
+    top: 10px;
+    padding: 10px;
+    width: 50%;
+    margin: 0 auto;
+    background-color:#c7c7c7;
+    border-color:#717171;
+    display:block;
+}    
+#records_button{
+    background-color:rgb(34,174,255);
+    //background-image:url("../img/upload_white.svg")
+}  
+
+#left-scroll {
+    position:absolute;
+    left:10px;
+    top:80px;
+    display:block;
+    z-index: 50;
+    padding: 10px;
+    color:rgb(34,174,255);
+
+} 
+#left-scroll,#right-scroll:hover {
+    cursor:pointer;   
+}    
+#right-scroll {
+    position:absolute;
+    right:10px;
+    top:80px;
+    display:block;
+    z-index:50;
+     padding: 10px;
+    color:rgb(34,174,255);
+    border:0px;
+}   
+
+.note-footer {
+ 	height:48px; 
+	width:148px; 
+	border: 1px solid #22aeff;
+}	

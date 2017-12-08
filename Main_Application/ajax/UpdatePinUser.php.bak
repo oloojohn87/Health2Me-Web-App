@@ -1,0 +1,206 @@
+<?php
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="usuarios"; // Table name
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$quePin = $_GET['quePin'];
+$queUsu = $_GET['queUsu'];
+$queIdUsFIXED = $_GET['queIdUsFIXED'];
+$queIdUsFIXEDNAME = $_GET['queIdUsFIXEDNAME'];
+$queEmail = $_GET['queEmail'];
+
+$queName = $_GET['queName'];
+$queSurname = $_GET['queSurname'];
+$queNameDoctor = $_GET['queNameDoctor'];
+$queSurnameDoctor = $_GET['queSurnameDoctor'];
+
+$FechaEmail = date("F j, Y, g:i a"); 
+
+/*
+echo "MODO: ";
+echo $queModo;
+echo "   --- Usuario: ";
+echo $queUsu;
+*/
+
+$queModo = 1;
+
+if ($queModo == '1')
+{
+	$q = mysql_query("UPDATE lifepin SET IdUsu='$queUsu', IdUsFIXED='$queIdUsFIXED', IdUsFIXEDNAME='$queIdUsFIXEDNAME', ValidationStatus=0 , NextAction='OK. Data assigned to user by doctor.'  WHERE IdPin='$quePin'");   
+    //LogMov($IdUsFIXED, $fromname, $fromaddress, '3', 'File Upload', 'FTP file UPLOADED SUCCESSFULLY', $subject, $email_number);
+
+}
+else
+{
+	$q = mysql_query("UPDATE lifepin SET IdUsu='$queUsu', IdUsFIXED='$queIdUsFIXED', IdUsFIXEDNAME='$queIdUsFIXEDNAME', ValidationStatus=0 , NextAction='OK. Data assigned to user by doctor.'  WHERE IdPin='$quePin'");   
+    //LogMov($IdUsFIXED, $fromname, $fromaddress, '3', 'File Upload', 'FTP file UPLOADED SUCCESSFULLY', $subject, $email_number);
+}
+
+
+$message = 'Dear ';
+//$message.= $NameDoctor.' '.$SurnameDoctor.' ';
+$message.= $queName.': ';
+//$message.= '( '.$PatientIdUsFIXED.' ['.$PatientIdUsFIXEDNAME.']'.' ) : ';
+$message.= ' Dr. '.$queNameDoctor.' '.$queSurnameDoctor.' added a new report to your Medical Record.';
+$message.= '(Ids.: '.$queIdUsFIXED.' ['.$queIdUsFIXEDNAME.']'.' ) : ';
+$message.= ' Date: ';
+$message.= '<span style="color: green;">';
+$message.= $FechaEmail;
+$message.= '<span style="color: black;">';
+$message.= '. The information has been updated and is available at eMapLife. ';
+
+EnviaMail2($queEmail, $queIdUsFIXED,'eMapLife clinical validation system','Patient information added.', $message, 0, 9999, 'Grace@health2.me', 'Inmers',$ID, 9);  		 	// ENVIA E-MAIL PARA EL PACIENTE
+
+
+
+
+
+
+function EnviaMail2($objetivo, $IdUsFIXED, $sobre, $message0, $message, $codExito, $IdU, $fro, $froa ,$quePIN, $queCodigo)
+{
+require_once 'lib/swift_required.php';
+
+/*
+echo "<br>\n"; 	
+echo "Objetivo = ";
+echo $objetivo;
+echo "<br>\n"; 	
+echo "sobre = ";
+echo $sobre;
+echo "<br>\n"; 	
+echo "message = ";
+echo $message;
+echo "<br>\n"; 	
+echo "codExito = ";
+echo $codExito;
+echo "<br>\n"; 	
+echo "IdU = ";
+echo $IdU;
+echo "<br>\n"; 	
+echo "fro = ";
+echo $fro;
+echo "<br>\n"; 	
+echo "froa = ";
+echo $froa;
+echo "<br>\n"; 	
+echo "quePIN = ";
+echo $quePIN;
+echo "<br>\n"; 	
+echo "queCodigo = ";
+echo $queCodigo;
+echo "<br>\n"; 	
+*/
+
+if ($codExito==0)
+{
+//LogMov($IdUsu, $fromname, $fromaddress, '4', 'dB INSERTION', 'PIN INSERTED, Database UPDATED' , $subject, $email_number);
+	$Sobre = $sobre;
+	$Body = '<h1>'.$message0.'</h1>';
+	$Body .= '<h2>Patient.: '.$IdUsFIXED.'</h2>';
+	
+	$confirm_code = $queCodigo;
+	
+	$message2= '***** HIPAA AND STANDARD COMPLIANCE PROCEDURES DISCLAIMER *****  :   ';
+	$message2.= ' Text of the Legal, Disclaimer and technical explanations here ... Lore Ipsum';
+	
+	
+    $Body.='<h3>';
+    $Body.= $message;
+    $Body.='</h3>';
+   
+    $Body.='<h3>';
+    $Body.= $message2;
+    $Body.='</h3>';
+
+}
+else
+{
+}
+
+
+$transporter = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
+  ->setUsername('HUB@health2.me')
+  ->setPassword('mnibjb007');
+
+$mailer = Swift_Mailer::newInstance($transporter);
+
+
+// Create the message
+$message = Swift_Message::newInstance()
+
+  // Give the message a subject
+  ->setSubject($Sobre)
+
+  // Set the From address with an associative array
+  ->setFrom(array('HUB@health2.me' => 'eMapLife Clinical HUB'))
+
+  // Set the To addresses with an associative array
+  ->setTo(array($objetivo))
+
+  // Give it a body
+ // ->setBody('Here is the message itself')
+  ->setBody('Here is the message itself')
+
+  // And optionally an alternative body
+//  ->addPart('<q>Here is the message itself</q>', 'text/html')
+  ->addPart($Body, 'text/html')
+
+  // Optionally add any attachments
+ // ->attach(Swift_Attachment::fromPath('my-document.pdf'))
+  ;
+
+
+$result = $mailer->send($message);
+
+
+}  
+
+function LogBLOCK ($IDBLOCK, $Content, $IdMEDEmail, $IdMEDRESERV, $IdUsFIXED, $IdUsFIXEDNAME, $IdUsRESERV , $Canal)
+{
+	$retorno = array();
+	$MensajeError = "";
+
+	$Fecha = date ('Y-m-d H:i:s');	
+
+				 require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+					$tbl_name="usuarios"; // Table name
+					
+					// Connect to server and select databse.
+					$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+					mysql_select_db("$dbname")or die("cannot select DB");
+
+
+	$q = mysql_query("INSERT INTO btracker SET  IDBLOCK ='$IDBLOCK', Content='$Content', DateTimeSTAMP = NOW(), TimeSTAMP = NOW(),  IdMEDEmail ='$IdMEDEmail', IdMEDRESERV ='$IdMEDRESERV', IdUsFIXED = '$IdUsFIXED', IdUsFIXEDNAME = '$IdUsFIXEDNAME', IdUsRESERV ='$IdUsRESERV' , CANAL = '$Canal' ");
+
+echo mysql_errno($link) . ": " . mysql_error($link). "\n";
+	
+/*
+	$retorno[0]=$Cambio;					//PUNTOS SUMADOS AHORA
+	$retorno[1]=$Cambio / 50;				//CREDITOS SUMADOS AHORA
+	$retorno[2]= $NuevoSaldoPrevio;			//SALDO EN PUNTOS  	 ACTUAL
+	$retorno[3]= $NumeroCreditos;			//SALDO EN CREDITOS  ACTUAL
+	$retorno[4]= $SaldoPrev;				//SALDO EN PUNTOS  	 **ANTERIOR**
+	$retorno[5]= $NumeroCreditosAnt;		//SALDO EN CREDITOS  **ANTERIOR**
+	$retorno[6]= $FechaPrevia;				//FECHA DE LA ENTRADA ANTERIOR
+	$retorno[7]= $MensajeError;				//MENSAJE
+*/
+
+	
+return $retorno;
+}
+
+
+
+?>

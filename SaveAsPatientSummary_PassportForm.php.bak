@@ -1,0 +1,12 @@
+<?php
+
+$htmlContent = $_GET['htmlContent'];
+
+$content = file_get_contents("http://dev.health2.me/templates/pdfTemplate.html");
+$content = str_replace("**Var**",$htmlContent,$content);
+$str = 'data.html';
+$fp = fopen($str, 'w');
+fwrite($fp, $content);
+
+shell_exec('C:\xampp\wkhtmltopdf\bin\wkhtmltopdf '.$str.' demoData.pdf');
+?>

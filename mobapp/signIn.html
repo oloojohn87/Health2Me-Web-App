@@ -1,0 +1,405 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+	<title>Page Title</title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+	<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+    <style type="text/css" media="screen">
+        .ui-page { -webkit-backface-visibility: hidden; }
+    </style>
+        <script type="text/javascript">
+        //apply overrides here 
+        $(document).bind("pageinit", function(){
+            $("#account_creation").click(function() {
+			
+				getIdUsFIXED();
+				getIdUsFIXEDNAME();
+				addhtml="<span>Signup ID: "+$('#VIdUSFIXEDNAME').val()+"</span><br><span> Email: "+$("#email").val()+"</span>";
+				$("#ShowIdDetails").html(addhtml);
+				$.mobile.changePage($('#SignUpConfirm'), 'slideup'); 
+			 
+            });
+			
+			$("#Proceed").click(function(){
+			
+			 
+				//$('#VIdUSFIXEDNAME').val('mobile.test');
+                 $('#signupform').method="post";
+				 $('#signupform').submit();
+			
+			
+			
+			});
+			
+			 $('#reset').bind("click", function(){
+	     	
+	     	var queEmail = $('#reset_email').val();
+          	var cadena = '../CheckPrevio2.php?valor='+queEmail+'&queTipo=1';
+	        var RecTipo = LanzaAjax (cadena);
+	     
+	        var loc1 =   RecTipo.indexOf("#");
+	        var subca1 = RecTipo.substr(loc1+1);
+	        var queTip = RecTipo.substr(0, loc1);
+	       
+	        var loc2 =   subca1.indexOf("#");
+	        var subca2 = subca1.substr(loc2+1);
+	        var IdUsFIXED = subca1.substr(0, loc2);
+
+	        var loc3 =   subca2.indexOf("#");
+	        var subca3 = subca2.substr(loc3+1);
+	        var IdUsFIXEDNAME = subca2.substr(0, loc3);
+	       
+	        var loc4 =   subca3.indexOf("#");
+	        var subca4 = subca3.substr(loc4+1);
+	        var IdUsRESERV = subca3.substr(0, loc4);
+
+	        /*
+	        alert (RecTipo);
+	        alert (queTip);
+	        alert (IdUsFIXED);
+		    alert (IdUsFIXEDNAME);
+		    alert (IdUsRESERV);
+            */
+	        
+	        if (queTip==0)
+	        {alert ('User not found in database. Please try with another email address.');}
+	        else
+	        {
+		        if (queTip>1){alert ('More than one user for that email address. Please contact health2.me support.');}
+	        else{
+		        // ENVIO DE EMAIL DE RECORDATORIO
+		        var cadena = '/mobapp/resetpassword_mob.php?email='+queEmail;
+		        //alert (cadena);
+				//$.mobile.changePage(cadena);
+				$.mobile.changePage(cadena, 'pop'); 
+		        //var RecTipo2 = LanzaAjax (cadena);
+				//alert(RecTipo2);
+	         	}
+	        }
+	        
+	        
+        });   
+		
+		 function getIdUsFIXED(){
+    		var year = $("#Year").val();
+    		var month = $("#Month").val();
+    		var day = $("#Day").val();
+    		
+    		var fnacnum = year+FormatNumberLength(month, 2)+FormatNumberLength(day, 2);
+			//This is for checking gender
+    		var gender = chkb($("#radio-mini-1").is(':checked'));
+   		     		
+    		//var gender = $("#Genderm").val();
+    		var orderOB = $("#OrderOB").val();
+			if (gender==0){ gender='0';}
+    		if (orderOB==0){ 
+			orderOB='0';
+			$("#OrderOB").val('0');
+			}
+   		
+    		var VIdFIXED = fnacnum+gender+orderOB;
+			$('#VIdUSFIXED').val(VIdFIXED);
+			$('#Gender').val(gender);
+   			/*$('#VIdUsFIXED').html(VIdUsFIXED);
+   			$('#VIdUsFIXED2').html(VIdUsFIXED);
+   			$('#VIdUsFIXEDINSERT').val(VIdUsFIXED);*/
+   		
+    	}
+ 
+		function getIdUsFIXEDNAME(){
+    		var vname = $("#Vname").val().toLowerCase().replace(".","").replace(" ","");
+    		var vsurname = $("#Vsurname").val().toLowerCase().replace(".","").replace(" ","");
+    		
+    		var VIdUsFIXEDNAME = vname+'.'+vsurname;
+    		$('#VIdUSFIXEDNAME').val(VIdUsFIXEDNAME);
+			//alert(VIdUsFIXEDNAME);
+    		//$('#VIdUsFIXEDNAME2').html(VIdUsFIXEDNAME);
+    		//$('#VIdUsFIXEDNAMEINSERT').val(VIdUsFIXEDNAME);
+    	}
+
+		function chkb(bool){
+	    if(bool)
+	    	return 1;
+	    	return 0;
+	    }
+		
+		function FormatNumberLength(num, length) {
+    	var r = "" + num;
+    	while (r.length < length) {
+        	r = "0" + r;
+        	}
+        return r;
+        }
+		
+		function LanzaAjax (DirURL)
+		{
+		var RecTipo = 'SIN MODIFICACIÓN';
+		$.ajax(
+           {
+           url: DirURL,
+           dataType: "html",
+           async: false,
+           complete: function(){ //alert('Completed');
+                    },
+           success: function(data) {
+                    if (typeof data == "string") {
+                                RecTipo = data;
+                                }
+                     }
+            });
+		return RecTipo;
+		}    
+
+            
+        });
+    </script>
+
+</head> 
+<body> 
+
+<div data-role="page" data-theme="d" id="home">
+
+	<div data-role="header" data-theme="a">
+		<h1><img src="Icono_H2M.png" alt="" ></h1>
+	</div><!-- /header -->
+
+	<div data-role="content" data-theme="d" >	
+		
+      
+	<p id="output"></p>
+
+    <p>
+
+        <form action="login_mob.php" method="post" id="loginForm" data-ajax="false">
+
+            Username: <input type="text" name="Nombre"><br /><br />
+
+            Password: <input type="password" name="Password"><br />
+
+            <input type="submit" value="Login">
+
+        </form>
+
+    </p>
+	<br>
+	<p style="float:left">
+		<a href="#Forgotpassword" data-transition="flip" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="e" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-e" data-prefetch>
+			<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Forgot Password</span></span>
+		</a>
+	</p>
+	
+	<!--<p><span style="float:left"><a href="#Forgotpassword"> Forgot Password</a></span> -->
+	<p style="float:right">
+		<a href="#signup" data-transition="flip" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="e" class="ui-btn ui-shadow ui-btn-corner-all ui-btn-up-e" data-prefetch>
+			<span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Sign Up</span></span>
+		</a>
+	</p>
+	
+	<!--<span style="float:right"><a href="#signup"> Sign Up </a></span></P> -->
+
+	</div>
+	
+	<div data-role="footer" data-id="foo1" data-position="fixed">
+	<div data-role="navbar">
+		<ul>
+			<li><div style="text-align:center"><i> Copyright 2014 Inmers LLC. </i></div></li>				
+		</ul> 
+		</div>	<!-- /navbar -->
+		</div>	<!-- /footer -->
+	</div><!-- /page -->
+	
+	<!-- Page for forgot password-->
+	<div data-role="page" id="Forgotpassword" data-theme="d" data-url="two" tabindex="0" class="ui-page ui-body-a" style="min-height: 667px;" >
+
+	<div data-role="header" data-theme="a">
+		<h1><img src="Icono_H2M.png" alt="" ></h1>
+	</div><!-- /header -->
+
+	<div data-role="content" data-theme="d" class="ui-content ui-body-a" role="main">	
+		
+		<p> <span> Please enter your email ID to reset password: <span> <br> <br>
+		
+		<input type="email" name="email" id="reset_email" placeholder="Email" value="" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" data-mini="true">
+		
+		</p>
+		<br>
+		<p> <input type="button" value="Proceed" id="reset" data-theme="b"></p>	
+		
+	</div><!-- /content -->
+	
+	<div data-role="footer" data-id="foo1" data-position="fixed">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="signIn.html" data-rel="back">Back</a></li>								
+		</ul> 
+			</div><!-- /navbar -->
+	</div>	<!-- /footer -->
+	</div>
+	<!--<div data-role="page" data-theme="d" id="Forgotpassword">
+			
+		
+			<div data-role="header" data-theme="a">
+			<h1><img src="Icono_H2M.png" alt="" ></h1>
+		</div><!-- /header -->
+      
+	<!--<div data-role="content" data-theme="d">
+	<p id="output">ForgotPassword</p>
+
+    <p>
+
+       <!-- <form method="post" id="loginForm">
+
+            Username: <input type="text" name="username"><br /><br />
+
+            Password: <input type="password" name="password"><br />
+
+            <input type="submit" value="Login">
+
+        </form>
+
+    </p>
+	
+
+	</div>
+	
+		<div data-role="footer" data-id="foo1" data-position="fixed">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="javascript:void(0)"></a></li>				
+			</ul> 
+		</div><!-- /navbar -->
+	<!--</div><!-- /footer -->
+
+	<!--</div>--><!-- /page -->
+	
+	<!-- Page for Sign Up -->
+	<div data-role="page" data-theme="d" id="signup">
+	<div data-role="header" data-theme="a">
+		<h1><img src="Icono_H2M.png" alt="" ></h1>
+	</div><!-- /header -->
+	
+	<div data-role="content" data-theme="d">	
+		
+    <p>
+      <form method="post" action="AddUser_mob.php" id="signupform" data-ajax="false">
+	  		
+			<!--<label for="date" class="ui-input-text">Birthdate:</label><input type="date" name="date" id="date" value="" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset">-->
+			<div class="ui-grid-b">
+			<div class="ui-block-a"><div class="ui-bar ui-bar-c">
+			<!--<label for="basic">Name:</label>-->
+			<input type="number" name="Birth-year" id="Year" value="" placeholder="Birth-Year" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" data-mini="true">
+			</div></div>
+			<div class="ui-block-b"><div class="ui-bar ui-bar-c">
+			<!--<label for="basic">Surname:</label>-->
+			<input type="number" name="Birth-month" id="Month" value="" placeholder="Birth-Month" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" data-mini="true">
+			</div></div>
+			<div class="ui-block-c"><div class="ui-bar ui-bar-c">
+			<!--<label for="basic">Surname:</label>-->
+			<input type="number" name="Birth-day" id="Day" value="" placeholder="Birth-Day" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" data-mini="true">
+			</div></div>
+			</div>
+			<div class="ui-grid-a">
+			<div class="ui-block-a"><div class="ui-bar ui-bar-c" style="height:70px">
+				<fieldset data-role="controlgroup" data-mini="true">
+					
+					<input type="radio" name="radio-mini" id="radio-mini-1" value="1" checked="checked" />
+						<label for="radio-mini-1">Male</label>
+
+					<input type="radio" name="radio-mini" id="radio-mini-2" value="0"  />
+						<label for="radio-mini-2">Female</label>
+				</fieldset>
+				</div></div>
+			<!--<div class="ui-block-b"><div class="ui-bar ui-bar-c" style="height:70px">
+				<label for="basic">Order:</label>
+				<input type="number" name="OrderOB" id="OrderOB" value="" placeholder="Order of birth" title="Order of birth(leave 0 if not part of multiple birth)" data-mini="true" />
+			</div></div>-->
+			</div>
+			
+			<div class="ui-grid-a">
+			<div class="ui-block-a"><div class="ui-bar ui-bar-c">
+			<!--<label for="basic">Name:</label>-->
+			<input type="text" name="Vname" id="Vname" value="" placeholder="Name" data-mini="true" />
+			</div></div>
+			<div class="ui-block-b"><div class="ui-bar ui-bar-c">
+			<!--<label for="basic">Surname:</label>-->
+			<input type="text" name="Vsurname" id="Vsurname" value=""  placeholder="Surname" data-mini="true" />
+			</div></div>
+			</div>
+			<div class="ui-grid-a">
+			<div class="ui-block-a"><div class="ui-bar ui-bar-c">
+				<!--<label for="email" class="ui-input-text">Email:</label>-->
+				<input type="email" name="email" id="email" placeholder="Email" value="" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" data-mini="true">
+			</div></div>
+			<div class="ui-block-b"><div class="ui-bar ui-bar-c">
+				<!--<label for="tel" class="ui-input-text">Phone:</label> -->
+				<input type="tel" name="tel" id="tel" value="" placeholder="Phone number" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" data-mini="true">
+			</div></div>
+			</div>
+			<div class="ui-grid-a">
+			<div class="ui-block-a"><div class="ui-bar ui-bar-c">
+				<!--<label for="password" class="ui-input-text">Password:</label>-->
+				<input type="password" name="Password" id="password" value="" placeholder="Password" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" data-mini="true">
+			
+			</div></div>
+			<div class="ui-block-b"><div class="ui-bar ui-bar-c">
+				<!--<label for="password" class="ui-input-text">Repeat Password:</label>-->
+				<input type="password" name="XPassword" id="XPassword" value="" placeholder="Repeat Password" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" data-mini="true">			
+			</div></div>
+			</div>
+			<input type="hidden" id="Gender" name="Gender">
+			<input type="hidden" id="VIdUSFIXED" name="VIdUSFIXED">
+			<input type="hidden" id="VIdUSFIXEDNAME" name="VIdUSFIXEDNAME">
+			
+			<input type="button" id="account_creation" value="Create Account" data-theme="b">
+
+        </form> 
+
+    </p>
+	
+
+	</div>
+    
+	<div data-role="footer" data-id="foo1" data-position="fixed">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="signIn.html" data-rel="back">Back</a></li>								
+		</ul> 
+			</div><!-- /navbar -->
+	</div><!-- /footer -->
+
+	</div><!-- /page -->
+	<div data-role="page" id="SignUpConfirm" data-theme="d" tabindex="0" class="ui-page ui-body-a" >
+
+	<div data-role="header" data-theme="a">
+		<h1><img src="Icono_H2M.png" alt="" ></h1>
+	</div><!-- /header -->
+
+	<div data-role="content" data-theme="d" class="ui-content ui-body-a" role="main">	
+		
+			<div id="ShowIdDetails">
+				
+			</div>
+			
+			<p>
+			
+			<input type="button" id="Proceed" Value="Proceed">
+			
+			</p>
+		
+	</div><!-- /content -->
+	
+	<div data-role="footer" data-id="foo1" data-position="fixed">
+		<div data-role="navbar">
+			<ul>
+				<li><a href="javascript:void(0)"></a></li>				
+			</ul> 
+		</div><!-- /navbar -->
+	<!--</div><!-- /footer -->
+	</div>
+	
+</body>
+</html>

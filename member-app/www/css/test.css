@@ -1,0 +1,57 @@
+.note{
+	max-width:150px;
+ 	max-height:auto;
+	margin-right:10px; 
+	margin-bottom:20px; 
+
+	-webkit-box-shadow: 3px 3px 14px rgba(25, 25, 25, 0.5); 
+	-moz-box-shadow:3px 3px 14px rgba(25, 25, 25, 0.5); 
+	box-shadow:3px 3px 14px rgba(25, 25, 25, 0.5);
+	
+	
+}
+.queTIP{
+	float:left; 
+	height:20px; 
+	width:120px; 
+	padding:0px; 
+	margin:0px; 
+	margin-top:0px; 
+	margin-left:5px; 
+	color:RGB(65,65,65); 
+	font-size:12px; 
+	font-family: "Myriad Pro", Myriad, "Liberation Sans", "Nimbus Sans L", "Helvetica Neue", Helvetica, Arial, sans-serif; 
+	overflow: hidden;
+}
+.note-header{
+	height:10%;
+	max-height:30px;
+	border: 1px solid RGB(223,223,223);
+	background-color: RGB(242,242,242);
+}	
+.imageContainer {
+  	max-width:100%;
+ 	max-height:100%;
+	
+}
+img {
+	max-width:100%;
+	max-height:100%;
+}
+.note-footer{
+	height:10%;
+	max-height:30px;
+	background-color:#fbfbfb;
+}	
+.label-style {
+	float:right; 
+	margin-top:0px; 
+	margin-right:10px; 
+	font-size:10px; 
+	text-shadow:none; 
+	text-decoration:none; 
+	font-weight:normal; 
+}
+.thumbnail  {
+
+}

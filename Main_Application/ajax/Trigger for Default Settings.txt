@@ -1,0 +1,11 @@
+DROP TRIGGER IF EXISTS create_default_settings ;
+DELIMITER $$
+CREATE TRIGGER create_default_settings AFTER INSERT ON doctors
+FOR EACH ROW
+BEGIN
+	insert into user_timezone_config(userid,timez) values(NEW.id,2);
+	insert into notification_config(userid,minutes) values(NEW.id,30);
+	insert into emr_config(userid) values(NEW.id);
+END $$
+DELIMITER ;
+

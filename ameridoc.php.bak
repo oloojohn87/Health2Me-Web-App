@@ -1,0 +1,149 @@
+<?php
+require_once("Services/Twilio.php");
+require("environment_detail.php");
+require("PasswordHash.php");
+require_once('/realtime-notifications/pusherlib/lib/Pusher.php');
+$dbhost = $env_var_db["dbhost"];
+$dbname = $env_var_db["dbname"];
+$dbuser = $env_var_db["dbuser"];
+$dbpass = $env_var_db["dbpass"];
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$app_key = 'd869a07d8f17a76448ed';
+$app_secret = '92f67fb5b104260bbc02';
+$app_id = '51379';
+$pusher = new Pusher($app_key, $app_secret, $app_id);
+
+$API_VERSION = '2010-04-01';
+$AccountSid = "AC109c7554cf28cdfe596e4811c03495bd";
+$AuthToken = "26b187fb3258d199a6d6edeb7256ecc1";
+// Instantiate a new Twilio Rest Client
+$client = new Services_Twilio($AccountSid, $AuthToken);
+
+if(((isset($_GET['Digits']) && $_GET['Digits'] == "0") || isset($_GET['not_me'])) && isset($_REQUEST['CallStatus']) && $_REQUEST['CallStatus'] == 'in-progress' )
+{
+    echo '<?xml version="1.0" encoding="UTF-8"?>';
+    echo '<Response>';
+    if(!isset($_GET['not_me']))
+    {
+        $pusher->trigger('Telemedicine', 'ameridoc', 'Incoming Call Detected');
+        //echo '<Say>Hello and Welcome to Health 2 me.</Say>';
+        echo '<Say language="es-MX">Hola, y Bienvenido a LLama al Doctor.</Say>';
+    }
+    
+    echo '<Gather timeout="10" action="http://'.$_SERVER['HTTP_HOST'].'/ameridoc.php?login=1" method="GET" numDigits="12"><Say>Please enter the phone number associated with your account.</Say></Gather>';
+    echo '</Response>';
+}
+else if(isset($_REQUEST['Digits']) && isset($_GET['login']) && isset($_REQUEST['CallStatus']) && $_REQUEST['CallStatus'] == 'in-progress' )
+{
+    $digits = $_REQUEST['Digits'];
+    $phone = $_REQUEST['Digits'];
+    //$pin = substr($_REQUEST['Digits'], strlen($_REQUEST['Digits']) - 4, 4);
+    $verified = 0;
+    
+    // verify inputed data
+    $result = mysql_query("SELECT Identif,Name,Surname,pin_hash FROM usuarios WHERE telefono LIKE '%".$phone."%'");
+    $num = mysql_num_rows($result);
+    $row = mysql_fetch_assoc($result);
+    /*if($num > 0)
+    {
+        if(validate_password($pin, $row['pin_hash']))
+        {
+            $verified = 1;
+            $pusher->trigger('Telemedicine', 'ameridoc', 'User '.$row['Name'].' '.$row['Surname'].' Validated');
+        }
+    }*/
+    
+    if($num > 0)
+    {
+        
+        echo '<?xml version="1.0" encoding="UTF-8"?>';
+        echo '<Response>';
+        echo '<Gather action="http://'.$_SERVER['HTTP_HOST'].'/ameridoc.php?not_me=1" numDigits="1" timeout="3" method="GET"><Say>We found this account belongs to '.$row['Name'].' '.$row['Surname'].'. Please press zero if this is not correct.</Say></Gather>';
+        //echo '<Redirect method="GET">http://'.$_SERVER['HTTP_HOST'].'/ameridoc_connect.php?id='.$row['Identif'].'</Redirect>';
+        echo '<Gather timeout="6" action="http://'.$_SERVER['HTTP_HOST'].'/ameridoc.php?login2='.$phone.'" method="GET" numDigits="4"><Say>Please enter your four digit pin number.</Say></Gather>';
+        echo '</Response>';
+    }
+    else
+    {
+        echo '<?xml version="1.0" encoding="UTF-8"?>';
+        echo '<Response>';
+        echo '<Say>Sorry, no account with that phone number was found.</Say>';
+        echo '<Redirect method="GET">http://'.$_SERVER['HTTP_HOST'].'/ameridoc.php?not_me=1</Redirect>';
+        echo '</Response>';
+    }
+}else if(isset($_REQUEST['Digits']) && isset($_GET['login2']) && isset($_REQUEST['CallStatus']) && $_REQUEST['CallStatus'] == 'in-progress' ){
+    $digits = $_REQUEST['Digits'];
+    //$phone = substr($_REQUEST['Digits'], 0, strlen($_REQUEST['Digits']) - 4);
+    $pin = $_REQUEST['Digits'];
+    $verified = 0;
+    
+    // verify inputed data
+    $result = mysql_query("SELECT Identif,Name,Surname,pin_hash FROM usuarios WHERE telefono LIKE '%".$_GET['login2']."%'");
+    $num = mysql_num_rows($result);
+    $row = mysql_fetch_assoc($result);
+    if($num > 0)
+    {
+        if(validate_password($pin, $row['pin_hash']))
+        {
+            $verified = 1;
+            $pusher->trigger('Telemedicine', 'ameridoc', 'User '.$row['Name'].' '.$row['Surname'].' Validated');
+        }
+    }
+    if($verified == 1)
+    {
+        echo '<?xml version="1.0" encoding="UTF-8"?>';
+        echo '<Response>';
+        echo '<Say>Pin number accepted.</Say>';
+        echo '<Redirect method="GET">http://'.$_SERVER['HTTP_HOST'].'/ameridoc_connect.php?id='.$row['Identif'].'</Redirect>';
+        //echo '<Gather timeout="3" action="http://'.$_SERVER['HTTP_HOST'].'/ameridoc.php?login2='.$$phone.'" method="GET" numDigits="10"><Say>Please enter your four digit pin number.</Say></Gather>';
+        echo '</Response>';
+    }
+    else
+    {
+        echo '<?xml version="1.0" encoding="UTF-8"?>';
+        echo '<Response>';
+        echo '<Say>Sorry, the pin number is not correct.</Say>';
+        echo '<Redirect method="GET">http://'.$_SERVER['HTTP_HOST'].'/ameridoc.php?not_me=1</Redirect>';
+        echo '</Response>';
+    }
+}else{
+    $Phone = $_REQUEST['From'];
+    
+    $Phone = str_replace("+", "", $Phone);
+    $result = mysql_query("SELECT Identif,Name,Surname FROM usuarios WHERE telefono='".$Phone."'");
+    $num = mysql_num_rows($result);
+    $is_in_system = 0;
+    if($num > 0)
+    {
+        // caller is user in our system
+        $pusher->trigger('Telemedicine', 'ameridoc', 'Incoming Call Detected');
+        
+        $is_in_system = 1;
+        $row = mysql_fetch_assoc($result);
+        $pusher->trigger('Telemedicine', 'ameridoc', 'User '.$row['Name'].' '.$row['Surname'].' Validated');
+        echo '<?xml version="1.0" encoding="UTF-8"?>';
+        echo '<Response>';
+        echo '<Gather timeout="5" action="http://'.$_SERVER['HTTP_HOST'].'/ameridoc.php?not_me=1" method="GET" numDigits="1"><Say>Hello '.$row['Name'].' '.$row['Surname'].', and welcome to Health 2 me. If this is not you, please press zero.</Say></Gather>';
+        echo '<Redirect method="GET">http://'.$_SERVER['HTTP_HOST'].'/ameridoc_connect.php?id='.$row['Identif'].'</Redirect>';
+        echo '</Response>';
+    }
+    else
+    {
+        echo '<?xml version="1.0" encoding="UTF-8"?>';
+        echo '<Response>';
+        if(!isset($_GET['not_me']))
+        {
+            $pusher->trigger('Telemedicine', 'ameridoc', 'Incoming Call Detected');
+	         //echo '<Say>Hello and Welcome to Health 2 me.</Say>';
+			 echo '<Say language="es-MX">Hola, y Bienvenido a LLama al Doctor.</Say>';
+        }
+        
+        echo '<Gather timeout="10" action="http://'.$_SERVER['HTTP_HOST'].'/ameridoc.php?login=1" method="GET" numDigits="12"><Say>Please enter the phone number associated with your account.</Say></Gather>';
+        echo '</Response>';
+    }
+}
+
+
+?>

@@ -1,0 +1,623 @@
+<?php
+session_start();
+if(isset($_SESSION['Acceso']))
+    unset($_SESSION['Acceso']); 
+
+$code=$_GET['Confirm'];
+$tempID=$_GET['tempID'];
+$IdUsu=$_GET['IdUsu'];
+
+?>
+
+<!DOCTYPE html>
+<html lang="en"  class="body-error"><head>
+    <meta charset="utf-8">
+    <title>Inmers - Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/login.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+	<!--<link rel="stylesheet" href="css/icon/font-awesome.css">-->
+	<link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.css">
+	<link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
+
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lte IE 8]><script type="text/javascript" src="/js/excanvas.min.js"></script><![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/images/icons/favicon.ico">
+    <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-37863944-1']);
+  _gaq.push(['_setDomainName', 'health2.me']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  </head>
+
+  <body>
+	<input type="hidden" name="uid"/>
+	<input type="hidden" name="pass"/>
+     	  <!--- VENTANA MODAL  ---> 
+   	  <!--<button id="BotonModal" data-target="#header-modal" data-toggle="modal" class="btn btn-warning" style="display: none;">Modal with Header</button>-->
+   	  <div id="header-modal" class="modal hide" style="display: none; height:320px;" aria-hidden="true">
+ <button id="BotonMod" data-target="#header-modal" data-toggle="modal" class="btn" style="float:right; margin-right:10px; display:none;"><i class="icon-indent-left"></i>New</button>
+
+         <div class="modal-header">
+             <button class="close" type="button" data-dismiss="modal">×</button>
+                 <h4>New User Account</h3>
+         </div>
+         
+         <div class="modal-body" id="ContenidoModal" style="height:170px;">
+           <!--<p>
+           You will receive an email with a confirmation link at the email address you indicated. Please follow the link to verify your identity and complete the sign up process. 
+           </p>-->
+            <p>
+           Your email: <span id="IDRESERV" class="label label-success" style="margin-right:200px; float:right; font-size:14px; padding:5px 10px 5px 10px; font-family: “Andale Mono”, AndaleMono, monospace; background-color:#22AEFF;;" title="Your email, valid for signin purposes"></span>
+           <p><p>
+           Your Number id: <span id="VIdUsFIXED2" class="label label-success" style="margin-right:200px; float:right; font-size:14px; padding:5px 10px 5px 10px; font-family: “Andale Mono”, AndaleMono, monospace;" title="This will be the first part of your flexible identification tag"></span>
+           <p>
+           <p>
+           Your Name id: <span id="VIdUsFIXEDNAME2" class="label label-success" style=" margin-right:200px; float:right; font-size:14px; padding:5px 10px 5px 10px; font-family: “Andale Mono”, AndaleMono, monospace;"  title="This will be the second part of your flexible identification tag"></span>
+           </p>
+           <p>
+            Please use your Name id for sign in purposes.
+           </p>
+           
+         </div>
+         <input type="hidden" id="queId">
+		 
+        
+         <div class="modal-footer">
+	         <!--<input type="button" class="btn btn-success" value="Confirm" id="ConfirmaLink">--->
+             <a href="#" class="btn btn-success" data-dismiss="modal" id="GrabaDatos">Proceed</a>
+             <a href="#" class="btn btn-primary" data-dismiss="modal" id="CloseModal">Cancel</a>
+         </div>
+      </div>  
+	  <!--- VENTANA MODAL  ---> 
+      
+      <!--- VENTANA MODAL  2 ---> 
+   	  <!--<button id="BotonModal" data-target="#header-modal" data-toggle="modal" class="btn btn-warning" style="display: none;">Modal with Header</button>
+   	  <div id="header-modal2" class="modal hide" style="display: none; height:320px;" aria-hidden="true">
+ <button id="BotonMod2" data-target="#header-modal2" data-toggle="modal" class="btn" style="float:right; margin-right:10px; display:none;"><i class="icon-indent-left"></i>New</button>
+
+         <div class="modal-header">
+             <button class="close" type="button" data-dismiss="modal">×</button>
+                 <h4>New User Account</h3>
+         </div>
+         
+         <div class="modal-body" id="ContenidoModal2" style="height:170px;">
+           <p>
+           Reset your password. 
+           </p>
+           
+         </div>
+         <input type="hidden" id="queId">
+        
+         <div class="modal-footer">
+	         <!--<input type="button" class="btn btn-success" value="Confirm" id="ConfirmaLink">
+             <a href="#" class="btn btn-success" data-dismiss="modal" id="GrabaDatos">Proceed</a>
+             <a href="#" class="btn btn-primary" data-dismiss="modal" id="CloseModal2">OK</a>
+         </div>
+      </div>  -->
+	  <!--- VENTANA MODAL 2 ---> 
+
+     
+    <div id="container_demo" >
+        <!--<a class="hiddenanchor" id="toregister"></a>-->
+        <!--<a class="hiddenanchor" id="tologin"></a> -->
+        <div id="wrapper" style="top:50px;">
+           <!-- <div id="login" class="animate form position">
+           <form  method="post" action="login.php" class="form-login" > 
+                    <div class="content-login">
+
+                    <a href="#" class="logo"></a>
+                            <span class="label label-info" style="font-size:18px; margin-left:70px;">MEDICAL USER ACCESS</span>
+                   
+                    <div class="inputs">
+                        <i class="icon-user first-icon"></i><input name="Nombre" type="text" class="first-input" placeholder="username" />
+                        <div class="clear"></div>
+                        <i class="icon-key"></i><input name="Password" type="password" class="last-input" placeholder="password" />
+                    </div>
+                    
+                    <div class="remember">
+                    	<input type="checkbox" id="c2" name="cc" checked="checked" />
+            			<label for="c2"><span></span> Remember Me</label>
+                    </div>
+                    <!--<div id="ForgotPassword" class="link"><a href="#">Forgot Password?</a></div>
+                    <div class="clear"></div>
+                    <div class="button-login"><input type="submit"  class="btn btn-large" value="Sign In"/></div>
+                    </div>
+                    
+                    <div class="footer-login">
+                     <div class="pull-left ">Don't have an account?</div>
+                     <div class="pull-right"><a href="#toregister" class="to_register">Create Account</a></div>
+                     <div class="clear"></div>
+                    </div>
+                   
+                </form>
+                
+                <div class="info-message">
+                    <div class="alert alert-info">        
+                    To create a new account, click "Create Account"
+                    </div>
+                </div>
+              
+            </div> -->
+     
+            <div>
+                <form  method="post" id="FormSU" action="AddNonUser.php" class="form-login"> 
+                    <div class="content-login">
+                    <a href="#" class="logo"></a>
+                    <span id="estaLabel" class="label label-info" style="font-size:18px; margin-left:70px;">MEDICAL USER ACCOUNT</span>
+                    <input id="ValorGlobal" type="hidden" value="-1" />
+                    <div class="inputs">
+                         	
+                     	<div class="clear"></div>
+                     	<div class="MsgAlarma2" style="height:0px; -webkit-border-radius: 3px; border-radius: 3px; margin-bottom:20px; background-color: grey;">
+                     	<!-- -webkit-border-radius: 3px; border-radius: 3px; margin-bottom:20px; background-color:grey;  -->
+                     	</div>
+                     	<span class="label label-info" style="font-size:14px; margin-bottom:20px;" >Numeric Id</span>
+                     	<span id="VIdUsFIXED" class="label label-success" style="float:right; font-size:12px; padding:5px 10px 5px 10px; font-family: “Andale Mono”, AndaleMono, monospace;" title="This will be the first part of your flexible identification tag"></span>
+                     	<input type="hidden" value="" id="VIdUsFIXEDINSERT" Name="VIdUsFIXED">
+                     	<input type="hidden" value="" id="VIdUsFIXEDNAMEINSERT" Name="VIdUsFIXEDNAME">
+                     	<div class="clear"></div> 
+                     	</br>
+	                    <i class="icon-calendar first-icon"></i><input id="Year" name="Year" type="text" class="first-input" placeholder="Year of Birth" style="width:100px; border-bottom-right-radius:3px; border-bottom-left-radius:3px;" title="Please insert your year of birth" />
+	                    <i class="icon-calendar first-icon" style="left:165px; margin-top:-35px;"></i><input id="Month" name="Month" type="text" class="first-input" placeholder="Month" style="width:50px; border-bottom-right-radius:3px; border-bottom-left-radius:3px;" title="Please insert your month of birth"/>
+	                    <i class="icon-calendar first-icon" style="left:260px; margin-top:-35px;"></i><input id="Day" name="Day" type="text" class="first-input" placeholder="Day" style="width:50px; border-bottom-right-radius:3px; border-bottom-left-radius:3px;" title="Please inser your day of birth" />
+	                    <div class="clear"></div>
+                        
+
+	                    <i class="icon-group first-icon"></i>
+	                    <input name="G" type="text" class="first-input" placeholder="" style="width:7px;" readonly/>
+	                    <select id="Gender" name="Gender" style="width:150px;" title="Please inser your gender">
+		                    <option value="">Select Gender:</option>
+		                    <option value="0">Female</option>
+		                    <option value="1">Male</option>
+		                </select>
+	                    
+	                
+ 	                    
+ 	                    <!--style="border:solid; opacity:100;"-->
+ 	                    <!--
+ 	                    <div class="tooltip" title="Order of birth: leave 0 if not part of a multiple birth, otherwise indicate your orther of birth"> 
+	                     		<p>This div has a d</p>
+	                    </div>
+	                    -->
+ 	                    <i class="icon-info-sign first-icon" style="left:235px; margin-top:-35px;"></i><input id="OrderOB" name="OrderOB" type="text" class="first-input"  title="Order of birth (leave 0 if not part of a multiple birth)" placeholder="Order" style="width:40px; margin-left:10px; border-bottom-right-radius:3px; border-bottom-left-radius:3px;" />
+ 	                    <div class="clear"></div>
+ 	           
+                        </br>
+                        
+                        <span id="estaLabel2" class="label label-info" style="font-size:14px; margin-bottom:20px;" >Text Id</span>
+                     	<span id="VIdUsFIXEDNAME" class="label label-success" style="float:right; font-size:12px; padding:5px 10px 5px 10px; font-family: “Andale Mono”, AndaleMono, monospace;"  title="This will be the second part of your flexible identification tag"></span>
+                     	
+                     	<div class="clear"></div>
+                     	</br>
+ 
+                        <i class="icon-user first-icon"></i><input id="Vname" name="Vname" type="text" class="first-input" placeholder="Name" style="width:120px; border-bottom-right-radius:3px; border-bottom-left-radius:3px;" title="Please insert your name (one word only, no signs or special characters)"/>
+                        <i class="icon-user first-icon" style="left:185px; margin-top:-35px;"></i><input id="Vsurname"  name="Vsurname" type="text" class="first-input" placeholder="Surname" style="width:120px; border-bottom-right-radius:3px; border-bottom-left-radius:3px;" title="Please insert your surname (one word only, no signs or special characters, no middle initial)"/>
+                        <div class="clear"></div>
+                        </br>
+                        
+                        <span class="label label-info" style="font-size:14px; margin-bottom:20px;">Security & Privacy</span>
+                     	<img src="images/load/4.gif" alt="" style="margin-left:50px; " id="Wait1">
+                        <div class="clear"></div>
+                     	</br>
+                        <i class="icon-key" style="margin-top:10px"></i><input id="XPassword" name="Password" type="password" class="first-input" placeholder="password" title="Please insert your password (at least 8 characters, use numbers and letters, no punctuation signs or other characters)"/>
+                        <div class="clear"></div>
+                        <i class="icon-key"></i><input id="XPassword2" name="Password2" type="password" class="intermediate-input" placeholder="repeat password" title="Please repeat your password (at least 8 characters, use numbers and letters, no punctuation signs or other characters)"/>
+                        <div class="clear"></div>
+                        <i class="icon-phone"></i><input name="phone" type="text" class="intermediate-input" placeholder="phone" title="Please insert your phone number (just numbers, no special characters or punctuation signs)"/>
+                        <div class="clear"></div>
+                        <i class="icon-envelope-alt"></i><input id="email" name="email" type="text" class="last-input" placeholder="email" title="Please insert your email" />
+						<div class="clear"></div>
+						<input type="hidden" name="tempID" value="<?php echo $tempID?>"/>
+		                <input type="hidden" name="PatientID" value="<?php echo $IdUsu?>"/>
+		                <input type="hidden" name="confirmcode" value="<?php echo $code?>"/>
+                        <!--<i class="icon-key"></i><input id="accesscode" name="code" type="password" class="last-input" placeholder="Access Code" title="Please Enter the Access Code provided by Health2Me" /> -->
+                    </div>
+                    
+                    <div class="button-login"><input id="BotonEnviaF" type="button"  class="btn btn-large" style="width:100%;" value="Create Account"></div>
+                    
+                    
+                    
+                    </div>
+                    
+                    <div class="footer-login">
+                     <!--<div class="pull-left ">Want login?</div>
+                     <div class="pull-right"><a href="SignIn.html" class="to_register">Sign In</a></div>-->
+                     <div class="clear"></div>
+                    </div>
+                </form>
+            </div>
+             
+        </div>
+    </div>  
+    
+   
+    
+    
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.min.js"></script>
+
+    <script src="js/jquery-ui.min.js"></script>
+   
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/bootstrap-colorpicker.js"></script>
+    <script src="js/google-code-prettify/prettify.js"></script>
+   
+    <script src="js/jquery.flot.min.js"></script>
+    <script src="js/jquery.flot.pie.js"></script>
+    <script src="js/jquery.flot.orderBars.js"></script>
+    <script src="js/jquery.flot.resize.js"></script>
+    <script src="js/graphtable.js"></script>
+    <script src="js/fullcalendar.min.js"></script>
+    <script src="js/chosen.jquery.min.js"></script>
+    <script src="js/autoresize.jquery.min.js"></script>
+    <script src="js/jquery.tagsinput.min.js"></script>
+    <script src="js/jquery.autotab.js"></script>
+    <script src="js/elfinder/js/elfinder.min.js" charset="utf-8"></script>
+	<script src="js/tiny_mce/tiny_mce.js"></script>
+    <script src="js/validation/languages/jquery.validationEngine-en.js" charset="utf-8"></script>
+	<script src="js/validation/jquery.validationEngine.js" charset="utf-8"></script>
+    <script src="js/jquery.jgrowl_minimized.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/jquery.mousewheel.js"></script>
+    <script src="js/jquery.jscrollpane.min.js"></script>
+    <script src="js/jquery.stepy.min.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/raphael.2.1.0.min.js"></script>
+    <script src="js/justgage.1.0.1.min.js"></script>
+	<script src="js/glisse.js"></script>
+    
+	<script src="js/application.js"></script>
+
+<!--    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.0.min.js"></script>-->
+    <script type="text/javascript" src="js/jquery.tooltipster.js"></script>
+    <script>
+		
+        $(document).ready(function() {
+            if($.browser.msie)
+            {
+                window.open('ie_error.html','_self',false);
+            }
+            
+        $('.tooltip').tooltipster();
+       
+        $('#Year').bind("focusout", function(){
+	     CheckValor(1900,2020,$(this));
+	     getIdUsFIXED();  		
+   		});
+        $('#Month').bind("focusout", function(){
+	     CheckValor(1,12,$(this));
+	     getIdUsFIXED();  		
+   		});
+        $('#Day').bind("focusout", function(){
+	     CheckValor(1,31,$(this));
+	     getIdUsFIXED();  		
+   		});
+        $('#Gender').bind("focusout change", function(){
+  	      	var dato = $("#Gender").val();
+	      	if (dato!='0' && dato!='1'){ alarma ('Please select appropriate gender','#Gender')}else{alarma ('','#Gender')}
+	     getIdUsFIXED(); 
+	      		
+   		});
+        $('#OrderOB').bind("focusout", function(){
+	   	     CheckValor(0,5,$(this));
+	   	     getIdUsFIXED();  		
+   		});   
+   		$('#Vname').bind("focus", function(){
+	      	var dato = $("#Gender").val();
+	      	if (dato!='0' && dato!='1'){ alarma ('Please select appropriate gender','#Gender')}
+	      	return('abc');
+   		});	
+
+   		$('#Vname').bind("focusout", function(){
+         CheckValorTipo(12,$(this));
+         getIdUsFIXEDNAME();
+   		});	
+   		$('#Vsurname').bind("focusout", function(){
+         CheckValorTipo(12,$(this));
+	     getIdUsFIXEDNAME();
+   		});			    
+    
+        $('#XPassword').bind("focusout", function(){
+	     CheckValorTipo(11,$(this));
+   		});
+        $('#XPassword2').bind("focusout", function(){
+	     CheckPass('#XPassword','#XPassword2');
+	     CheckValorTipo(11,$(this));
+   		});
+      
+        $('#email').bind("focusout", function(){
+	     $('#IDRESERV').html($(this).val());
+	     //alert($(this).val());
+	     CheckValorTipo(13,$(this));
+	     //CheckPrevio (1,$(this));
+         });
+  		
+   		$('#accesscode').bind("focusout", function(){
+			CheckValorTipo(14,$(this));
+	     
+   		});			
+		
+
+        $('#BotonEnviaF').bind("click", function(){
+	        var dato= 0;
+	        var todos = 0;
+	        
+	        $('#Year').trigger('focusout');
+	        dato = $('#ValorGlobal').val(); if (dato!=0) {todos=1;}
+	        $('#Month').trigger('focusout');
+	       	dato = $('#ValorGlobal').val(); if (dato!=0) {todos=1;}
+	        $('#Day').trigger('focusout');
+	        dato = $('#ValorGlobal').val(); if (dato!=0) {todos=1;}
+	        $('#Gender').trigger('focusout');
+	        dato = $('#ValorGlobal').val(); if (dato!=0) {todos=1;}
+	        $('#OrderOB').trigger('focusout');
+	        dato = $('#ValorGlobal').val(); if (dato!=0) {todos=1;}
+	        $('#Vname').trigger('focusout');
+	        dato = $('#ValorGlobal').val(); if (dato!=0) {todos=1;}
+	        $('#Vsurname').trigger('focusout');
+	        dato = $('#ValorGlobal').val(); if (dato!=0) {todos=1;}
+	        $('#XPassword2').trigger('focusout');
+	        dato = $('#ValorGlobal').val(); if (dato!=0) {todos=1;}
+	        $('#XPassword').trigger('focusout');
+	        dato = $('#ValorGlobal').val(); if (dato!=0) {todos=1;}
+	        $('#email').trigger('focusout');
+	        dato = $('#ValorGlobal').val(); if (dato!=0) {todos=1;}
+			
+			
+	        if (todos!=1){$('#BotonMod').trigger('click');}
+    	});
+
+        $('#GrabaDatos').bind("click", function(){
+	        $('#FormSU').method="post";
+			$('#FormSU').submit();
+	        });
+
+        	   
+   	    
+   	    $('#Wait1')
+   	    	.hide()  // hide it initially
+   	    	.ajaxStart(function() {
+	   	    	//alert ('ajax start');
+	   	    	$('#Wait1').show();
+	   	    	$(this).show();
+	   	    	})
+	   	    .ajaxStop(function() {
+		   	    $(this).hide();
+		}); 
+   		
+     function CheckValor(minimo, maximo,selector){
+	     var dato = $(selector).val();
+	     var quevalor = dato;
+	     var pasa = 1;
+	     if (!form_input_is_numeric(dato)){
+		     var mensaje = 'Value not numeric';
+		     alarma (mensaje,selector);
+		     quevalor = '';
+		     pasa = 0;
+		     $('#ValorGlobal').val('-1');
+	     }
+
+	     if (dato>maximo){
+		     var mensaje = 'Value too high';
+		     alarma (mensaje,selector);
+		     quevalor = '';
+		     pasa =0;
+		     $('#ValorGlobal').val('-1');
+	     }	
+
+	     if (dato<minimo){
+		     var mensaje = 'Value too low';
+		     alarma (mensaje,selector);
+		     quevalor = '';
+		     pasa =0;
+		     $('#ValorGlobal').val('-1');
+	     }	
+
+	     if (pasa==1) {alarma('',selector); $('#ValorGlobal').val('0'); }
+	     $(selector).val(quevalor);
+	 }
+     
+     function CheckValorTipo(tipo,selector){
+	     var dato = $(selector).val();
+	     var quevalor = dato;
+	     var pasa = 1;
+	     if (tipo>10){
+		     switch (tipo){
+				 case 11: if (dato.length<8)   // 11: COMPRUEBA QUE LA LONGITUD SEA AL MENOS DE 8 CARACTERES
+				 		  {
+				 		  var mensaje = 'Value must be at least 8 characters long';
+			     		  alarma (mensaje,selector);
+			     		  quevalor = '';
+			     		  pasa = 0;
+			     		  $('#ValorGlobal').val('-1');
+			     		  }
+			     		  break;
+				 case 12: if (dato.length<2)   // 12: COMPRUEBA QUE LA LONGITUD SEA AL MENOS DE 2 CARACTERES
+				 		  {
+				 		  var mensaje = 'Value must be at least 2 characters long';
+			     		  alarma (mensaje,selector);
+			     		  quevalor = '';
+			     		  pasa = 0;
+			     		  $('#ValorGlobal').val('-1');
+			     		  }
+			     		  break;
+				 case 13: if (dato.length<6)   // 13: COMPRUEBA QUE LA LONGITUD SEA AL MENOS DE 6 CARACTERES
+				 		  {
+				 		  var mensaje = 'Value must be at least 6 characters long';
+			     		  alarma (mensaje,selector);
+			     		  quevalor = '';
+			     		  pasa = 0;
+			     		  $('#ValorGlobal').val('-1');
+			     		  }
+			     		  break;
+				 
+			     default: var mensaje = 'Unknown error';
+			     		  alarma (mensaje,selector);
+			     		  quevalor = '';
+			     		  pasa = 0; 
+			     		  $('#ValorGlobal').val('-1');
+			     		  break;		  
+			     
+		     }
+	     }
+
+	     if (pasa==1) {alarma('',selector); $('#ValorGlobal').val('0'); }
+	     $(selector).val(quevalor);
+	 }
+
+     function CheckPass(selector1,selector2){
+     	var dato1 = $(selector1).val();
+        var dato2 = $(selector2).val(); 
+        if (dato1 != dato2)
+        {
+	       	 var mensaje = 'Values must be the same';
+		     alarma (mensaje,selector1);
+		     alarma (mensaje,selector2);
+		     quevalor = '';
+			 $('#ValorGlobal').val('-1');
+        }	     else{
+		     alarma ('',selector1);
+		     alarma ('',selector2);
+		     $('#ValorGlobal').val('0'); 
+	     }
+
+     	//var dato = pass1.length; 
+      
+	 }
+	
+	 function CheckPrevio(tipo,selector){
+	     var dato = $(selector).val();
+	     var quevalor = dato;
+	     var pasa = 1;
+	     
+	     var queTipo=1;
+	     var cadena = 'http://dev.health2.me/CheckPrevio.php?valor='+dato+'&queTipo='+queTipo;
+	     var RecTipo = LanzaAjax (cadena);
+	    
+	     //alert (RecTipo);
+	     
+	     if (RecTipo>0){
+		     var mensaje = 'User/Value already exists';
+		     alarma (mensaje,selector);
+		     quevalor = '';
+		     pasa = 0;
+		     $('#ValorGlobal').val('-1');
+	     }
+
+	     if (pasa==1) {alarma('',selector); $('#ValorGlobal').val('0'); }
+	     $(selector).val(quevalor);
+	 }
+
+	function LanzaAjax (DirURL)
+		{
+		var RecTipo = 'SIN MODIFICACIÓN';
+		$.ajax(
+           {
+           url: DirURL,
+           dataType: "html",
+           async: false,
+           complete: function(){ //alert('Completed');
+                    },
+           success: function(data) {
+                    if (typeof data == "string") {
+                                RecTipo = data;
+                                }
+                     }
+            });
+		return RecTipo;
+		}    
+
+
+	 function alarma(mensaje,selector)
+	 {
+	 if (mensaje=='') { var tama = '0px'; $(selector).css ('background-color','white'); }else { var tama = '40px'; $(selector).css ('background-color','#FFF8DC'); }
+	 
+	 $('.MsgAlarma2').animate({
+		    height: tama
+		      }, 500, function() {
+			      $(".MsgAlarma2").html('<p style="font-size:18px; color:white; margin:10px; top:10px; position:relative;">'+mensaje+'</p>');
+		});
+	 }
+
+     function getIdUsFIXED(){
+    		var year = $("#Year").val();
+    		var month = $("#Month").val();
+    		var day = $("#Day").val();
+    		
+    		var fnacnum = year+FormatNumberLength(month, 2)+FormatNumberLength(day, 2);
+    		var gender = chkb($("#Gender").is(':checked'));
+   		
+    		var gender = $("#Gender").val();
+    		var orderOB = $("#OrderOB").val();
+    		if (gender==0){ gender='0';}
+    		if (orderOB==0){ orderOB='0';}
+   		
+    		var VIdUsFIXED = fnacnum+gender+orderOB;
+   			$('#VIdUsFIXED').html(VIdUsFIXED);
+   			$('#VIdUsFIXED2').html(VIdUsFIXED);
+   			$('#VIdUsFIXEDINSERT').val(VIdUsFIXED);
+   		
+    	}
+ 
+     function getIdUsFIXEDNAME(){
+    		var vname = $("#Vname").val().toLowerCase().replace(".","").replace(" ","");
+    		var vsurname = $("#Vsurname").val().toLowerCase().replace(".","").replace(" ","");
+    		
+    		var VIdUsFIXEDNAME = vname+'.'+vsurname;
+    		$('#VIdUsFIXEDNAME').html(VIdUsFIXEDNAME);
+    		$('#VIdUsFIXEDNAME2').html(VIdUsFIXEDNAME);
+    		$('#VIdUsFIXEDNAMEINSERT').val(VIdUsFIXEDNAME);
+    	}
+
+    function chkb(bool){
+	    if(bool)
+	    	return 1;
+	    	return 0;
+	   }
+	 
+	function form_input_is_numeric(input){
+		   return !isNaN(input);
+		   }
+      
+	function FormatNumberLength(num, length) {
+    	var r = "" + num;
+    	while (r.length < length) {
+        	r = "0" + r;
+        	}
+        return r;
+        }
+    
+   
+       
+    });
+    </script>
+  </body>
+</html>
+

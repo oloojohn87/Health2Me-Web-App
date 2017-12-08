@@ -1,0 +1,191 @@
+.ui-progressbar {
+position: relative;
+}
+	
+.progress-label {
+position: absolute;
+left: 50%;
+top: 4px;
+font-weight: bold;
+text-shadow: 1px 1px 0 #fff;
+}
+	
+.avatar{
+background-color:white;
+}
+
+.modal-body{
+overflow-y:visible;
+}
+
+#overlay {
+background-color: none;
+position: auto;
+top: 0; right: 0; bottom: 0; left: 0;
+opacity: 1.0;
+}
+	
+#messagecontent {
+white-space: pre-wrap;   
+}
+
+#probeRequest{
+display: none;
+}
+
+#progressbar .ui-progressbar-value {
+background-color: #ccc;
+}
+
+#InfoIDPacienteB{
+float:left;
+margin-left:50%;
+}
+
+#ProbeTab{
+background-color:white;
+}
+
+#Timezone{
+width:15em;
+margin-top:10px;
+}
+
+#Time{
+width:16em;
+margin-top:10px;
+}
+
+#Interval{
+width:15em;
+margin-top:10px;
+}
+
+#Method{
+width:15em;
+margin-top:10px;
+}
+
+#Email{
+width:16em;
+margin-top:10px;
+}
+
+#PhoneRow{
+display:none;
+}
+
+#Phone{
+width:15em;
+margin-top:10px;
+height:30px;
+}
+
+#MessageRow{
+display:none;
+}
+
+#Message{
+width:15em;
+margin-top:10px;
+height:30px;
+}
+
+#patientID{
+display:none;
+}
+
+#probeHistory{
+display: none;
+}
+
+#header-modal5656{
+display: none;
+overflow:visible;
+width:800px;
+margin-left:-400px;
+}
+
+#InfoIDPacienteStats{
+float:left;
+}
+
+#InfoIDPacienteBB{
+float:right;
+}
+
+#TablaProbeHistory{
+width:100%; 
+table-layout: fixed; 
+}
+
+#message_modal{
+display: none;
+}
+
+#header-message{
+display: none;
+}
+
+#ToDoctor, #mailDate {
+color:#2c93dd; 
+font-weight:bold;
+}
+
+#messagedetails{
+height:200px;
+}
+
+#messagecontent_inbox{
+height:90px;
+}
+
+#attachments{
+display:none;
+}
+
+#content{
+padding-left:0px;
+}
+
+#BotonModal{
+display: none;
+}
+
+#header-modal{
+display: none; 
+width: 800px; 
+left: 20%; 
+margin-left:auto; 
+margin-right:auto;
+}
+
+#selpat{
+width: 100px; 
+margin-left:5%; 
+float: left; 
+color: rgb(61, 147, 224);
+}
+
+#seldr{
+width:100px; 
+margin-left:5%; 
+float:left;
+}
+
+#ContentScroller{
+width:100%; 
+height:280px; 
+overflow: hidden; 
+}
+
+#ScrollerContainer{
+width:2000px; 
+height:275px; 
+}
+
+#content_selpat{
+float:left; 
+width:800px; 
+height:270px;
+}

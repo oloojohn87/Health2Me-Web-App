@@ -1,0 +1,34 @@
+<?php
+
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+ session_start();
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+$enc_result = mysql_query("select pass from encryption_pass where id = (select max(id) from encryption_pass)");
+			$row_enc = mysql_fetch_array($enc_result);
+			$enc_pass=$row_enc['pass'];
+
+$oldName = $_GET['oldName'];
+$newName=$_GET['newName'];
+//sleep(8);
+if(file_exists("PatientImage\\".$oldName))
+{
+	rename("PatientImage\\".$oldName,"PatientImage\\".$newName);
+	shell_exec('Encrypt.bat PatientImage '.$newName.' '.$enc_pass);          //Encrypt the image (prasanna)
+}
+ $fileTypes = array('jpg','jpeg','gif','png'); // File extensions
+ foreach($fileTypes as $ext)
+ {
+	if(file_exists("../htdocs/PatientImage/".$_SESSION["MEDID"].".".$ext))
+	{
+		unlink("../htdocs/PatientImage/".$_SESSION["MEDID"].".".$ext);
+		//echo "Session file unlinked";
+	}
+ }
+
+?>

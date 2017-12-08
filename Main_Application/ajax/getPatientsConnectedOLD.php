@@ -1,0 +1,214 @@
+<?php
+ //   echo '<table><tr><td>TEST</td></tr></table>';
+ /*KYLE
+
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="usuarios"; // Table name
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$queUsu = $_GET['Usuario'];
+$UserDOB = $_GET['UserDOB'];
+$NReports = $_GET['NReports'];
+$IdDoc = $_GET['IdDoc'];
+//$queUsu = 32;
+
+
+
+
+
+$MyGroup = array();
+
+// *************START************ Create an Array to store "My Group": All IdMeds belonging to my group(s)
+$indGroup = 0;
+$MyGroup[$indGroup]=$IdDoc;
+$result = mysql_query("SELECT * FROM doctorsgroups WHERE idDoctor = '$IdDoc' LIMIT 25");
+while ($row = mysql_fetch_array($result)) {
+	$IdGroup = $row['idGroup'];
+	$result2 = mysql_query("SELECT * FROM doctorsgroups WHERE idGroup = '$IdGroup' ");
+	while ($row2 = mysql_fetch_array($result2)) {
+		$IdDocGroup = $row2['idDoctor'];
+		// Check if this doctor is already stored (belonging to other group )
+		$n=0;
+		$DocExists = 0;
+		while ($n<$indGroup)
+			{
+				if ($IdDocGroup == $MyGroup[$n]) $DocExists = 1;	
+				$n++;
+			}
+		if ($DocExists == 0){
+			$MyGroup[$indGroup] = $IdDocGroup;
+			$indGroup++;
+		}		
+	}	
+}
+
+/* Debug to see if array is ok
+$n=0;
+echo '// My Id = '.$IdDoc;
+while ($n<$indGroup)
+{
+	echo ' // Posicion '.$n.' = '.$MyGroup[$n];
+	$n++;
+}
+die;
+*/ //Debug to see if array is ok 
+// **************END************* Create an Array to store "My Group": All IdMeds belonging to my group(s)
+
+
+//$result = mysql_query("SELECT * FROM usuarios WHERE IdUsFIXEDNAME like '%$queUsu%' LIMIT 25");
+/*KYLE
+$result = mysql_query("SELECT * FROM usuarios ORDER BY Surname");
+
+echo  '<table class="table table-mod" id="TablaSents" style="height:100px; width:600px; overflow-y:hidden; table-layout: fixed; border: 1px SOLID #CACACA;">';
+echo '<thead>
+<tr>
+    <th style="width:250px;">Patient and Doctor</th>
+    <th style="width:400px;">Status</th>
+    <th style="width:60px;">Linked?</th>
+    <th style="width:140px;">Tools</th>
+</tr>
+</thead>';
+echo '<tbody>';
+
+while ($row = mysql_fetch_array($result)) {
+
+$UsuFila = $row['Identif'];
+$DirectLink = '0';
+$ConnectionSTATUS = 0;
+
+
+// ************** START ************* Check DLU for given Doctor and Patient to see if there is a 'NULL' IdPin connection acknowledged 
+$DLUlink = 0;
+if ($NReports == '4')
+{
+    $resultDLU = mysql_query("SELECT * FROM doctorslinkusers WHERE IdMED = '$IdDoc' AND IdUs = '$UsuFila' ");
+    //echo "Query is: "."SELECT * FROM doctorslinkusers WHERE IdMED = '$IdDoc' AND IdUs = '$queUsu' "."    **********************************************";
+        while ($rowDLU = mysql_fetch_array($resultDLU)) {
+            $DLUlink = 1;
+            $IdPinDLU = $rowDLU['IdPIN'];
+            $EstadoDLU = $rowDLU['estado'];
+            if ($IdPinDLU < '1' && $EstadoDLU=='2') 
+            {
+                $DLUlink = 2;
+                $TemporaryEmail = $rowDLU['TemporaryEmail'];
+                $DateAck = $rowDLU['Fecha'];
+                $DirectLink = '1';
+            }
+        }
+    //echo 'DLU Link is: '.$DLUlink.'    **********************************************';
+}
+// **************  END  ************* Check DLU for given Doctor and Patient to see if there is a 'NULL' IdPin connection acknowledged 
+
+
+$PatientAccountSTATUS = 0;
+$resultB = mysql_query("SELECT * FROM lifepin WHERE IdUsu='$UsuFila' ");
+$count=mysql_num_rows($resultB);
+//Borrar esto para acelerar el rendimiento
+$numOwned = 0;
+while ($rowB = mysql_fetch_array($resultB)) {
+	$Owner = $rowB['IdMed'];
+	if (in_array($Owner, $MyGroup)) {$numOwned++; $ConnectionSTATUS = 1;}   	// THIS PATIENT IS AVAILABLE TO ME AS Dr.			********************
+	if ($Owner == $IdDoc) {$DirectLink = '1';	$ConnectionSTATUS = 2;}			// THIS PATIENT IS ALREADY CONNECTED TO ME AS Dr.	********************
+}
+
+if ($DirectLink == '1') 	$ConnectionSTATUS = 2;  							// THIS PATIENT IS ALREADY CONNECTED TO ME AS Dr. THROUGH SPECIFIC DLU (NULL IDPin) CONNECTION	********************
+
+
+$IsUser = '-';
+$queTools = '';
+$UserFlag = 0;
+if ($row['Password']>'')  														// THIS PATIENT HAS AN ACCOUNT						********************
+{
+    $UserFlag = 1;
+	$PatientAccountSTATUS = 1;
+	$IsUser = '<a href="#"><span class="label label-info" style="left:0px; margin-left:0px; margin-top:20px; margin-bottom:5px; font-size:14px; text-shadow:none;">YES</span></a>';
+    $queTools .='<a id="BotSendMsg" href="#" class="btn" title="Send Message" style="width:120px; margin-left:10px; color:#22aeff;"><i class="icon-envelope"></i>Send Message</a>';
+}
+$queColor = 'RGB (51,51,51)';
+if ($numOwned == 0) 
+{
+	$queColor = '#22aeff';
+	if ($NReports == '4')
+	{
+		echo '<tr class="CFILAMODAL" id="'.$row['Identif'].'" style="height:10px; line-height:0; color:'.$queColor.';">';
+		echo '<td>'.$row['Name'].'</td>';
+		echo '<td>'.$row['Surname'].'</td>';
+		if ($NReports !='3' && $NReports !='4') echo '<td>'.$row['IdUsFIXEDNAME'].'</td>';
+		echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$numOwned.'/'.$count.'</td>';
+		echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$IsUser.'</td>';
+		echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;"> - </td>';
+		echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$queTools.'</td>';
+	}
+echo '</tr>';
+}
+else
+{
+	$queLink2Me = '-';
+	if ($DirectLink == 1) 
+	{
+		$queLink2Me = '<a href="#"><span class="label label-info" style="background-color:#54bc00; left:0px; margin-left:0px; margin-top:20px; margin-bottom:5px; font-size:14px; text-shadow:none;">Connected</span></a>';
+	}
+	else
+	{
+		$queLink2Me = '<a href="#"><span class="label label-info" style="left:0px; margin-left:0px; margin-top:20px; margin-bottom:5px; font-size:14px; text-shadow:none;">Available</span></a>';
+		if ($DLUlink == '0'){
+            $queTools .= '<a id="BotConnect" href="#" class="btn" title="Send Invitation" style="width:70px; color:blue;"><i class="icon-link"></i>Connect</a>';}
+				else  {		 
+            $queTools .= '<a id="BotConnect" href="#" class="btn" title="Send Invitation" style="width:160px; color:#66CCFF; font-style:italic;"><i class="icon-link"></i>Pending confirmation</a>';}
+	     }
+	
+	if ($IsUser == '-' && $DirectLink == '1') $queTools .= '<a id="BotInvite" href="#" class="btn" title="Send Invitation" style="width:70px; color:green;"><i class="icon-envelope-alt"></i>Invite</a>';
+ 
+
+    
+	echo '<tr class="CFILAMODAL" id="'.$row['Identif'].'" style="height:10px; line-height:0; color:'.$queColor.';">';
+	echo '<td>'.$row['Name'].'</td>';
+	echo '<td>'.$row['Surname'].'</td>';
+	if ($NReports != '4') echo '<td>'.$row['IdUsFIXED'].'</td>';
+	if ($NReports !='3' && $NReports !='4') echo '<td>'.$row['IdUsFIXEDNAME'].'</td>';
+	echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$numOwned.'/'.$count.'</td>';
+if ($NReports == '4')
+{
+	echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$IsUser.'</td>';
+	echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$queLink2Me.'</td>';
+	if ($ConnectionSTATUS == '1')
+	{
+		echo '<td class="CFILAMODALIdent" id="'.$row['Identif'].'" id2="conn" style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$queTools.'</td>';
+	}else
+	{
+        if ($DirectLink == 1) 
+        {
+            if ($UserFlag == 1)
+            {
+                    echo '<td class="CFILAMODALIdent" id="'.$row['Identif'].'" id2="msg" style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$queTools.'</td>';
+            }
+            else
+            {
+                    echo '<td class="CFILAMODALIdent" id="'.$row['Identif'].'" id2="invi" style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$queTools.'</td>';
+            }
+        }
+        else
+        {
+		echo '<td class="CFILAMODALIdent" id="'.$row['Identif'].'" id2="invi" style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$queTools.'</td>';
+        }
+	}
+	
+}
+		//echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$count.'</td></tr>';
+echo '</tr>';
+}
+
+
+}
+
+echo '</tbody></table>';    
+    
+
+?>

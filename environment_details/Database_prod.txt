@@ -1,0 +1,4 @@
+dbhost="54.225.226.163";
+dbname="monimed";
+dbuser="monimed";
+dbpass="ardiLLA98";

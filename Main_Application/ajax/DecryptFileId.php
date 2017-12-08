@@ -1,0 +1,81 @@
+<?php
+ session_start();
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }	
+
+$ReportId = $_GET['reportid'];
+$queMed = $_GET['queMed'];
+//$pass = $_SESSION['decrypt'];
+
+//Changed from getting the password for decryption from session variable to retrieving it from database while implementing the feature of send button in userdashboard.php page
+$result = $con->prepare("select pass from encryption_pass where id = (select max(id) from encryption_pass)");
+$result->execute();
+
+$row = $result->fetch(PDO::FETCH_ASSOC);
+$pass = $row['pass'];
+
+$result = $con->prepare("SELECT RawImage FROM lifepin WHERE IdPin=?");
+$result->bindValue(1, $ReportId, PDO::PARAM_INT);
+$result->execute();
+
+$row = $result->fetch(PDO::FETCH_ASSOC);
+$rawimage = $row['RawImage'];
+echo $rawimage;
+
+	$ImageRaiz = basename($rawimage);
+//	$extensionR = substr($rawimage,strlen($rawimage)-3,3);
+	$extensionR = end(explode('.', $rawimage));
+	
+	if($extensionR == 'jpeg' || $extensionR == 'JPEG')
+         $extensionR = 'jpg';
+	
+	$filename = 'temp/'.$queMed.'/Packages_Encrypted/'.$rawimage;
+	if (file_exists($filename)) 
+	{
+		//do nothing
+		//echo "The file $filename exists";
+	}
+	else 
+	{
+		shell_exec("echo '".$pass."' | openssl aes-256-cbc -pass stdin -d -in Packages_Encrypted/".$ImageRaiz.".".$extensionR." -out temp/".$queMed."/Packages_Encrypted/".$ImageRaiz.".".$extensionR);
+		//echo 'Decrypt.bat Packages_Encrypted '.$rawimage.' '.$queMed .' '.$pass.' 2>&1';	
+	}
+	
+	if($extensionR=='jpg')
+	{
+		//die("Found JPG Extension");
+		$extension='jpg';
+		//return;
+	}
+	else
+	{
+		$extension='png';
+	}
+	$filename = 'temp/'.$queMed.'/PackagesTH_Encrypted/'.$ImageRaiz.'.'.$extension;	
+	//echo $filename;
+	if (file_exists($filename)) 
+	{
+		//do nothing
+		//echo "The file $filename exists";	
+	}
+	else 
+	{
+		shell_exec("echo '".$pass."' | openssl aes-256-cbc -pass stdin -d -in PackagesTH_Encrypted/".$ImageRaiz.".".$extension." -out temp/".$queMed."/PackagesTH_Encrypted/".$ImageRaiz.".".$extension);
+		//echo "Thumbnail Generated";
+	}
+
+	
+
+
+?>

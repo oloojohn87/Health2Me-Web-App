@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Health2Me Technical Documentation</title>
+
+    <!-- Core CSS - Include with every page -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="font-awesome/css/font-awesome.css" rel="stylesheet">-->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Page-Level Plugin CSS - Dashboard -->
+    <link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="css/plugins/timeline/timeline.css" rel="stylesheet">
+
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+         <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Health2Me Technical Documentation</a>
+            </div>
+            <!-- /.navbar-header -->
+
+  
+
+            <div class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li>
+                            <a href="index.html"><i class="fa fa-book fa-fw"></i> Manual</a>
+                        </li>
+                        <li>
+                            <a href="Database.html"><i class="fa fa-database fa-fw"></i> Database Structure</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Documents<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                     <a href="Probes.html">Probes</a>
+                                </li>
+                                <li>
+                                    <a href="GithubCommit.html">GitHub Commit Procedure</a>
+                                </li>
+                                <li>
+                                    <a href="PhoneNumbers.html">Important Note for Phone Numbers</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                            <li>
+                                 <a href="Probes.html"><i class="fa fa-gears fa-fw"></i> Startup Procedure<span class="fa arrow"></span></a>
+								 <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a href="Processes.html">Processes</a>
+		                                </li>
+		                               <li>
+		                                    <a href="PhoneNumbers.html">Apache</a>
+		                                </li>
+		                               <li>
+		                                    <a href="PhoneNumbers.html">MySQL</a>
+		                                </li>
+		                               <li>
+		                                    <a href="PhoneNumbers.html">FTP Server</a>
+		                                </li>
+		                               <li>
+		                                    <a href="UbuntuInstallationSteps.html">Ubuntu Installation</a>
+		                                </li>
+								 </ul>	 
+                            </li>
+                            <li>
+                                 <a href="Channels.html"><i class="fa fa-arrows-alt fa-fw"></i> Channels</a>
+                            </li>
+							<li>
+                             	 <a href="Database.html"><i class="fa fa-medkit fa-fw"></i> DICOM viewer</a>
+							</li>
+                        <li>
+                             	 <a href="UbuntuInstallationSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Ubuntu Installation</a>
+							</li>
+                        <li>
+                             	 <a href="TurnServerInstallationSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Turn Server Installation</a>
+							</li>
+                        
+                        <li>
+                             	 <a href="UbuntuUpdateSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Server Restart and Package Update</a>
+				        </li>
+                        <li>
+                             	 <a href="SessionHashing.html"><i class="fa fa-cog fa-fw"></i>Session Hashing</a>
+				        </li>  
+                        <li>
+                             	 <a><i class="fa fa-book fa-fw"></i> Libraries<span class="fa arrow"></span></a>
+                                 <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a>External Libraries<span class="fa arrow"></span></a>
+                                               <ul class="nav nav-second-level">
+                                                   <li>
+		                                              <a href="timebar.html">Timebar</a>
+		                                           </li>
+                                                   <li>
+		                                              <a href="Libraries.html">Moment.js</a>
+		                                           </li>
+                                               </ul>
+		                                </li>
+		                               <li>
+		                                    <a>Internal Libraries<span class="fa arrow"></span></a>
+		                                </li>
+		                              
+								 </ul>	
+							</li>
+                            <li>
+                             	 <a href="H2MAPIs.html"><i class="fa fa-cog fa-fw"></i> Health2Me APIs</a>
+							</li>
+                   </ul>
+                    <!-- /#side-menu -->
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">Golden Rules of Report Access</h2>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                
+
+
+<h4 class="text-primary">Important Database tables related to Report viewing <span style="margin-left:20px;"></span></h4>
+<p><br>-> lifepin table - This single table contains the entries for all files being entered into Health2Me system. Important fields are Rawimage(which contains the unique identifier for identifying the encrypted file), IdMed and IdCreator.</br>
+<br>->doctorslinkusers - This table contain entries which are inserted when a doctor creates a member, a member initiates a telemedicine phone/video consultation and when a member sends a mail to doctors outside of Health2Me network higlighting certain reports. </br>
+<br>->doctorslinkdoctors - This table comes into play mostly when referrals are being made to doctors by doctors. Entries are made into the table about the files which are being attached during referral process.</br>
+<br>->doctorsgroup - This table contains the group and doctor ids which fall in a group.</br>
+</p>
+<h4 class="text-primary">Rule 1 (IdCreator Rule) <span style="margin-left:20px;"></span></h4>
+<p><br>-> We have a column in lifepin table called Idcreator which implies who created/uploaded the file. All such files which have been created/uploaded by the doctor(Idcreator) such reports should be viewable to the doctor unless it has been blinded by the member.</br>
+<br>-></br>
+<br>-></br>
+</p>
+<h4 class="text-primary">Rule 2 (Group Membership Rule) <span style="margin-left:20px;"></span></h4>
+<p><br>->Under this rule if a doctor is member of a group then all members which are associated with all the doctors of that group, all such members and their reports are viewable and accesible to a doctor.</br>
+<br>-></br>
+<h4 class="text-primary">Rule 3 (Patient Permission Rule) <span style="margin-left:20px;"></span></h4>
+<p><br></br>
+    <br>->Under this rule, a doctor can seek permission from a member to view a report which is locked. </br>
+<br>->This can be achieved by clicking on the lock icon on a report thumbnail. On clicking, it prompts the doctor with an alert to seek permission for access from the user/member. If clicked OK, it sends an email to the member stating the request from the doctor.</br>
+</p>
+<h4 class="text-primary">Rule 4 (Doctor Sharing rule) <span style="margin-left:20px;"></span></h4>
+<p><br>->This rule comes into play when a Health2Me doctor referes a member to another Health2Me or non-Health2Me doctor. Under such circumstances during referral, reports of members are highlighted to the doctor and entries made at the backend tables doctorslinkdoctors to these higlighted reports </br>
+<br></br>
+</p>
+
+
+</br>
+<p><i class="fa fa-wrench fa-fw" style="margin-right:10px;"></i><span>This page created by <span class="text-primary">Pallab Hazarika</span> on <span class="text-info">October 24, 2014</span></span></p>
+<!--<p><i class="fa fa-edit fa-fw" style="margin-right:10px;"></i><span>This page last edited by <span class="text-primary">Javier Vinals</span> on <span class="text-info">June 26, 2014</span></span></p> -->
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Core Scripts - Include with every page -->
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <!-- Page-Level Plugin Scripts - Dashboard -->
+    <script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="js/plugins/morris/morris.js"></script>
+
+    <!-- SB Admin Scripts - Include with every page -->
+    <script src="js/sb-admin.js"></script>
+
+    <!-- Page-Level Demo Scripts - Dashboard - Use for reference -->
+    <script src="js/demo/dashboard-demo.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<?php session_start();
+ require("environment_detail.php");
+ require("PasswordHash.php");
+ 
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+
+
+$NombreEnt = 'x';
+$PasswordEnt = 'x';
+
+$name=$_POST['Nombre'];
+$pass=$_POST['Password'];
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+	
+	//$result = mysql_query("SELECT * FROM doctors where IdMEDEmail='$name' and IdMEDRESERV='$pass'");
+	$result = mysql_query("SELECT * FROM doctors where IdMEDEmail='$name'"); 
+	$count=mysql_num_rows($result);
+	$row = mysql_fetch_array($result);
+	$success ='NO';
+    if($count == 0)
+    {
+        $result = mysql_query("SELECT * FROM doctors where IdMEDFIXEDNAME='$name'"); 
+	    $count=mysql_num_rows($result);
+	    $row = mysql_fetch_array($result);
+    }
+    //DOCTOR FOUND
+	if($count==1)
+	{
+		
+		$IdMedRESERV=$row['IdMEDRESERV'];
+		$addstring=$row['salt'];
+		$correcthash=PBKDF2_HASH_ALGORITHM .":". PBKDF2_ITERATIONS. ":" . $addstring . ":" .$IdMedRESERV;
+		if(validate_password($pass,$correcthash)){
+            echo '1';
+            
+        }else
+            echo '0';
+    }else if($count>1){echo '-1';}
+     else{
+        echo '-2';
+    }
+
+?>

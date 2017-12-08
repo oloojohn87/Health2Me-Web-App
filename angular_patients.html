@@ -1,0 +1,129 @@
+<div class="grid main_grid">
+    <!-- Statistics Box -->
+    <div class="row-fluid">
+
+
+        <div class="grid statistics_box">
+
+
+            <div class="loading_statistics" ng-hide="patientsCtrl.statistics.loaded">
+                <div class="loading_indicator">
+                    <img src="images/load/29.gif" />
+                </div>
+                {{'LOADING_STATS' | translate}}
+
+            </div>
+
+            <div ng-show="userCtrl.user.privilege == 1" class="gauge_box">
+                <div id="gauge" class="gauge"></div>
+                <div class="gauge_label">{{'REFERRED_TO_ME' | translate}}</div>
+            </div>	
+            <div class="statistics_box_right_section" ng-show="patientsCtrl.statistics.loaded">
+                <div class="statistics_box_entry">
+
+                    <div class="statistics_box_number_container">
+                        <p class="statistics_box_number" style="color: #6978FA"  ng-class="patientsCtrl.statistics.getSizeClass(patientsCtrl.statistics.members_size)">
+                            {{patientsCtrl.statistics.members}}
+                        </p>
+                    </div>
+
+                    <div class="statistics_box_label_container" style="background-color: #6978FA; border: 1px solid #6978FA;" >
+                        <p class="statistics_box_label" lang="en">{{'MEMBERS' | translate}}</p>
+                    </div>	
+
+                </div>
+
+                <div class="statistics_box_entry">
+
+                    <div class="statistics_box_number_container"> 
+                        <p class="statistics_box_number" style="color: #FFC831"  ng-class="patientsCtrl.statistics.getSizeClass(patientsCtrl.statistics.reach_size)">
+                            {{patientsCtrl.statistics.reach}}
+                        </p>
+                    </div>
+
+                    <div class="statistics_box_label_container" style="background-color: #FFC831; border: 1px solid #FFC831;">
+                        <p class="statistics_box_label" lang="en">{{'REACH' | translate}}</p>
+                    </div>	
+
+                </div>
+
+                <div class="statistics_box_entry" style="width: 200px;">
+
+                    <div class="statistics_box_number_container">
+                        <p class="statistics_box_label2">{{patientsCtrl.statistics.new_info}}%</p>
+                        <p class="statistics_box_label3">{{patientsCtrl.statistics.new_info_from_reach}}{{'PERCENT_REACH' | translate}}</p>
+                    </div>
+
+                    <div class="statistics_box_label_container" style="background-color: #73BB3B; border: 1px solid #73BB3B;">
+                        <p class="statistics_box_label" lang="en">{{'NEW_INFO' | translate}}</p>
+                    </div>	
+
+                </div>
+            </div> 
+
+        </div>
+    </div>
+
+
+    <!-- Search bar to search for patients -->
+    <div class="patients_table_wrapper">
+        <div class="search_bar">
+            <input type="text" ng-model="patientsCtrl.patients.searchQuery" placeholder="{{'SEARCH_MEMBERS' | translate}}" style="margin-left: 10px" />
+            <button class="search_bar_button" search-patients>{{'SEARCH' | translate}}</button>
+            <button class="clear_search_button" ng-show="patientsCtrl.patients.searchQuery.length > 0" search-clear-button><i class="icon-remove-sign"></i></button>
+            
+            <div style="float:right; margin-right:20px;">
+                <label class="checkbox toggle candy blue" onclick="" style="width:100px;">
+                    <input type="checkbox" id="RetrievePatient" name="RetrievePatient" ng-model="patientsCtrl.patients.isGroup" toggle-group/>
+                    <p>
+                        <span title="Search in only in group" lang="en">{{'GROUP' | translate}}</span>
+                        <span title="Search all patients" lang="en">{{'ME' | translate}}</span>
+                    </p>
+
+                    <a class="slide-button"></a>
+                </label>
+            </div>
+        </div>
+
+        <!-- Table to display patient results -->
+        <table id="patients_table" cellspacing="0" cellpadding="0">
+
+            <!-- Table header row -->
+            <tr class="patients_table_header">
+                <th style="width: 20%">{{'IDENTIFIER' | translate}}</th>
+                <th style="width: 20%">{{'FIRST_NAME' | translate}}</th>
+                <th style="width: 20%">{{'LAST_NAME' | translate}}</th>
+                <th style="width: 20%">{{'USER_NAME' | translate}}</th>
+                <th style="width: 20%">{{'TOTAL_REPORTS' | translate}}</th>
+            </tr>
+
+            <!-- Repeat a row for every patient in the patients model -->
+            <tr ng-repeat="patient in patientsCtrl.patients.items" class="patient_row" ng-class="{'even': $even, 'odd': $odd}" select-patient pat-Id="{{patient.identifier}}">
+                <td>{{patient.identifier}}</td>
+                <td>{{patient.first_name}}</td>
+                <td>{{patient.last_name}}</td>
+                <td>{{patient.user_name}}</td>
+                <td>{{patient.reports}} / {{patient.total_reports}}</td>
+            </tr>
+        </table>
+        <div class="table_loading_indicator" ng-show="patientsCtrl.patients.loading">
+            <img src="images/load/29.gif" />
+        </div>
+    </div>
+    <div class="pagination">
+        <button class="pagination_outer_button" style="float: left;" ng-disabled="patientsCtrl.patients.totalPages <= 1 || patientsCtrl.patients.loading" first-page>
+            {{'FIRST' | translate}}
+        </button>
+        <button class="pagination_button" style="float: left;" ng-disabled="patientsCtrl.patients.currentPage <= 1 || patientsCtrl.patients.loading" previous-page>
+            <i class="icon-caret-left"></i>
+        </button>
+        <button class="pagination_outer_button" style="float: right;" ng-disabled="patientsCtrl.patients.totalPages <= 1 || patientsCtrl.patients.loading" last-page>
+            {{'LAST' | translate}}
+        </button>
+        <button class="pagination_button" style="float: right;" ng-disabled="patientsCtrl.patients.currentPage >= patientsCtrl.patients.totalPages || patientsCtrl.patients.loading" next-page>
+            <i class="icon-caret-right"></i>
+        </button>
+        {{patientsCtrl.patients.currentPage}} {{'OF' | translate}} {{patientsCtrl.patients.totalPages}}
+    </div>
+
+</div>

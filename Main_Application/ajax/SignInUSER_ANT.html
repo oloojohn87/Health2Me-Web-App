@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en"  class="body-error"><head>
+    <meta charset="utf-8">
+    <title>Inmers - Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/login.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+	<link rel="stylesheet" href="css/icon/font-awesome.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.css">
+	
+	
+
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="images/icons/favicon.ico">
+    
+  </head>
+
+  <body>
+
+
+     
+    <div id="container_demo" >
+        <a class="hiddenanchor" id="toregister"></a>
+        <a class="hiddenanchor" id="tologin"></a>
+        <div id="wrapper" style="top:50px;">
+            <div id="login" class="animate form position">
+           <form action="UserAccount.php" class="form-login"> 
+                    <div class="content-login">
+
+                    <a href="#" class="logo"></a>
+                            <span class="label label-success" style="font-size:18px; margin-left:110px;">USER ACCESS</span>
+                            <input name="Acceso" type="TEXT" style="display:none;" class="first-input" placeholder="username" Value="23432"/>
+                    <div class="inputs">
+                        <!--<i class="icon-user first-icon"></i><input name="Nombre" type="text" class="first-input" placeholder="username" />-->
+						<i class="icon-envelope first-icon"></i><input name="Nombre" type="text" class="first-input" placeholder="e-mail used for signup" />
+                        <div class="clear"></div>
+                        <i class="icon-key"></i><input name="Password" type="password" class="last-input" placeholder="password" />
+                    </div>
+                    
+                    <div class="remember">
+                    	<input type="checkbox" id="c2" name="cc" checked="checked" />
+            			<label for="c2"><span></span> Remember Me</label>
+                    </div>
+                    <div class="link"><a href="#">Forgot Password?</a></div>
+                    <div class="clear"></div>
+                    <div class="button-login"><input type="submit" class="btn btn-large" value="Sign In"></div>
+                    </div>
+                    
+                    <div class="footer-login">
+                     <div class="pull-left ">Don't have an account?</div>
+                     <div class="pull-right"><a href="#toregister" class="to_register">Create Account</a></div>
+                     <div class="clear"></div>
+                    </div>
+                   
+                </form>
+                
+                <div class="info-message">
+                    <div class="alert alert-info">        
+                    To create a new account, click "Create Account"
+                    </div>
+                </div>
+              
+            </div>
+     
+            <div id="register" class="animate form position">
+               <form action="XXdashboard.html" class="form-login" id="default"> 
+                    <div class="content-login">
+                    <a href="#" class="logo"></a>
+                     <div class="inputs">
+                        <i class="icon-user first-icon"></i><input name="" type="text" class="first-input" placeholder="username" />
+                        <div class="clear"></div>
+                        <i class="icon-envelope-alt"></i><input name="" type="text" class="intermediate-input" placeholder="email" />
+                        <div class="clear"></div>
+                        <i class="icon-key"></i><input name="" type="password" class="last-input" placeholder="password" />
+                    </div>
+                				                    
+                    <div class="button-login"><input type="submit" class="btn btn-large" value="Create Account"></div>
+                    
+                    <div class="or"><span>or</span></div>
+
+                    
+                    </div>
+                    
+                    <div class="footer-login">
+                     <div class="pull-left ">Want login?</div>
+                     <div class="pull-right"><a href="#tologin" class="to_register">Sign In</a></div>
+                     <div class="clear"></div>
+                    </div>
+                </form>
+            </div>
+             
+        </div>
+    </div>  
+    
+   
+    
+    
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="js/jquery.min.js"></script>
+      <script>
+          $(document).ready(function() {
+      if($.browser.msie)
+            {
+                window.open('ie_error.html','_self',false);
+            }});
+      </script>
+ 
+
+  </body>
+</html>
+

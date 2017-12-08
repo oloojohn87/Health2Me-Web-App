@@ -1,0 +1,316 @@
+<?php
+ //   echo '<table><tr><td>TEST</td></tr></table>';
+ 
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="usuarios"; // Table name
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }		
+
+$queUsu = $_GET['Usuario'];
+$UserDOB = $_GET['UserDOB'];
+$NReports = $_GET['NReports'];
+$IdDoc = $_GET['IdDoc'];
+//$queUsu = 32;
+
+//task154 disable all patients that has all ready been referred
+
+if(empty($queUsu)) die();
+
+$ArrayPacientes = array();
+
+$numeral=0;
+$res = $con->prepare("Select * from doctorslinkdoctors where IdMED=?");
+$res->bindValue(1, $IdDoc, PDO::PARAM_INT);
+$res->execute();
+
+
+	while($row = $res->fetch(PDO::FETCH_ASSOC)){
+		$ArrayPacientes[$numeral]=$row['IdPac'];
+		$numeral++;
+	}
+
+
+
+$MyGroup = array();
+
+// *************START************ Create an Array to store "My Group": All IdMeds belonging to my group(s)
+$indGroup = 0;
+$MyGroup[$indGroup]=$IdDoc;
+$result = $con->prepare("SELECT * FROM doctorsgroups WHERE idDoctor = ? LIMIT 25");
+$result->bindValue(1, $IdDoc, PDO::PARAM_INT);
+$result->execute();
+
+while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+	$IdGroup = $row['idGroup'];
+	$result2 = $con->prepare("SELECT * FROM doctorsgroups WHERE idGroup = ? ");
+	$result2->bindValue(1, $IdGroup, PDO::PARAM_INT);
+	$result2->execute();
+	
+	while ($row2 = $result2->fetch(PDO::FETCH_ASSOC)) {
+		$IdDocGroup = $row2['idDoctor'];
+		// Check if this doctor is already stored (belonging to other group )
+        if (!in_array($IdDocGroup, $MyGroup) && $IdDocGroup != $IdDoc) array_push($MyGroup, $IdDocGroup);
+	}	
+}
+/* Debug to see if array is ok
+$n=0;
+echo '// My Id = '.$IdDoc;
+while ($n<$indGroup)
+{
+	echo ' // Posicion '.$n.' = '.$MyGroup[$n];
+	$n++;
+}
+die;
+*/ //Debug to see if array is ok 
+// **************END************* Create an Array to store "My Group": All IdMeds belonging to my group(s)
+
+
+//$result = mysql_query("SELECT * FROM usuarios WHERE IdUsFIXEDNAME like '%$queUsu%' LIMIT 25");
+
+/*$result = $con->prepare("SELECT DISTINCT * FROM usuarios WHERE Surname like ? OR Name like ? LIMIT 10000"); //Changed limit value from 50 10 10000
+$result->bindValue(1, '%'.$queUsu.'%', PDO::PARAM_STR);
+$result->bindValue(2, '%'.$queUsu.'%', PDO::PARAM_STR);
+$result->execute();*/
+
+$result=$con->prepare("SELECT q.* FROM (
+                            (
+                                SELECT USU.* FROM usuarios USU 
+                                INNER JOIN (    
+                                    SELECT DISTINCT A.idDoctor FROM doctorsgroups A 
+                                    INNER JOIN (
+                                        SELECT idGroup FROM doctorsgroups WHERE idDoctor=?
+                                    ) 
+                                    B WHERE B.idGroup = A.idGroup
+                                ) 
+                                DG WHERE DG.idDoctor = USU.IdCreator
+                            )
+                        UNION
+                            (
+                                SELECT USU.* FROM usuarios USU 
+                                INNER JOIN (
+                                    SELECT IdPac FROM doctorslinkdoctors WHERE IdMED2=?
+                                ) DLD WHERE DLD.IdPac = USU.Identif
+                            )
+                        UNION
+                            (
+                                SELECT USU.* FROM usuarios USU 
+                                INNER JOIN (
+                                    SELECT IdUs FROM doctorslinkusers WHERE IdMED=?
+                                ) DLU WHERE DLU.IdUs = USU.Identif
+                            )
+                        UNION
+                            (
+                                SELECT * FROM usuarios WHERE IdCreator = ?
+                            )
+                        )q WHERE q.Surname LIKE ? OR q.Name LIKE ? OR q.IdUsFIXEDNAME LIKE ? ".$limitquery);
+
+$result->bindValue(1, $IdDoc, PDO::PARAM_INT);
+$result->bindValue(2, $IdDoc, PDO::PARAM_INT);
+$result->bindValue(3, $IdDoc, PDO::PARAM_INT);
+$result->bindValue(4, $IdDoc, PDO::PARAM_INT);
+$result->bindValue(5, '%'.$queUsu.'%', PDO::PARAM_STR);
+$result->bindValue(6, '%'.$queUsu.'%', PDO::PARAM_STR);
+$result->bindValue(7, '%'.$queUsu.'%', PDO::PARAM_STR);
+
+$result->execute();
+
+if ($NReports == '3')
+{
+	echo  '<table class="table table-mod" id="TablaPacMODAL" style="height:100px; width:600px; overflow-y:hidden; table-layout: fixed; border: 1px SOLID #CACACA;">';
+	echo '<thead><tr id="FILA" class="CFILAMODAL"><th>First Name</th><th>Last Name</th><th>Fixed Id</th><th>Rep</th></tr></thead>';
+}
+else
+{
+	if ($NReports == '4')
+	{
+		echo  '<table class="table table-mod" id="TablaPacMODAL" style="height:100px; width:600px; overflow-y:hidden; table-layout: fixed; border: 1px SOLID #CACACA;">';
+		echo '<thead><tr id="FILA" class="CFILAMODAL"><th style="width:100px">First Name</th><th style="width:100px">Last Name</th><th style="width:60px">#Reports</th><th style="width:50px">Is User?</th><th style="width:80px">Linked2Me?</th><th style="width:220px">Tools</th></tr></thead>';
+	}
+	else
+	{
+		echo  '<table class="table table-mod" id="TablaPacMODAL" style="height:100px; width:600px; overflow-y:hidden; table-layout: fixed; border: 1px SOLID #CACACA;">';
+		echo '<thead><tr id="FILA" class="CFILAMODAL"><th>First Name</th><th>Last Name</th><th>Fixed Id</th><th>User Id</th><th>Rep</th></tr></thead>';
+	}
+}
+
+echo '<tbody>';
+
+while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
+$UsuFila = $row['Identif'];
+$DirectLink = '0';
+$ConnectionSTATUS = 0;
+
+
+// ************** START ************* Check DLU for given Doctor and Patient to see if there is a 'NULL' IdPin connection acknowleged 
+$DLUlink = 0;
+
+// Changes for the patient search from dashboard.Add NReport=2 condition
+if ($NReports == '4' or $NReports == '2') {
+	$resultDLU = $con->prepare("SELECT * FROM doctorslinkusers WHERE IdMED = ? AND IdUs = ? ");
+	$resultDLU->bindValue(1, $IdDoc, PDO::PARAM_INT);
+	$resultDLU->bindValue(2, $UsuFila, PDO::PARAM_INT);
+	$resultDLU->execute();
+	
+//echo "Query is: "."SELECT * FROM doctorslinkusers WHERE IdMED = '$IdDoc' AND IdUs = '$queUsu' "."    **********************************************";
+	while ($rowDLU = $resultDLU->fetch(PDO::FETCH_ASSOC)) {
+		$DLUlink = 1;
+		$IdPinDLU = $rowDLU['IdPIN'];
+		$EstadoDLU = $rowDLU['estado'];
+		if ($IdPinDLU < '1' && $EstadoDLU=='2') 
+		{
+			$DLUlink = 2;
+			$TemporaryEmail = $rowDLU['TemporaryEmail'];
+			$DateAck = $rowDLU['Fecha'];
+			$DirectLink = '1';
+		}
+	}
+//echo 'DLU Link is: '.$DLUlink.'    **********************************************';
+}
+// **************  END  ************* Check DLU for given Doctor and Patient to see if there is a 'NULL' IdPin connection acknowleged 
+
+
+$PatientAccountSTATUS = 0;
+$resultB = $con->prepare("SELECT * FROM lifepin WHERE IdUsu=? ");
+$resultB->bindValue(1, $UsuFila, PDO::PARAM_INT);
+$resultB->execute();
+
+$count = $resultB->rowCount();
+//Borrar esto para acelerar el rendimiento
+$numOwned = 0;
+while ($rowB = $resultB->fetch(PDO::FETCH_ASSOC)) {
+	$Owner = $rowB['IdMed'];
+	if (in_array($Owner, $MyGroup)) {$numOwned++; $ConnectionSTATUS = 1;}   	// THIS PATIENT IS AVAILABLE TO ME AS Dr.			********************
+	if ($Owner == $IdDoc) {$DirectLink = '1';	$ConnectionSTATUS = 2;}			// THIS PATIENT IS ALREADY CONNECTED TO ME AS Dr.	********************
+}
+
+if ($DirectLink == '1') 	$ConnectionSTATUS = 2;  							// THIS PATIENT IS ALREADY CONNECTED TO ME AS Dr. THROUGH SPECIFIC DLU (NULL IDPin) CONNECTION	********************
+
+
+$IsUser = '-';
+$queTools = '';
+$UserFlag = 0;
+if ($row['Password']>'')  														// THIS PATIENT HAS AN ACCOUNT						********************
+{
+    $UserFlag = 1;
+	$PatientAccountSTATUS = 1;
+	$IsUser = '<a href="#"><span class="label label-info" style="left:0px; margin-left:0px; margin-top:20px; margin-bottom:5px; font-size:14px; text-shadow:none;">YES</span></a>';
+    $queTools .='<a id="BotSendMsg" href="#" class="btn" title="Send Message" style="width:120px; margin-left:10px; color:#22aeff;"><i class="icon-envelope"></i>Send Message</a>';
+}
+$queColor = 'RGB (51,51,51)';
+if ($numOwned == 0) 
+{
+
+    echo '<tr class="CFILAMODAL" id="'.$UsuFila.'" style="height:10px; line-height:0; color:'.$queColor.';">';
+    echo '<td>'.$row['Name'].'</td>';
+    echo '<td>'.$row['Surname'].'</td>';
+    echo '<td>'.$row['IdUsFIXEDNAME'].'</td>';
+    echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$numOwned.'/'.$count.'</td>';
+    /*echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$IsUser.'</td>';
+    echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;"> - </td>';
+    echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$queTools.'</td>';*/
+    echo '</tr>';
+}
+else
+{
+	$queLink2Me = '-';
+	if ($DirectLink == 1) 
+	{
+		$queLink2Me = '<a href="#"><span class="label label-info" style="background-color:#54bc00; left:0px; margin-left:0px; margin-top:20px; margin-bottom:5px; font-size:14px; text-shadow:none;">Connected</span></a>';
+	}
+	else
+	{
+		$queLink2Me = '<a href="#"><span class="label label-info" style="left:0px; margin-left:0px; margin-top:20px; margin-bottom:5px; font-size:14px; text-shadow:none;">Available</span></a>';
+		if ($DLUlink == '0'){
+            $queTools .= '<a id="BotConnect" href="#" class="btn" title="Send Invitation" style="width:70px; color:blue;"><i class="icon-link"></i>Connect</a>';
+        }
+        else  {		 
+    $queTools .= '<a id="BotConnect" href="#" class="btn" title="Send Invitation" style="width:160px; color:#66CCFF; font-style:italic;"><i class="icon-link"></i>Pending confirmation</a>';
+        }
+    }
+	
+	if ($IsUser == '-' && $DirectLink == '1') $queTools .= '<a id="BotInvite" href="#" class="btn" title="Send Invitation" style="width:70px; color:green;"><i class="icon-envelope-alt"></i>Invite</a>';
+ 
+    
+	echo '<tr class="CFILAMODAL" id="'.$UsuFila.'" style="height:10px; line-height:0; color:'.$queColor.';">';
+	$IdPatient=$UsuFila;
+	
+	
+	if(in_array($IdPatient, $ArrayPacientes)){
+		
+		$tooltip='';
+		$res12 = $con->prepare("Select Idmed2 from doctorslinkdoctors where Idmed=? and IdPac=?");
+		$res12->bindValue(1, $IdDoc, PDO::PARAM_INT);
+		$res12->bindValue(2, $IdPatient, PDO::PARAM_INT);
+		$res12->execute();
+		
+		while($row12 = $res12->fetch(PDO::FETCH_ASSOC)){
+			$Idmed2=$row12['Idmed2'];
+			$res11=$con->prepare("Select Name,Surname from doctors where id=?");
+			$res11->bindValue(1, $Idmed2, PDO::PARAM_INT);
+			$res11->execute();
+			
+			$row11 = $res11->fetch(PDO::FETCH_ASSOC);
+			$name=$row11['Name'];
+			$surname=$row11['Surname'];
+			$tooltip=$tooltip.' Dr. '.$name.' '.$surname;
+			
+		}
+	
+		echo '<td>'.$row['Name'].'<span style="float:right;font-size:12px; color:#22aeff;" title="This patient has been referred to'.$tooltip.'"> <i class="icon-share icon-large"></i> <span></td>';	
+	}else {
+		echo '<td>'.$row['Name'].'</td>';
+	}
+	echo '<td>'.$row['Surname'].'</td>';
+	if ($NReports != '4') echo '<td>'.$row['IdUsFIXED'].'</td>';
+	if ($NReports !='3' && $NReports !='4') echo '<td>'.$row['IdUsFIXEDNAME'].'</td>';
+	echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$numOwned.'/'.$count.'</td>';
+if ($NReports == '4')
+{
+	echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$IsUser.'</td>';
+	echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$queLink2Me.'</td>';
+	if ($ConnectionSTATUS == '1')
+	{
+		echo '<td class="CFILAMODALIdent" id="'.$IdPatient.'" id2="conn" style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$queTools.'</td>';
+	}else
+	{
+        if ($DirectLink == 1) 
+        {
+            if ($UserFlag == 1)
+            {
+                    echo '<td class="CFILAMODALIdent" id="'.$IdPatient.'" id2="msg" style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$queTools.'</td>';
+            }
+            else
+            {
+                    echo '<td class="CFILAMODALIdent" id="'.$IdPatient.'" id2="invi" style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$queTools.'</td>';
+            }
+        }
+        else
+        {
+		echo '<td class="CFILAMODALIdent" id="'.$IdPatient.'" id2="invi" style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$queTools.'</td>';
+        }
+	}
+	
+}
+		//echo '<td style="overflow:hidden; white-space:nowrap; width:20px; text-align: center;">'.$count.'</td></tr>';
+echo '</tr>';
+}
+
+
+}
+
+echo '</tbody></table>';    
+    
+
+?>

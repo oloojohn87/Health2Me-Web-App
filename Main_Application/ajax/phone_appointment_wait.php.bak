@@ -1,0 +1,63 @@
+<?php echo '<?xml version="1.0" encoding="UTF-8" ?>' ?>
+<?php
+    require("environment_detail.php");
+ $dbhost = $env_var_db["dbhost"];
+ $dbname = $env_var_db["dbname"];
+ $dbuser = $env_var_db["dbuser"];
+ $dbpass = $env_var_db["dbpass"];
+ $link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+$result = mysql_query("SELECT in_consultation FROM doctors where id=".$_GET['doc_id']);
+$row = mysql_fetch_array($result);
+$count = $row["in_consultation"];
+$doc_id = $_GET['doc_id'];
+$pat_id = $_GET['pat_id'];
+$recent_id = $_GET['recent_id'];
+if($count == '2')
+{
+    $result = mysql_query("UPDATE doctors SET in_consultation=3 WHERE id=".$doc_id);
+    $result = mysql_query("SELECT most_recent_doc FROM usuarios WHERE Identif=".$pat_id);
+    $row = mysql_fetch_assoc($result);
+    $str = $row['most_recent_doc'];
+    $res = "";
+    if(strlen($str) > 0)
+    {
+        $str = str_replace(array("[", "]"), "", $str);
+        $ids = explode(",", $str);
+        $found = false;
+        for($i = 0; $i < count($ids); $i++)
+        {
+            if($ids[$i] == $doc_id)
+            {
+                $found = true;
+            }
+        }
+        if(!$found)
+        {
+            array_unshift($ids , $doc_id);
+            while(count($ids) > 5)
+            {
+                $doc = array_pop($ids);
+            }
+        }
+        $res = implode(",", $ids);
+    }
+    else
+    {
+        $res = $doc_id;
+    }
+    $new_ids = "[".$res."]";
+    $result = mysql_query("UPDATE usuarios SET most_recent_doc='".$new_ids."' WHERE Identif=".$pat_id);
+}
+else
+{
+    $result = mysql_query("UPDATE doctors SET in_consultation=2 WHERE id=".$_GET['doc_id']);
+    
+}
+?>
+<Response>
+    <Say language="en" voice="woman">Please wait for Doctor <?php echo $_GET['doc_name']; ?> to join.</Say>
+    <Dial action="phone_appointment_handle_leave.php?id=<?php echo $doc_id; ?>" method="GET">
+        <Conference record="record-from-start" maxParticipants="2" endConferenceOnExit="true" eventCallbackUrl="phone_appointment_callback.php?info=<?php echo $doc_id.'_'.$pat_id.'_'.$recent_id; ?>"><?php echo $_GET['conference_id']; ?></Conference>
+    </Dial>
+</Response>

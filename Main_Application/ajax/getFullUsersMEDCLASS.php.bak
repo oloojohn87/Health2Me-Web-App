@@ -1,0 +1,168 @@
+<?php
+class checkPatientsClass{
+
+public $queUsu = '';
+public $group = 1;
+public $IdMed;
+public $member;
+public $status1 = '';
+public $status2 = '';
+public $status3 = '';
+public $status4 = '';
+
+public function setters($mem_id, $doc_id){
+$this->member = $mem_id;
+$this->IdMed = $doc_id;
+}
+
+public function checker(){
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }	
+  
+  if($_SESSION['UserID'] > 0){
+  if($this->member == $_SESSION['UserID']){
+//  $this->status1 = $_SESSION['UserID'];
+  $this->status2 = 'true';
+	}else{
+//	$this->status1 = $_SESSION['UserID'];
+//  $this->status2 = 'true';
+  }
+  }else{
+ 
+
+$queUsu = $this->queUsu;
+$Group = $this->group;
+$IdMed = $this->IdMed;
+$check_mem = $this->member;
+
+
+	$resultUSU = $con->prepare("select * from usuarios where Identif=? and IdCreator=?");
+	$resultUSU->bindValue(1, $check_mem, PDO::PARAM_INT);
+	$resultUSU->bindValue(2, $IdMed, PDO::PARAM_INT);
+	$resultUSU->bindValue(3, $IdMed, PDO::PARAM_INT);
+	$resultUSU->execute();
+	
+	$rowUSU = $resultUSU->fetch(PDO::FETCH_ASSOC);
+	
+
+		if($rowUSU['Identif'] == $check_mem){
+	    $this->status1 = 'true';
+		}else{
+		$this->status1 = 'false';
+		}
+	 
+	
+  
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  $resultPRE = $con->prepare("select * from doctorslinkusers where IdMed=? and IdUs=?");
+	$resultPRE->bindValue(1, $IdMed, PDO::PARAM_INT);
+	$resultPRE->bindValue(2, $check_mem, PDO::PARAM_INT);
+	$resultPRE->execute();
+	
+	
+	$holder = '';
+	while ($rowPRE = $resultPRE->fetch(PDO::FETCH_ASSOC)) {
+
+		if($rowPRE['IdUs'] == $check_mem){
+		$this->status2 = $rowPRE['IdUs'].'&'.$check_mem;
+		}else{
+		$this->status2 = 'false';
+		}
+		
+		
+	 }
+	
+	
+  
+  
+  
+  
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  $resultPRE = $con->prepare("select * from doctorslinkdoctors where IdMED2= ? and IdPac=?");
+	$resultPRE->bindValue(1, $IdMed, PDO::PARAM_INT);
+	$resultPRE->bindValue(2, $check_mem, PDO::PARAM_INT);
+	$resultPRE->execute();
+	
+	
+	$holder = '';
+	while ($rowPRE = $resultPRE->fetch(PDO::FETCH_ASSOC)) {
+
+		if($rowPRE['IdPac'] == $check_mem){
+		$this->status3 = 'true';
+		}else{
+		$this->status3 = 'false';
+		}
+		
+		
+	 }
+	
+	
+  
+  
+  
+  
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+$resultPRE=$con->prepare("select * from doctorsgroups where idGroup IN (select idGroup from doctorsgroups where idDoctor=?)");
+$resultPRE->bindValue(1, $IdMed, PDO::PARAM_INT);
+$resultPRE->execute();
+
+
+while ($rowPRE = $resultPRE->fetch(PDO::FETCH_ASSOC))
+	{
+
+
+			$idEncontrado = $rowPRE['idDoctor'];
+			$resultUSU = $con->prepare("select * from usuarios where Identif=? and IdCreator=?");
+			$resultUSU->bindValue(1, $check_mem, PDO::PARAM_INT);
+			$resultUSU->bindValue(2, $idEncontrado, PDO::PARAM_INT);
+			$resultUSU->execute();
+			
+			$rowUSU = $resultUSU->fetch(PDO::FETCH_ASSOC);
+			
+			$resultUSU = $con->prepare("select * from doctorslinkdoctors where IdMED2= ? and IdPac=?");
+			$resultUSU->bindValue(1, $idEncontrado, PDO::PARAM_INT);
+			$resultUSU->bindValue(2, $check_mem, PDO::PARAM_INT);
+			$resultUSU->execute();
+			
+			$rowUSU2 = $resultUSU->fetch(PDO::FETCH_ASSOC);
+			
+			$resultUSU = $con->prepare("select * from doctorslinkusers where IdMED=? and IdUs=?");
+			$resultUSU->bindValue(1, $idEncontrado, PDO::PARAM_INT);
+			$resultUSU->bindValue(2, $check_mem, PDO::PARAM_INT);
+			$resultUSU->execute();
+			
+			$rowUSU3 = $resultUSU->fetch(PDO::FETCH_ASSOC);
+
+			if($rowUSU['Identif'] == $check_mem or $rowUSU2['IdPac'] == $check_mem or $rowUSU3['IdUs'] == $check_mem ){
+			$this->status4 = 'true';
+			break;
+			}else{
+			$this->status4 = 'false';
+			}
+			
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+}
+}
+}
+
+?>

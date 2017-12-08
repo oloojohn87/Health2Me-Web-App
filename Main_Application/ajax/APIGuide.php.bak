@@ -1,0 +1,617 @@
+    <!DOCTYPE html>
+<html lang="en"  class="body-error"><head>
+    <meta charset="utf-8">
+    <title>health2.me</title>
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <link rel="shortcut icon" href="images/icons/favicon.ico">
+	<link href="css/bootstrap.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/bootstrap-responsive.css">
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+	<script src="js/jquery-1.9.1-autocomplete.js"></script>
+	<script src="js/jquery-ui-autocomplete.js"></script>
+	</head>
+
+  <body>
+
+
+	
+	<?php
+	require('environment_detail.php');
+	$dbhost = $env_var_db['dbhost'];
+	$dbname = $env_var_db['dbname'];
+	$dbuser = $env_var_db['dbuser'];
+	$dbpass = $env_var_db['dbpass'];
+	
+	$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+	mysql_select_db("$dbname")or die("cannot select DB");	
+
+
+         echo "<div class='container-fluid'><div class='row row-fluid'>
+		 <center><img src='images/health2meLOGO.png' width='150px'></br>
+  
+		 <b>Health2.me API User Resource Version 1.0</b></br>";
+		
+		if(isset($_GET['memportal']) && $_GET['memportal'] == 'show'){
+		 echo "<span style='margin-left:20px;'><font size='3'><b><a href='APIGuide.php?memportal=hide'>Members Portal</a></b></font></span>";
+		 }else{
+		 echo "<span style='margin-left:20px;'><font size='3'><b><a href='APIGuide.php?memportal=show'>Members Portal</a></b></font></span>";
+		 }
+		 
+		 if(isset($_GET['agentportal']) && $_GET['agentportal'] == 'show'){
+		 echo "<span style='margin-left:20px;'><font size='3'><b><a href='APIGuide.php?agentportal=hide'>Agent Portal</a></b></font></span>";
+		 }else{
+		 echo "<span style='margin-left:20px;'><font size='3'><b><a href='APIGuide.php?agentportal=show'>Agent Portal</a></b></font></span>";
+		 }
+		 
+		 if(isset($_GET['admin']) && $_GET['admin'] == 'show'){
+		 echo "<span style='margin-left:20px;'><font size='3'><b><a href='APIGuide.php?admin=hide'>Admin Tools</a></b></font></span>";
+		 }else{
+		 echo "<span style='margin-left:20px;'><font size='3'><b><a href='APIGuide.php?admin=show'>Admin Tools</a></b></font></span>";
+		 }
+		
+		echo "</div></center></br>";
+		if(isset($_GET['memportal']) && $_GET['memportal'] == 'show'){
+  echo "<p>Addition of candidates to health2.me can be uploaded via our REST API.  For each patient that you would like to insert into the system you must use a basic POST request.
+		 <p>Please note that you <b>must</b> have a valid agent account in order to add new patients into the system. You may reference our newAgentAPI.php at the bottom of this page.
+		 <p>The resource URL for making post requests
+		 </br><b>dev.health2.me/newUserAPI.php</b>
+		 <p></br>";
+		 
+		 echo "<ul>";
+		 
+		 if(isset($_GET['pat']) && $_GET['pat'] == 'show'){
+		 echo "<li style='display:inline;margin-left:25px'><font size='3'><b><a href='APIGuide.php?pat=hide&memportal=show'>Create Patients</a></b></font></li>";
+		 }else{
+		 echo "<li style='display:inline;margin-left:25px'><font size='3'><b><a href='APIGuide.php?pat=show&memportal=show'>Create Patients</a></b></font></li>";
+		 }
+		 
+		 if(isset($_GET['param']) && $_GET['param'] == 'show'){
+		 echo "<li style='display:inline;margin-left:25px'><font size='3'><b><a href='APIGuide.php?param=hide&memportal=show'>Parameters</a></b></font></li>";
+		 }else{
+		 echo "<li style='display:inline;margin-left:25px'><font size='3'><b><a href='APIGuide.php?param=show&memportal=show'>Parameters</a></b></font></li>";
+		 }
+		 
+		 if(isset($_GET['ret']) && $_GET['ret'] == 'show'){
+		 echo "<li style='display:inline;margin-left:25px'><font size='3'><b><a href='APIGuide.php?ret=hide&memportal=show'>Returned Errors</a></b></font></li>";
+		 }else{
+		 echo "<li style='display:inline;margin-left:25px'><font size='3'><b><a href='APIGuide.php?ret=show&memportal=show'>Returned Errors</a></b></font></li>";
+		 }
+		 
+		 echo "</ul>";
+		 
+		 
+		 
+		 if(isset($_GET['param']) && $_GET['param'] == 'show')
+		 {
+		 echo "<center><table class='table table-bordered' style='width:100%;'>
+		 <tr>
+		 <td>name</br><i><font size='1'>Required</font></i></td><td>The first name of the patient to be added to the system.</td>
+		 </tr>
+		 <tr>
+		 <td>surname</br><i><font size='1'>Required</font></i></td><td>The last name of the patient to be added to the system.</td>
+		 </tr>
+		 <tr>
+		 <td>dob</br><i><font size='1'>Required</font></i></td><td>This parameter must contain the date of birth of the patient.</br>Format: mm/dd/yyyy</td>
+		 </tr>
+		 <tr>
+		 <td>gender</br><i><font size='1'>Required</font></i></td><td>This will indicate the gender of the patient.</td>
+		 </tr>
+		 <tr>
+		 <td>email</td><td>Enter the full email of the patient to be uploaded</td>
+		 </tr>
+		 <tr>
+		 <td>plan</br><i><font size='1'>Required</font></i></td><td>Enter the payment plan for the patient.</td>
+		 </tr>
+		 <tr>
+		 <td>phone</br><i><font size='1'>Required</font></i></td><td>Enter the phone number of the patient.  The number may include many special characters such as (555)-223(5555), but 5552235555 is preferred.</td>
+		 </tr>
+		 <tr>
+		 <td>agent</br><i><font size='1'>Required</font></i></td><td>Enter the unique agent ID in order to add patients to the system.  You can add agents using our add agent API.</td>
+		 </tr>
+		 <tr>
+		 <td>security</br><i><font size='1'>Required</font></i></td><td>Enter the unique security ID in order to add patients to the system.  This will be provided to you by Health2.me</td>
+		 </tr>
+		 <tr>
+		 <td>facility</br><i><font size='1'>Required</font></i></td><td>Enter the agent location.</td>
+		 </tr>
+		 </table></center>";
+		 }
+		 echo "</br>";
+		 
+		 
+		 
+		 if(isset($_GET['ret']) && $_GET['ret'] == 'show'){
+		 echo "<center><table class='table table-bordered' style='width:100%;'>
+		 <tr>
+		 <td>'CODE':'1'</td><td>'SUCCESS':'Candidate has been successfully added to the system.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'101'</td><td>'ERROR':'Email is not valid.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'102'</td><td>'ERROR':'Phone number is not valid.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'201'</td><td>'ERROR':'Candidate phone is already known.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'202'</td><td>'ERROR':'Candidate email is already known.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'301'</td><td>'MISSING':'First name is required.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'302'</td><td>'MISSING':'Surname is required.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'303'</td><td>'MISSING':'Date of birth is required.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'304'</td><td>'MISSING':'Gender is required.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'305'</td><td>'MISSING':'Phone number is required.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'306'</td><td>'MISSING':'Security code is required.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'307'</td><td>'MISSING':'Agent ID is required.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'308'</td><td>'MISSING':'Facility location is required.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'309'</td><td>'MISSING':'Payment plan is required.'</td>
+		 </tr>
+		 </table></center>";
+		 }
+		 echo "</br>";
+		 
+		 if(isset($_GET['pat']) && $_GET['pat'] == 'show'){
+		 echo "<form width='75%' method='post' action='http://dev.health2.me/newUserAPI.php'>
+ <input type='text' style='float:left;' id='name' name='name' maxlength='50' size='25' placeholder='First Name'/>
+ <input id='field_id' type='hidden' style='width:0px;'></br></br>
+ <input type='text' style='float:left;' id='surname' name='surname' maxlength='100' size='25' placeholder='Sir Name'/>
+ <input id='field_id2' type='hidden' style='width:0px;'></br></br>
+ <input type='date' id='dob' name='dob' placeholder='Birth Date'/></br>
+ <input type='text' style='float:left;' id='email' name='email' maxlength='255' size='25' placeholder='Email'/>
+ <input id='field_id3' type='hidden' style='width:0px;'></br></br>
+ <input type='text' style='float:left;' id='phone' name='phone' maxlength='20' size='20' placeholder='Phone'/>
+ <input id='field_id4' type='hidden' style='width:0px;'></br></br>
+ <select name='plan'>
+ <option value='' disabled selected>Select the Plan</option>
+<option value='0'>Individual Plan</option>
+<option value='1'>Family Plan</option>
+</select>
+ <table style='background-color:white;'><tr><td width='50px'><label for='male'>Male</label>
+ <input type='radio' class='radio' id='male' name='gender' value='1'/>
+ </td><td width='50px'><label for='female'>Female</label>
+ <input type='radio' class='radio' id='female' name='gender' value='0'/>
+</td></tr></table>
+ <p></br><input type='text' id='agent' name='agent' placeholder='Agent ID'/>
+ <input type='password' id='security' name='security' placeholder='Agent Security Code'/>
+ <select name='facility'>
+ <option value='' disabled selected>Select the Facility</option>
+<option value='0'>Columbia</option>
+<option value='1'>Spain</option>
+</select>
+ <p></br><a id='dupe' class='btn'>Check for Duplicates</a>
+ <input class='btn' type='submit' name='addPatient' value='Add Patient' />
+ </form>";
+ }
+ }
+ 
+ if(isset($_GET['agentportal']) && $_GET['agentportal'] == 'show'){
+ echo "<p>Addition of agents to health2.me can be uploaded via our REST API.  For each agent that you would like to insert into the system you must use a basic POST request.
+		 <p>The resource URL for making post requests
+		 </br><b>dev.health2.me/newAgentAPI.php</b>
+		 <p></br>";
+		 
+		 echo "<ul>";
+		 
+		 if(isset($_GET['agent']) && $_GET['agent'] == 'show'){
+		 echo "<li style='display:inline;margin-left:25px'><font size='3'><b><a href='APIGuide.php?agent=hide&agentportal=show#para'>Create Agents</a></b></font></li>";
+		 }else{
+		 echo "<li style='display:inline;margin-left:25px'><font size='3'><b><a href='APIGuide.php?agent=show&agentportal=show#para'>Create Agents</a></b></font></li>";
+		 }
+		 
+		 if(isset($_GET['para']) && $_GET['para'] == 'show'){
+		 echo "<li style='display:inline;margin-left:25px'><font size='3'><b><a href='APIGuide.php?para=hide&agentportal=show#para'>Parameters</a></b></font></li>";
+		 }else{
+		 echo "<li style='display:inline;margin-left:25px'><font size='3'><b><a href='APIGuide.php?para=show&agentportal=show#para'>Parameters</a></b></font></li>";
+		 }
+		 
+		 if(isset($_GET['reta']) && $_GET['reta'] == 'show'){
+		 echo "<li style='display:inline;margin-left:25px'><font size='3'><b><a href='APIGuide.php?reta=hide&agentportal=show#para'>Returned Errors</a></b></font></li>";
+		 }else{
+		 echo "<li style='display:inline;margin-left:25px'><font size='3'><b><a href='APIGuide.php?reta=show&agentportal=show#para'>Returned Errors</a></b></font></li>";
+		 }
+		 
+		 echo "</ul>";
+		 
+		 if(isset($_GET['para']) && $_GET['para'] == 'show'){
+		 echo "<center><table class='table table-bordered' style='width:100%;'>
+		 <tr>
+		 <td>agent</br><i><font size='1'>Required</font></i></td><td>Enter the agent id/username.</td>
+		 </tr>
+		 <tr>
+		 <td>password</br><i><font size='1'>Required</font></i></td><td>Enter the agent password.</td>
+		 </tr>
+		 <tr>
+		 <td>password_repeat</br><i><font size='1'>Required</font></i></td><td>Repeat the agent password.</td>
+		 </tr>
+		 <tr>
+		 <td>email</br><i><font size='1'>Required</font></i></td><td>Add agent email.</td>
+		 </tr>
+		 <tr>
+		 <td>security</td><td>Enter the security code provided to you by health2.me for identity verification.</td>
+		 </tr>
+		 </table></center>";
+		 echo "</br>";
+		 }
+		 
+		 
+		 if(isset($_GET['reta']) && $_GET['reta'] == 'show'){
+		 echo "<center><table class='table table-bordered' style='width:100%;'>
+		 <tr>
+		 <td>'CODE':'1'</td><td>'SUCCESS':'Agent has been successfully added to the system.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'101'</td><td>'ERROR':'Email is not valid.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'102'</td><td>'ERROR':'The passwords entered do not match.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'103'</td><td>'ERROR':'The agent id is already in the system.'</td>
+		 </tr>
+		 <tr>
+		 <td>'CODE':'306'</td><td>'MISSING':'Security code is required.'</td>
+		 </tr>
+		 </table></center>";
+		 }
+		 echo "</br>";
+		 
+		 
+ 
+ if(isset($_GET['agent']) && $_GET['agent'] == 'show'){
+ echo "Agent accounts are created to increase security and prevent DDOS attacks.  This method also allows for much closer tracking of which agents are adding which users.<p>To view the tracking system please visit <a href='APIGuide.php?count=show&admin=show#reset'>Show Agent Stats</a> in the <a href='APIGuide.php?admin=show'>Admin Tools</a> above.</br></br>
+ <form method='post' action='http://dev.health2.me/newAgentAPI.php'>
+ <input type='text' id='agent' name='agent' maxlength='50' size='25' placeholder='Agent ID'/>
+ <input type='password' id='password' name='password' maxlength='100' size='25' placeholder='Password'/>
+ <input type='password' id='password_repeat' name='password_repeat' maxlength='100' size='25' placeholder='Repeat Password'/>
+ <input type='text' id='email' name='email' maxlength='255' size='25' placeholder='Email'/>
+ <input type='text' id='security' name='security' maxlength='255' size='25' placeholder='Security Code'/>'security'
+</br>
+<select name='facility'>
+ <option value='' disabled selected>Select the Facility</option>
+<option value='0'>Columbia</option>
+<option value='1'>Spain</option>
+</select>
+ <p></br><input class='btn' type='submit' name='addAgent' value='Add Agent' />
+ </form>";
+ }
+ }
+ 
+ if(isset($_GET['admin']) && $_GET['admin'] == 'show'){
+ echo "The administrative section can be used to reset passwords or track agent information.
+ </br></br>
+ <b>Agent Tracking:</b></br>In the Show Agent Stats link below, there is a table with all registered agents.  On the far right column will show the total number of registered members by that agent.
+ </br>If that agent has registered members then the number will display as a link.  Once the link is clicked it will display all members registered by that agent.";
+ echo "</br></br></br><ul>";
+ 
+ if(isset($_GET['reset']) && $_GET['reset'] == 'show'){
+ echo "<li style='display:inline;margin-left:25px'><b><font size='3'><a id='reset' href='APIGuide.php?reset=hide&admin=show#reset'>Reset Agent Password</a></font></b></li>";
+ }else{
+ echo "<li style='display:inline;margin-left:25px'><b><font size='3'><a href='APIGuide.php?reset=show&admin=show#reset'>Reset Agent Password</a></font></b></li>";
+ }
+ 
+ if(isset($_GET['count']) && $_GET['count'] == 'show'){
+ echo "<li style='display:inline;margin-left:25px'><b><font size='3'><a id='reset' href='APIGuide.php?count=hide&admin=show#reset'>Show Agent Stats</a></font></b></li>";
+ }else{
+ echo "<li style='display:inline;margin-left:25px'><b><font size='3'><a href='APIGuide.php?count=show&admin=show#reset'>Show Agent Stats</a></font></b></li>";
+ }
+ 
+ if(isset($_GET['count']) && $_GET['count'] == 'show'){
+ $query = mysql_query("SELECT * FROM agents");
+ 
+ echo "<table class='table table-bordered'><th>Agent ID</th><th>Email</th><th>Total Members Registered</th>";
+ while($row = mysql_fetch_array($query))
+ {
+ echo "<tr>
+ <td>".$row['username']."</td>
+ <td>".$row['email']."</td>";
+ if($row['t_registered'] > 0){
+ echo "<td><a href='APIGuide.php?pullusers=".$row['idagents']."'>".$row['t_registered']."</a> <-- Click to view registered users</td>";
+ }else{
+ echo "<td> -==No Users Registered==-</td>";
+ }
+ echo "</tr>";
+ }
+ echo "</table>";
+ }
+ 
+ echo "</ul>";
+ 
+ if(isset($_GET['reset']) && $_GET['reset'] == 'show'){
+  echo "Please enter the agent ID and the password you would like to reset it to.</br></br></br>
+  <form method='post' action='http://dev.health2.me/agentPassAPI.php'>
+ <input type='text' id='agent' name='agent' maxlength='50' size='25' placeholder='Agent ID'/>
+ <input type='password' id='password' name='password' maxlength='100' size='25' placeholder='Password'/>
+ <input type='password' id='password_repeat' name='password_repeat' maxlength='100' size='25' placeholder='Repeat Password'/>
+ <input type='text' id='security' name='security' maxlength='255' size='25' placeholder='Security Code'/>'Reset Password'
+ <p></br><input class='btn' type='submit' name='reset' value='Reset Agent Password' />
+ </form>";
+ }
+ }
+ 
+ if(isset($_GET['pullusers'])){
+ $query = mysql_query("SELECT * FROM agentslinkusers WHERE agent='".$_GET['pullusers']."'");
+ echo "<table class='table table-bordered'><th>ID</th><th>Name</th><th>Surname</th><th>Email</th><th>Number</th><th>Grant Access</th><th>Verified</th><th>Last IP Logged</th><th>Sign Up Date</th><th>Number of Calls</th><th>Location</th>";
+ while($row = mysql_fetch_array($query)){
+ $query2 = mysql_query("SELECT * FROM usuarios WHERE Identif='".$row['user']."'");
+ $row2 = mysql_fetch_array($query2);
+ if($row2['Verificado'] != null){
+ $verified = 'Yes';
+ }else{
+ $verified = 'No';
+ }
+ if($row2['IPVALID'] != null){
+ $ip = $row2['IPVALID'];
+ }else{
+ $ip = 'Never logged in';
+ }
+ if($row2['location'] != null){
+ $location = $row2['location'];
+ }else{
+ $location = 'Location never added';
+ }
+ echo "<tr>
+ <td width='5%'>".$row2['Identif']."</td>
+ <td width='5%'>".$row2['Name']."</td>
+ <td width='5%'>".$row2['Surname']."</td>
+ <td width='15%'>".$row2['email']."</td>
+ <td width='10%'>".$row2['telefono']."</td>
+ <td width='10%'>".$row2['GrantAccess']."</td>
+ <td width='5%'>".$verified."</td>
+ <td width='10%'>".$ip."</td>
+ <td width='10%'>".$row2['signUpDate']."</td>
+ <td width='10%'>".$row2['numberofPhoneCalls']."</td>
+ <td width='15%'>".$location."</td>
+ </tr>";
+ }
+ echo "</table>";
+ }
+    echo "</div>"; 
+        ?>
+		<script type="text/javascript" >
+		
+		GetMemberList();
+		GetSurnameList();
+		GetEmailList();
+		GetPhoneList();
+		
+		function GetMemberList()
+	{
+		
+		var queUrl ='getMemberList.php?name=yes';	
+		//alert(queUrl);	
+		var members='';	
+		$.ajax(
+		{
+			url: queUrl,
+			dataType: "json",
+			async:false,
+			success: function(data)
+			{
+				members= data.items;
+				//alert(data.items);
+				
+			},
+            error: function(data, errorThrown){
+               alert(errorThrown);
+              } 
+		});
+		
+		MemberListName=members;
+//		alert(MemberList);	
+		
+	}
+	
+	function GetSurnameList()
+	{
+		
+		var queUrl ='getMemberList.php?surname=yes';	
+		//alert(queUrl);	
+		var members='';	
+		$.ajax(
+		{
+			url: queUrl,
+			dataType: "json",
+			async:false,
+			success: function(data)
+			{
+				members= data.items;
+				//alert(data.items);
+				
+			},
+            error: function(data, errorThrown){
+               alert(errorThrown);
+              } 
+		});
+		
+		MemberListSurname=members;
+//		alert(MemberList);	
+		
+	}
+	
+	function GetEmailList()
+	{
+		
+		var queUrl ='getMemberList.php?email=yes';	
+		//alert(queUrl);	
+		var members='';	
+		$.ajax(
+		{
+			url: queUrl,
+			dataType: "json",
+			async:false,
+			success: function(data)
+			{
+				members= data.items;
+				//alert(data.items);
+				
+			},
+            error: function(data, errorThrown){
+               alert(errorThrown);
+              } 
+		});
+		
+		MemberListEmail=members;
+//		alert(MemberList);	
+		
+	}
+	
+	function GetPhoneList()
+	{
+		
+		var queUrl ='getMemberList.php?phone=yes';	
+		//alert(queUrl);	
+		var members='';	
+		$.ajax(
+		{
+			url: queUrl,
+			dataType: "json",
+			async:false,
+			success: function(data)
+			{
+				members= data.items;
+				//alert(data.items);
+				
+			},
+            error: function(data, errorThrown){
+               alert(errorThrown);
+              } 
+		});
+		
+		MemberListPhone=members;
+//		alert(MemberList);	
+		
+	}
+	
+	$("#name").autocomplete({
+        source: MemberListName,
+        minLength: 1,
+        select: function(event, ui) {
+            // feed hidden id field
+            $("#field_id").val(ui.item.id);
+ //           alert($("#field_id").val());
+        },
+               
+		// if user enter some drug which is not in our list
+        change: function (event, ui) {
+            if (ui.item === null) {
+                $('#field_id').val('DB00000');
+//				alert($("#field_id").val());
+            }
+        }
+    });
+	
+	$("#surname").autocomplete({
+        source: MemberListSurname,
+        minLength: 1,
+        select: function(event, ui) {
+            // feed hidden id field
+            $("#field_id2").val(ui.item.id);
+ //           alert($("#field_id").val());
+        },
+               
+		// if user enter some drug which is not in our list
+        change: function (event, ui) {
+            if (ui.item === null) {
+                $('#field_id2').val('DB00000');
+//				alert($("#field_id").val());
+            }
+        }
+    });
+	
+	$("#email").autocomplete({
+        source: MemberListEmail,
+        minLength: 1,
+        select: function(event, ui) {
+            // feed hidden id field
+            $("#field_id3").val(ui.item.id);
+ //           alert($("#field_id").val());
+        },
+               
+		// if user enter some drug which is not in our list
+        change: function (event, ui) {
+            if (ui.item === null) {
+                $('#field_id3').val('DB00000');
+//				alert($("#field_id").val());
+            }
+        }
+    });
+	
+	$("#phone").autocomplete({
+        source: MemberListPhone,
+        minLength: 1,
+        select: function(event, ui) {
+            // feed hidden id field
+            $("#field_id4").val(ui.item.id);
+ //           alert($("#field_id").val());
+        },
+               
+		// if user enter some drug which is not in our list
+        change: function (event, ui) {
+            if (ui.item === null) {
+                $('#field_id4').val('DB00000');
+//				alert($("#field_id").val());
+            }
+        }
+    });
+	
+	$('#dupe').click(function() {
+	var name = $('#name').val();
+	var surname = $('#surname').val();
+	var dob = $('#dob').val();
+	var email = $('#email').val();
+	var phone = $('#phone').val();
+
+	checkForDupeAPI(name, surname, dob, email, phone);
+	});
+	
+	function checkForDupeAPI(name, surname, dob, email, phone)
+	{
+		var n = 0;
+		var queUrl ="checkForDupeAPI.php?name="+name+"&surname="+surname+"&dob="+dob+"&email="+email+"&phone="+phone;	
+		//alert(queUrl);	
+		
+		$.ajax(
+		{
+			url: queUrl,
+			dataType: "json",
+			async:false,
+			success: function(data)
+			{
+			dupeData = data.items;
+				
+				
+			},
+            error: function(data, errorThrown){
+               alert('There are no duplicates with that information in the system.');
+              } 
+		});
+		var numDupe = dupeData.length;
+		alert('There are '+numDupe+' duplicate entries with that information.');
+
+	}
+	
+
+</script>
+  

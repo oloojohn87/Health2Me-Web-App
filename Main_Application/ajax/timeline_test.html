@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>Timeline Test</title>
+    
+        <link rel="stylesheet" href="css/tipped.css" >
+        <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css" >
+        <link rel="stylesheet" href="css/jquery-ui-1.8.16.custom.css" media="screen"  />
+    </head>
+    <body>
+        
+        
+        <script src="js/jquery.min.js"></script>
+        <script src="js/jquery.easing.1.3.js"></script>
+        <script src="js/tipped.js"></script>
+        <script src="js/imagesloaded.pkgd.min.js"></script>
+        <script src="js/H2M_Timeline.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
+        
+        <div id="main_timeline" style="width: 100%; height: 25px; margin-top: 75px;"></div>
+        <div id="main_timeline2" style="width: 100%; height: 25px; margin-top: 75px;"></div>
+        <div id="main_timeline3" style="width: 100%; height: 25px; margin-top: 75px;"></div>
+        <!--<div id="main_timeline4" style="width: 100%; height: 25px; margin-top: 75px;"></div>
+        <div id="main_timeline5" style="width: 100%; height: 25px; margin-top: 75px;"></div>
+        <div id="main_timeline6" style="width: 100%; height: 25px; margin-top: 75px;"></div>-->
+        
+        <script>
+            $(document).ready(function()
+            {
+                $("#main_timeline").H2M_Timeline({doctor: 2641, patient: 2195, max: 30, index: 53});
+                $("#main_timeline2").H2M_Timeline({doctor: 2641, patient: 2095, max: 30, index: 98});
+                $("#main_timeline3").H2M_Timeline({doctor: 2641, patient: 2158, max: 30, index: 523});
+                /*$("#main_timeline4").H2M_Timeline({doctor: 2641, patient: 2093, max: 30, index: 22});
+                $("#main_timeline5").H2M_Timeline({doctor: 2641, patient: 2093, max: 30, index: 90});
+                $("#main_timeline6").H2M_Timeline({doctor: 2641, patient: 2093, max: 30, index: 52});*/
+            });
+        </script>
+    </body>
+</html>

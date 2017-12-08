@@ -1,0 +1,77 @@
+<?php
+
+session_start();
+ require("environment_detail.php");
+ require("push_server.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+ 
+ $probeID = $_GET['probeID'];
+ $feedback = $_GET['feedback'];
+ $datetime = $_GET['datetime'];
+ $feedbackToken = $_GET['feedbackToken'];
+ 
+ $link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+ mysql_select_db("$dbname")or die("cannot select DB");	
+
+
+//$query = "insert INTO proberesponse values($probeID,$feedback,'$datetime')";
+//mysql_query($query);
+
+$query = "select id as maxid FROM sentprobelog where probeID=$probeID and method=1 and sid='$feedbackToken'";
+$result = mysql_query($query);
+$row=mysql_fetch_array($result);
+$targetid=$row['maxid'];
+$query = "UPDATE sentprobelog set result=$feedback,requestTime='$datetime' where id=$targetid";
+mysql_query($query);
+
+$string = getDoctorIDPatientName($probeID);
+				list($doctorID, $patientName, ) = split('::', $string);
+				
+				
+				$feeling = "";
+				switch($feedback)
+				{
+					case 1:$feeling = "Very Bad";
+							break;
+					case 2:$feeling = "Bad";
+							break;
+					case 3:$feeling = "Normal";
+							break;
+					case 4:$feeling = "Good";
+							break;
+					case 5:$feeling = "Very Good";
+							break;
+					
+				
+				}
+				
+				Push_notification($doctorID,$patientName." is feeling ".$feeling);
+
+				
+	function getDoctorIDPatientName($probeID)
+	{
+		require("environment_detail.php");
+				
+		$dbhost = $env_var_db['dbhost'];
+		$dbname = $env_var_db['dbname'];
+		$dbuser = $env_var_db['dbuser'];
+		$dbpass = $env_var_db['dbpass'];
+
+		$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+		mysql_select_db("$dbname")or die("cannot select DB");
+		
+		$query = "select p.doctorID,concat(u.Name,' ',u.Surname) as fullname from probe p,usuarios u where p.patientID = u.identif and p.probeID=".$probeID;
+		$result = mysql_query($query);
+		$row=mysql_fetch_array($result);
+		$string=$row['doctorID']."::".$row['fullname'];
+		return $string;
+		
+		
+	
+	}
+	
+?>

@@ -1,0 +1,276 @@
+<?php
+
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass']; 
+ $hardcode = $env_var_db['hardcode']; 
+
+// Connect to server and select databse.
+ //KYLE$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+ mysql_select_db("$dbname")or die("cannot select DB");
+
+$user = $_GET['user'];
+$email = $_GET['emailDoc'];
+
+
+$splittedUserName = explode(" ",$user);
+$userName = $splittedUserName[0];
+$userSurname = $splittedUserName[1];
+
+
+
+$alias = $userName.".".$userSurname;
+
+
+$query1 = mysql_query("select Identif,email from usuarios where alias = '$alias'");
+
+$row1 = mysql_fetch_array($query1);
+$patientId = $row1['Identif'];
+$emailUser = $row1['email'];
+
+
+?>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+   <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles
+	<link href="css/login.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+<!--	<link rel="stylesheet" href="css/icon/font-awesome.css">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap-responsive.css">
+	<link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
+
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/basic.css" />
+    <link rel="stylesheet" href="css/dropzone.css"/>
+    <script src="js/dropzone.min.js"></script>
+    <link rel="stylesheet" href="css/jquery-ui-1.8.16.custom.css" media="screen"  />
+    <link rel="stylesheet" href="css/fullcalendar.css" media="screen"  />
+    <link rel="stylesheet" href="css/chosen.css" media="screen"  />
+    <link rel="stylesheet" href="css/datepicker.css" >
+    <link rel="stylesheet" href="css/colorpicker.css">
+    <link rel="stylesheet" href="css/glisse.css?1.css">
+    <link rel="stylesheet" href="css/jquery.jgrowl.css">
+    <link rel="stylesheet" href="js/elfinder/css/elfinder.css" media="screen" />
+    <link rel="stylesheet" href="css/jquery.tagsinput.css" />
+    <link rel="stylesheet" href="css/demo_table.css" >
+    <link rel="stylesheet" href="css/jquery.jscrollpane.css" >
+    <link rel="stylesheet" href="css/validationEngine.jquery.css">
+    <link rel="stylesheet" href="css/jquery.stepy.css" />
+	
+	<link href="css/demo_style.css" rel="stylesheet" type="text/css"/>
+	<link href="css/smart_wizard.css" rel="stylesheet" type="text/css"/>
+	
+	<link rel="stylesheet" href="css/jquery-ui-autocomplete.css" />
+				<script src="js/jquery-1.9.1-autocomplete.js"></script>
+	<script src="js/jquery-ui-autocomplete.js"></script>
+    <link rel="stylesheet" href="css/dropzone.css"/>
+    <script src="js/dropzone.min.js"></script>
+    -->
+    
+    <link rel="stylesheet" href="css/dropzone.css"/>
+    <script src="js/dropzone.min.js"></script>
+</head>
+<body>
+
+<div align="center" style="text-align: center">
+        <img id="customHeaderImage" label="Header Image" editable="true" width="150" src="<?php echo $hardcode ?>images/health2melogo-min2.122104.png" class="w640" border="0" align="top" style="display: inline; margin-top:30px;">
+        <div style="font-size: 20px; margin-top: 0px; font-size: 16px; color:#489de5; font-family: "Cuprum", Arial, sans-serif; text-align: center; display: block;">unlocking health</div>
+</div>    
+<div id="step-1">
+  <div align="center" style="text-align: center;margin-top:40px">
+    <span style="font-size:30px">DROP FILES</span>
+  </div>
+      <center>
+        <table style="margin-top:10px;">
+				<tr>
+				  <td>
+				   <div id="dropzone" style="background: #F9F9F9; height:300px; width:390px;margin-top:0px">
+				     <form action="upload_dropzoneRequestReportsExtDoc.php" method="post" class="dropzone" id="ReportsDropzone" 
+                           class= "dropzone dz-cliclable" style="background:orange;height:300px; width:390px; overflow:auto;margin-top:0px">
+                        <center style="color:white; font-size:22px;">
+                                &nbsp;&nbsp;Patient Reports
+                        </center>
+                      </form>
+				    </div>
+				   </td>
+				</tr>
+         </table>
+      </center>
+        
+     <div class="button-submit" style="width: 100px;margin-left: auto; margin-right: auto;">
+         <input type = "button" class ="btn btn-large" id = "DropMail" value ="FINISH" style="margin-top:100px">
+     </div>
+</div> 
+
+    
+<script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/bootstrap-colorpicker.js"></script>
+    <script src="js/google-code-prettify/prettify.js"></script>
+   
+    <script src="js/jquery.flot.min.js"></script>
+    <script src="js/jquery.flot.pie.js"></script>
+    <script src="js/jquery.flot.orderBars.js"></script>
+    <script src="js/jquery.flot.resize.js"></script>
+    <script src="js/graphtable.js"></script>
+    <script src="js/fullcalendar.min.js"></script>
+    <script src="js/chosen.jquery.min.js"></script>
+    <script src="js/autoresize.jquery.min.js"></script>
+    <script src="js/jquery.tagsinput.min.js"></script>
+    <script src="js/jquery.autotab.js"></script>
+    <script src="js/elfinder/js/elfinder.min.js" charset="utf-8"></script>
+	<script src="js/tiny_mce/tiny_mce.js"></script>
+    <script src="js/validation/languages/jquery.validationEngine-en.js" charset="utf-8"></script>
+	<script src="js/validation/jquery.validationEngine.js" charset="utf-8"></script>
+    <script src="js/jquery.jgrowl_minimized.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/jquery.mousewheel.js"></script>
+    <script src="js/jquery.jscrollpane.min.js"></script>
+    <script src="js/jquery.stepy.min.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/raphael.2.1.0.min.js"></script>
+    <script src="js/justgage.1.0.1.min.js"></script>
+	<script src="js/glisse.js"></script>
+    <script src="js/morris.js"></script>
+    
+	<script src="js/application.js"></script>
+	<script type="text/javascript" src="js/jquery.tooltipster.js"></script>
+
+	<script src="realtime-notifications/lib/gritter/js/jquery.gritter.min.js"></script>
+	<link href="realtime-notifications/lib/gritter/css/jquery.gritter.css"rel="stylesheet" type="text/css" />
+	
+<!--<script type="text/javascript" src="js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="js/jquery.smartWizard.js"></script>    -->
+
+<script type="text/javascript">
+
+var filecount = 0;
+var num=0;
+var orig_file_array = new Array();
+var patientId =<?php echo $patientId; ?>;
+
+
+     $("input:file").change(function (){
+       var fileName = $(this).val();
+       var dataFile=new FormData();
+	   dataFile.append('file',$(this)[0].files[0]);
+			//getImageDimension('getImageDimension.php');
+		var DirURL = 'upload_image.php';
+			//var DirURL = 'checkFileUploaded.php';
+			// alert(DirURL);
+		  $.ajax({
+           url: DirURL,
+		   type: 'POST',
+          // dataType: "html",
+		  processData: false,
+		  contentType:false,
+		   data: dataFile,
+           async: false,
+           complete: function(){ //alert('Completed');
+                    },
+           success: function(data) {
+			//alert("File uploaded.");
+		   }
+		   
+		   
+     });
+	});
+
+Dropzone.options.ReportsDropzone = {
+			//autoProcessQueue: false,	
+			//previewTemplate: '<span class="label label-info" style="left:0px; margin-left:30px; font-size:30px;">Patient Creator</span>',
+			//maxFilesize:0,
+			init: function() 
+			{
+				
+                myDropzone1 = this; 
+				
+                this.on("addedfile", function(file) {
+					num=1;
+					
+                    
+                    if(patientId == 0)
+					{
+						myDropzone1.removeFile(file);
+						alert('Please Select/Create a patient');
+						return;
+					}
+					//alert('File dropped on 1' + file.name);
+					$('#filename').val(file.name);
+					//$('#datepicker1').val('');
+					//$('#BotonModal').trigger('click');
+					
+					
+				});
+				
+				this.on("sending", function(file, xhr, formData) {
+					//formData.append("repdate", $('#datepicker1').val()); // Append all the additional input data of your form here!
+					formData.append("idus",patientId);
+					//formData.append("tipo",60);
+					formData.append("id",filecount);
+					orig_file_array[filecount] = file.name;
+					filecount++;
+					//alert('sending file');
+					//document.getElementById("upload_count_label").innerHTML = upload_count + '/' + filecount;
+					myDropzone1.processQueue();
+					
+				});
+				
+				//this.on("success",function(file,resp){
+					
+					//alert(resp);
+				//	upload_count++;
+				//	document.getElementById("upload_count_label").innerHTML = upload_count + '/' + filecount;
+				//	var str = resp.split(";");
+					//alert(resp);
+					//alert(str[0] + '  ' + str[1] + '  ' + str[2] + '  ' + str[3]);
+					//idpin_array[str[0]] = str[1];
+					//files[str[1]] = str[2];
+					//types[str[1]] = str[3];
+					//alert('file sent'+ str[2]);
+					//var contenURL =   '// //echo $domain ;?>/temp/ //echo $_SESSION['MEDID'] ;?>/Packages_Encrypted/'+str[2];
+					//var conten =  '<iframe id="ImagenN" style="border:1px solid #666CCC" title="PDF" src="'+contenURL+'" frameborder="1" scrolling="auto" height="850" width="600" ></iframe>';
+					//$('#AreaConten').html(conten);
+					//alert("uploaded successfully");	
+					
+				//});
+				
+								
+				this.on("error",function(file,errorMessage){
+					//alert(file.name + " not uploaded properly");
+					failed_uploads++;
+				});
+						
+			}
+		}; 
+    
+    $("#DropMail").on('click',function{
+                
+            var emailUser = <?php echo $emailUser; ?>;
+            var emailDoc =<?php echo $email; ?>;
+            
+            $.get("sendReturnMail2User.php?emailUser="+emailUser+"&emailDoc="+emailDoc,function(data,success)
+    {
+    
+    });
+});
+    
+
+    </script>
+</body>
+</html>
+    

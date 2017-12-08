@@ -1,0 +1,48 @@
+<?php
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="usuarios"; // Table name
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$queUsu = $_POST['EnviaUserid'];
+$queModo = $_POST['EnviaModo']; //1: Actualizar,  2: CREAR
+$queTipoUsuario = $_POST['EnviaTipoUsuario']; //1: MEDICO,  2: PACIENTE
+
+$queDoB = $_POST['dp32'];
+$queGender = $_POST['gender'];
+$queOrden = $_POST['orderOB'];
+$queIdUsFIXED = $_POST['VIdUsFIXED'];
+
+$queUserName = $_POST['Vname'];
+$queUserSurname = $_POST['Vsurname'];
+$queUserPassword = $_POST['Vpassword'];
+$queIdUsFIXEDNAME = $_POST['VIdUsFIXEDNAME'];
+
+$queUserEmail = $_POST['Vemail'];
+$queUserTelefono = $_POST['Vphone'];
+
+
+echo "MODO: ";
+echo $queModo;
+echo "   --- Usuario: ";
+echo $queUsu;
+
+if ($queModo == '1')
+{
+	$q = mysql_query("UPDATE usuarios SET Fnac = '$queDoB', Sexo = '$queGender', Orden = '$queOrden', IdUsFIXED='$queIdUsFIXED', Name = '$queUserName', Surname = '$queUserSurname', IdUsRESERV = '$queUserPassword', Password = '$queUserPassword', IdUsFIXEDNAME = '$queIdUsFIXEDNAME', email = '$queUserEmail', telefono = '$queUserTelefono'  WHERE Identif='$queUsu'");   
+}
+else
+{
+	$q = mysql_query("INSERT INTO usuarios SET Fnac = '$queDoB', Sexo = '$queGender', Orden = '$queOrden', IdUsFIXED='$queIdUsFIXED', Name = '$queUserName', Surname = '$queUserSurname', IdUsRESERV = '$queUserPassword', Password = '$queUserPassword', IdUsFIXEDNAME = '$queIdUsFIXEDNAME', email = '$queUserEmail', telefono = '$queUserTelefono'  ");   
+}
+
+$salto="location:UserAccount.php?Acceso=23432&Nombre=".$queIdUsFIXEDNAME."&Password=".$queUserPassword."&MEDID=".$queUserEmail;
+header($salto);
+
+?>

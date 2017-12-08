@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+<script src="/js/jquery.min.js"></script>
+<!--<<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>--->
+<script src="/js/jquery-ui.min.js"></script>
+<script src="/js/moment-with-locales.js"></script>
+<!--<script src="/js/h2m_clinicaltimeline.js"></script>-->
+<script src="/js/bootstrp.min.js"></script>
+<script src="/js/bootstrap-popover.js"></script>
+<script src="/js/jquery.textfill.min.js"></script>
+      
+<link rel="stylesheet" href="/css/jquery-ui.css">      
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link href="/css/bootstrap.css" rel="stylesheet">
+<link href="/css/bootstrap-responsive.css" rel="stylesheet">
+
+<link href="/css/h2mfontions.css" rel="stylesheet">
+<link href="h2m_dialogclass.css" rel="stylesheet">
+      
+<script src="/js/tipped.j" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/css/tipped.css"/>      
+      
+<style>
+  body {
+    margin: 0px;
+    padding: 0px;
+  }
+</style>
+</head>
+
+<body>
+   
+<div class="content">
+<div class="grid" class="grid span4" style="width:1000px; height:600px; margin: 0 auto; margin-top:30px; padding-top:30px; border: 1px solid #cacaca; padding: 10px; margin-bottom:30px;">  
+
+    
+<div style="float:left;height:100px; width:470px;">    
+    
+    <div class="phs_label" style="width:450px; font-size:16px; color:#b6b6b6; margin-bottom:5px;"><center>Total <span id="num_patients" style="font-size:20px; color:rgb(0, 161, 2);">220</span> Patients</center></div>
+ 
+    <div class="NNot" style="float:left; height:40px; line-height: 40px; width:0px;  background-color:#54bc00; text-align: center;"> <span id="NNot_green" style="font-size:20px; color:white;">124</span></div>
+    <div class="NCon" style="float:left; height:40px; line-height: 40px; width:0px;   background-color:#449800; text-align: center;"> <span id="NCon_green" style="font-size:20px; color:white;">65</span></div>
+    <div class="NTra" style="float:left; height:40px; line-height: 40px; width:0px;  background-color:#357601; text-align: center;"> <span id="NTra_green" style="font-size:20px; color:white;">52</span></div>
+    
+    <div style="width:100%; float:left;"></div>
+    
+    <div class="NNot_label" style="float:left; width:250px; font-size:14px; color:#54bc00; text-align: center; line-height: 100%; margin-top:12px; min-width: 100px;">
+        <div id="container_NNot" style="display: inline-block;"><i class="fa fa-chain-broken" style="color:#22aeff;"></i> <span>Not Connected</span></div>
+    </div>
+  
+    <div class="NCon_label" style="float:left; width:250px; font-size:14px; color:#449800; text-align: center; line-height: 100%; margin-top:12px; min-width: 100px;">
+        <div id="container_NCon" style="display: inline-block;"><i class="fa fa-link" style="color:#22aeff;"></i> <span>Connected</span></div>
+    </div>
+    
+    <div class="NTra_label" style="float:left; width:250px; font-size:14px; color:#357601; text-align: center; line-height: 100%; margin-top:12px; min-width: 100px;">
+        <div id="container_NTra" style="display: inline-block;"><i class="fa fa-tag" style="color:#22aeff;"></i> <span>Tracking</span></div>
+    </div>
+</div>    
+
+<div style="float:left; height:100px; width:170px;">
+    <div style="float:left; width:100%; height:25px; line-height:25px;"><center style="font-size:14px; color:#b6b6b6; ">New Activity from</center> </div>
+    <div style="float:left; width:100%; height:50px; line-height:50px; text-align:center;"><span style="font-size:45px; color:#22aeff; font-weight:bold;">124</span> </div>
+    <div style="float:left; width:100%; height:25px; line-height:25px;"><center style="font-size:14px; color:#b6b6b6; ">Patients</center> </div>
+</div>
+<div style="height:100px; width:370px;display:table-cell; vertical-align: middle; ">
+  <image src="/images/demobuttons.png" />   
+</div>
+    
+    <div style="margin-top:40px; width:100%; float:left;">
+        <input type="text"  name="" placeholder="# Not connected" style="width:150px;" id="NNot">
+        <input type="text"  name="" placeholder="# Connected" style="width:150px;" id="NCon">
+        <input type="text"  name="" placeholder="# Tracking" style="width:150px;" id="NTra">
+        <div style="width:100%; float:left;"></div>
+        <a class="btn btn-info" id="Update">Update</a>
+    </div>
+    
+    
+</div>    
+</div>    
+    
+    
+<script>
+  
+$(document).ready(function() {
+   
+$("body").on('click', '#Update', function(e)
+{
+    var NNot = parseInt($("#NNot").val());
+    var NCon = parseInt($("#NCon").val());
+    var NTra = parseInt($("#NTra").val());
+    var max_width = 450;
+    var numpatients = NNot+NCon+NTra;
+    var conversion = max_width / numpatients;
+    
+    $( ".NNot" ).animate({width: (NNot*conversion)}, 500, function() { });
+    $("#NNot_green").html(NNot);
+    $( ".NCon" ).animate({width: (NCon*conversion)}, 500, function() { });
+    $("#NCon_green").html(NCon);
+    $(".NTra").width(NTra*conversion);
+    $( ".NTra" ).animate({width: (NTra*conversion)}, 500, function() { });
+    $("#NTra_green").html(NTra);
+    
+    $(".NNot_label").width(450/3);
+    $(".NCon_label").width(450/3);
+    $(".NTra_label").width(450/3);
+     
+    $('#container_NNot').html('<i class="fa fa-chain-broken" style="color:#b8b8b8;"> </i> <span>Not Connected: <strong>'+NNot+'</strong></span>');
+    $('#container_NCon').html('<i class="fa fa-link" style="color:#b8b8b8;"> </i> <span>Connected: <strong>'+NCon+'</strong></span>');
+    $('#container_NTra').html('<i class="fa fa-tag" style="color:#b8b8b8;"> </i> <span>Tracking: <strong>'+NTra+'</strong></span>');
+    
+    $(".phs_label").width(max_width);
+    $("#num_patients").html(numpatients);
+  
+    $('.NNot').textfill({maxFontPixels: 20});
+    $('.NCon').textfill({maxFontPixels: 20});
+    $('.NTra').textfill({maxFontPixels: 20});
+});
+  
+    
+    
+});
+
+    
+</script>
+       
+
+ 
+</body>
+
+
+</html>

@@ -1,0 +1,50 @@
+<?php
+ //   echo '<table><tr><td>TEST</td></tr></table>';
+//require "identicon.php";
+ 
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="messages"; // Table name
+
+$senderid = $_GET['sender'];
+$receiverid = $_GET['receiver'];
+$content= $_GET['content'];
+$subject= $_GET['subject'];
+$patientid=$_GET['patient'];
+$attachments=empty($_GET['attachments'])?0:$_GET['attachments'];
+$connection_id=$_GET['connection_id'];
+$tofrom=$_GET['tofrom'];
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }		
+
+
+$sql_que = $con->prepare("Insert INTO message_infrastructureuser set Subject=?,content=?,sender_id=?,receiver_id=?,patient_id=?,connection_id=?,attachments=?,fecha=now(),status='new', tofrom=?");
+$sql_que->bindValue(1, $subject, PDO::PARAM_STR);
+$sql_que->bindValue(2, $content, PDO::PARAM_STR);
+$sql_que->bindValue(3, $senderid, PDO::PARAM_INT);
+$sql_que->bindValue(4, $receiverid, PDO::PARAM_INT);
+$sql_que->bindValue(5, $patientid, PDO::PARAM_INT);
+$sql_que->bindValue(6, $connection_id, PDO::PARAM_INT);
+$sql_que->bindValue(7, $attachments, PDO::PARAM_INT);
+$sql_que->bindValue(8, $tofrom, PDO::PARAM_STR);
+$res = $sql_que->execute();;
+
+if($res)
+echo 'Message Sent';
+else
+echo 'Message sending error';	
+
+
+
+
+?>

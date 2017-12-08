@@ -1,0 +1,60 @@
+<?php
+ //   echo '<table><tr><td>TEST</td></tr></table>';
+//require "identicon.php";
+ 
+ require("environment_detail.php");
+require("NotificationClass.php");
+ 
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="messages"; // Table name
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }		
+
+$referral_id=$_GET['referralid'];
+$stage=$_GET['stage'];
+
+$referral = $con->prepare("SELECT * FROM doctorslinkdoctors WHERE id = ?");
+$referral->bindValue(1, $referral_id, PDO::PARAM_INT);
+$referral->execute();
+$referral_row = $referral->fetch(PDO::FETCH_ASSOC);
+
+$notifications = new Notifications();
+
+$notifications->add('REFCNG', $referral_row['IdMED2'], true, $referral_row['IdMED'], true, $referral_row['IdPac']);
+
+
+$pending=empty($_GET['pending']) ? 0:$_GET['pending'];
+//echo $pending;
+if($pending==1){
+	$result = $con->prepare("UPDATE doctorslinkdoctors SET Confirm = '***R****' , FechaConfirm = NOW(), estado = '2' WHERE id =? ");
+	$result->bindValue(1, $referral_id, PDO::PARAM_INT);
+	$result->execute();
+	
+	$result = $con->prepare("insert into referral_stage set referral_id=?,stage=1");
+	$result->bindValue(1, $referral_id, PDO::PARAM_INT);
+	$result->execute();
+	
+	//echo $pending;
+	
+}else{
+	$result = $con->prepare("update referral_stage set stage=?, datevisit=NOW() where referral_id=?");
+	$result->bindValue(1, $stage, PDO::PARAM_INT);
+	$result->bindValue(2, $referral_id, PDO::PARAM_INT);
+	$result->execute();
+	
+	//echo 'done';
+}
+
+//$count=mysql_num_rows($result);
+//echo $q;
+?>

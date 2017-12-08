@@ -1,0 +1,123 @@
+<?php
+ session_start();
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }	
+ 
+ 
+$idpatient = $_SESSION['UserID'];
+$iddoctor = $_SESSION['MEDID'];
+if ($iddoctor == $idpatient) $idauthor = -1; else $idauthor = $iddoctor;
+
+$VaccCode = $_GET['VaccCode'];
+$VaccName = $_GET['VaccName'];
+$AllerCode = $_GET['AllerCode'];
+$AllerName = $_GET['AllerName'];
+$intensity = $_GET['intensity'];
+$dateEvent = $_GET['dateEvent'];
+$ageEvent = $_GET['ageEvent'];
+$dob = $_GET['dob'];
+$dateEvent = $dateEvent.'-01';
+
+
+
+$idrow = $_GET['rowediter'];
+
+if(isset($_GET['rowediter'])){
+$query = $con->prepare("UPDATE p_immuno SET deleted=1 WHERE id=?");
+$query->bindValue(1, $idrow, PDO::PARAM_INT);
+$result = $query->execute();
+}
+
+
+if(isset($_GET['noallergies']) && $_GET['noallergies'] == 'yes'){
+$query = $con->prepare("DELETE FROM p_immuno WHERE idpatient=? and deleted=0");
+$query->bindValue(1, $idpatient, PDO::PARAM_INT);
+$result = $query->execute();
+
+$ageEvent = 0;
+$AllerName = "Nothing";
+$AllerCode = "Nothing";
+}
+
+if(!isset($_GET['noallergies'])){
+$query = $con->prepare("DELETE FROM p_immuno WHERE idpatient=? and deleted=0 and AllerName='Nothing'");
+$query->bindValue(1, $idpatient, PDO::PARAM_INT);
+$result = $query->execute();
+}
+
+if(isset($_GET['dateEvent']) && $_GET['dateEvent'] != ""){
+$years = substr($dateEvent,0,4);
+$months = substr($dateEvent,5,2);
+$days = substr($dateEvent,8,2);
+
+$dob_years = substr($dob,0,4);
+$dob_months = substr($dob,4,2);
+$dob_days = substr($dob,6,2);
+
+$bday = new DateTime(''.$days.'.'.$months.'.'.$years.'');//dd.mm.yyyy
+     $today = new DateTime(''.$dob_days.'.'.$dob_months.'.'.$dob_years.''); // Current date
+     $diff = $today->diff($bday);
+//     printf('%d years, %d month, %d days', $diff->y, $diff->m, $diff->d);
+//	 var_dump($diff);
+
+
+if($diff->y > 0){
+$year_hold = $diff->y." y";
+}else{
+$year_hold = $diff->m." m";
+}
+
+$ageEvent = $year_hold;
+}else{
+$ageEvent = $ageEvent." y";
+}
+
+//echo $year_hold."</br>".$ageEvent;
+
+if($VaccName != ""){
+$VaccCode = $VaccName;
+}
+
+if($AllerCode == ''){
+$AllerCode = substr($AllerName,0,4);
+}
+
+if($ageEvent == '' or $ageEvent == 0){
+$ageEvent = '0 y';
+}
+
+$query = $con->prepare("INSERT INTO p_immuno SET idpatient=?,VaccCode=?,VaccName=?,AllerCode=?,AllerName=?,intensity=?,date=?,ageevent=?,latest_update=NOW(),doctor_signed=?");
+$query->bindValue(1, $idpatient, PDO::PARAM_INT);
+$query->bindValue(2, $VaccCode, PDO::PARAM_STR);
+$query->bindValue(3, $VaccCode, PDO::PARAM_STR);
+$query->bindValue(4, $AllerCode, PDO::PARAM_STR);
+$query->bindValue(5, $AllerName, PDO::PARAM_STR);
+$query->bindValue(6, $intensity, PDO::PARAM_INT);
+$query->bindValue(7, $dateEvent, PDO::PARAM_STR);
+$query->bindValue(8, $ageEvent, PDO::PARAM_STR);
+$query->bindValue(9, $idauthor, PDO::PARAM_INT);
+$result = $query->execute();
+
+
+/*
+$query = "INSERT INTO p_immuno(idpatient,VaccCode,VaccName,AllerCode,AllerName,intensity,date,ageevent,latest_update,doctor_signed) values(?,?,?,?,?,?,?,?,?,?)";
+$insertstmt = mysqli_prepare($link, $query);
+mysqli_stmt_bind_param($insertstmt,"issssisssi",$idpatient,$VaccCode,$VaccName,$AllerCode,$AllerName,$intensity,$dateEvent,$ageEvent,NOW(),$idauthor);
+mysqli_stmt_execute($insertstmt);
+*/
+
+
+?>

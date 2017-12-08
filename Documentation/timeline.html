@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Health2Me Technical Documentation</title>
+
+    <!-- Core CSS - Include with every page -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="font-awesome/css/font-awesome.css" rel="stylesheet">-->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Page-Level Plugin CSS - Dashboard -->
+    <link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="css/plugins/timeline/timeline.css" rel="stylesheet">
+
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+         <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Health2Me Technical Documentation</a>
+            </div>
+            <!-- /.navbar-header -->
+
+  
+
+            <div class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li>
+                            <a href="index.html"><i class="fa fa-book fa-fw"></i> Manual</a>
+                        </li>
+                        <li>
+                            <a><i class="fa fa-database fa-fw"></i> Database Structure<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a href="GoldenRules.html">Golden Rules of Report Access</a>
+		                                </li>
+		                               <li>
+		                                    <a>Important Tables<span class="fa arrow"></span></a>
+                                             <ul class="nav nav-second-level">
+		                                       <li>
+		                                          <a href="Database.html">Usuarios</a>
+		                                        </li>
+                                     
+								              </ul>
+		                                </li>
+		                               
+								 </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Documents<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                     <a href="Probes.html">Probes</a>
+                                </li>
+                                <li>
+                                    <a href="GithubCommit.html">GitHub Commit Procedure</a>
+                                </li>
+                                <li>
+                                    <a href="PhoneNumbers.html">Important Note for Phone Numbers</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                            <li>
+                                 <a href="Probes.html"><i class="fa fa-gears fa-fw"></i> Startup Procedure<span class="fa arrow"></span></a>
+								 <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a href="Processes.html">Processes</a>
+		                                </li>
+		                               <li>
+		                                    <a href="Apache.html">Apache</a>
+		                                </li>
+		                               <li>
+		                                    <a href="PhoneNumbers.html">MySQL</a>
+		                                </li>
+		                               <li>
+		                                    <a href="PhoneNumbers.html">FTP Server</a>
+		                                </li>
+                                        <li>
+		                                    <a href="UbuntuInstallationSteps.html">Ubuntu Installation</a>
+		                                </li>
+								 </ul>	 
+                            </li>
+                            <li>
+                                 <a href="Channels.html"><i class="fa fa-arrows-alt fa-fw"></i> Channels</a>
+                            </li>
+							<li>
+                             	 <a href="Database.html"><i class="fa fa-medkit fa-fw"></i> DICOM viewer</a>
+							</li>
+                        
+                        <li>
+                             	 <a href="UbuntuInstallationSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Ubuntu Installation</a>
+							</li>
+                        <li>
+                             	 <a href="TurnServerInstallationSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Turn Server Installation</a>
+							</li>
+                        
+                        <li>
+                             	 <a href="UbuntuUpdateSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Server Restart and Package Update</a>
+							</li>
+                        <li>
+                             	 <a href="SessionHashing.html"><i class="fa fa-cog fa-fw"></i>Session Hashing</a>
+							</li>    
+                        <li>
+                             	 <a><i class="fa fa-book fa-fw"></i> Libraries<span class="fa arrow"></span></a>
+                                 <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a>External Libraries<span class="fa arrow"></span></a>
+                                               <ul class="nav nav-second-level">
+                                                   <li>
+		                                              <a href="Libraries.html">Moment.js</a>
+		                                           </li>
+                                               </ul>
+		                                </li>
+		                               <li>
+		                                    <a>Internal Libraries<span class="fa arrow"></span></a>
+                                            <ul class="nav nav-second-level">
+                                                   <li>
+		                                              <a href="timebar.html">Timebar</a>
+		                                           </li>
+                                                   <li>
+		                                              <a href="timeline.html">Timeline</a>
+		                                           </li>
+                                               </ul>
+		                                </li>
+		                              
+								 </ul>	
+							</li>
+                          <li>
+                             	 <a href="H2MAPIs.html"><i class="fa fa-cog fa-fw"></i> Health2Me APIs</a>
+				         </li>
+                   </ul>
+                    <!-- /#side-menu -->
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">Timeline</h2>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                
+
+<div style="width: 682px; height: 32px; margin: auto;"><img src="images/timeline.png" /></div>
+<br/><br/>
+<p>The timeline is a H2M specific plugin that displays recent activity information between a given doctor and patient.</p>
+
+<br/>
+<h4 class="text-primary">Dependencies</h4>
+<p>The timeline is dependent on a few js and css files and its backend file to generate content.</p>
+<p>Javacript:</p>
+<ul>
+    <li>js/jquery.min.js</li>
+    <li>js/jquery.easing.1.3.js</li>
+    <li>js/jquery-ui.min.js</li>
+    <li>js/tipped.js</li>
+    <li>js/imagesloaded.pkgd.min.js</li>
+    <li>js/H2M_Timeline.js</li>
+</ul>
+<p>CSS:</p>
+<ul>
+    <li>css/tipped.css</li>
+    <li>font-awesome/css/font-awesome.min.css</li>
+    <li>css/jquery-ui-1.8.16.custom.css</li>
+</ul>
+<p>PHP:</p>
+<ul>
+    <li>get_personal_doctor_timeline.php</li>
+</ul>
+<br/>
+<h4 class="text-primary">Getting Started</h4>
+<p>To create a timeline, just simply add a div to an html page, and then in the $(document).ready function of JQuery call the H2M_Timeline function to your div. Make sure the div is at least 25 pixels in height.</p>
+<p>HTML:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #156D9D;"><em>&lt;div id="main_timeline"&gt;&lt;/div&gt;</em></span></p>                  
+<p>JQuery:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #156D9D;"><em>$("#main_timeline").H2M_Timeline({doctor: doc_id, patient: pat_id, max: 30});</em></span></p>
+<br/>
+<h4 class="text-primary">Parameters</h4>
+<p>You must pass three parameters to the H2M_Timeline function for it to display the content properly.
+<p><strong>Parameters:</strong></p>
+<div style="width: 98%; margin-left: 2%">
+    
+    <p>doctor - The id of the doctor that will be used to display this timeline</p>
+    <p>patient - The id of the patient that will be used to display this timeline</p> 
+    <p>max - The maximum number of items to return</p>
+</div>
+
+</br>
+<p><i class="fa fa-wrench fa-fw" style="margin-right:10px;"></i><span>This page created by <span class="text-primary">Bruno Lima</span> on <span class="text-info">October 27, 2014</span></span></p>
+<!--<p><i class="fa fa-edit fa-fw" style="margin-right:10px;"></i><span>This page last edited by <span class="text-primary">Javier Vinals</span> on <span class="text-info">June 26, 2014</span></span></p> -->
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Core Scripts - Include with every page -->
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <!-- Page-Level Plugin Scripts - Dashboard -->
+    <script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="js/plugins/morris/morris.js"></script>
+
+    <!-- SB Admin Scripts - Include with every page -->
+    <script src="js/sb-admin.js"></script>
+
+    <!-- Page-Level Demo Scripts - Dashboard - Use for reference -->
+    <script src="js/demo/dashboard-demo.js"></script>
+
+</body>
+
+</html>

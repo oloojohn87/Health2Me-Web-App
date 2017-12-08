@@ -1,0 +1,49 @@
+<?php
+ session_start();
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$queUsu = $_SESSION['UserID'];
+
+
+
+$query = "SELECT * FROM p_medication WHERE idpatient='$queUsu'";
+$result = mysql_query($query);
+$count=mysql_num_rows($result);
+$counter1 = 0 ;
+$cadena = '';
+while ($row2 = mysql_fetch_array($result)) {
+	$Id[$counter1] = $row2['id'];
+	$DrugName[$counter1] = $row2['drugname'];
+	$DrugId[$counter1] = $row2['drugcode'];
+	$frequency[$counter1] = $row2['frequency'];
+	$dossage[$counter1] = $row2['dossage'];
+	$deleted[$counter1] = $row2['deleted'];
+
+	if ($counter1>0) $cadena.=',';    
+	$cadena.='
+    {
+        "id":"'.$Id[$counter1].'",
+        "drugname":"'.$DrugName[$counter1].'",
+        "drugcode":"'.$DrugId.'",
+        "dossage":"'.$frequency[$counter1].'",
+        "frequency":"'.$dossage[$counter1].'",
+        "deleted":"'.$deleted[$counter1].'"
+        }';    
+
+	$counter1++;
+}
+
+$encode = json_encode($cadena);
+echo '{"items":['.($cadena).']}'; 
+
+
+?>

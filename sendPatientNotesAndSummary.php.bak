@@ -1,0 +1,62 @@
+<?php
+
+require("environment_detail.php");
+
+$dbhost = $env_var_db['dbhost'];
+$dbname = $env_var_db['dbname'];
+$dbuser = $env_var_db['dbuser'];
+$dbpass = $env_var_db['dbpass'];
+
+ 
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$doctorId = $_GET['doctorId'];
+$userId = $_GET['userId'];
+
+
+$query = mysql_query("select email from usuarios where identif = ".$userId);
+$result = mysql_fetch_array($query);
+$email = $result['email'];
+
+//Getting the consultationId for the just ended consultation between doctor and patient
+$query = mysql_query("select consultationId from consults where patient =".$userId." and doctor =".$doctorId." order by datetime desc limit 1");
+$result = mysql_fetch_array($query);
+$consultationId = $result['consultationId'];
+
+//Getting the name and surname of the doctor
+
+$query = mysql_query("select name,surname from doctors where id =".$doctorId);
+$result = mysql_fetch_array($query);
+$Var3 = $result['name']." ".$result['surname'];
+
+
+$Var8 = 1;
+
+require_once 'lib/swift_required.php';
+
+$Content = file_get_contents('templates/sendPatientNotesAndSummary_template.html');
+$Content = str_replace("**Var3**",$Var3,$Content);
+$Content = str_replace("**Var8**",$Var8,$Content);
+$Content = str_replace("**Var9**",$consultationId,$Content);
+ 
+ 
+ $body = $Content;
+
+ $transporter = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
+  ->setUsername('dev.health2me@gmail.com')
+  ->setPassword('health2me');
+
+$mailer = Swift_Mailer::newInstance($transporter);
+
+
+$message = Swift_Message::newInstance()
+  ->setSubject('View Your Notes And Summary')
+  ->setFrom(array('hub@inmers.us' => 'Dr '.$Var3.' Phone Session Review'))
+  ->setTo(array($email))
+  ->setBody($body, 'text/html')
+  ;
+
+$result = $mailer->send($message);
+
+?>

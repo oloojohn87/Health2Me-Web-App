@@ -1,0 +1,286 @@
+<?php
+//Author: Pallab Hazarika
+//Version: 1.0
+//Updated By:
+    
+require("environment_detail.php");
+
+$dbhost = $env_var_db["dbhost"];
+$dbname = $env_var_db["dbname"];
+$dbuser = $env_var_db["dbuser"];
+$dbpass = $env_var_db["dbpass"];
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$currentPage;
+$sortOrder;
+$sortField;
+$scope = $_POST['scope'];
+$period = $_POST['period'];
+$customerData = array();
+$rowsPerPage = 20;
+
+// get the current page or set a default
+if (isset($_POST['currentPage']) && is_numeric($_POST['currentPage'])) 
+{
+   // cast var as int
+   $currentPage = (int) $_POST['currentPage'];
+} 
+else 
+{
+   
+    // default page num
+   $currentPage = 1;
+}
+
+
+//Setting the offset
+$offset = ($currentPage - 1)*$rowsPerPage;
+
+// get the sort order or set a default
+if (isset($_POST['sortField'])) 
+{
+   // cast var as int
+   $sortField = $_POST['sortField'];
+} 
+else 
+{
+   
+    // default sort order
+   $sortField = 'Name';
+}
+
+if(isset($_POST['sortOrder']))
+{
+   $sortOrder = $_POST['sortOrder'];
+}
+
+else
+{
+   $sortOrder = 'asc';
+}
+
+//Start of getting the global data
+if($scope == 'Global')
+    
+{
+   //start of getting the hourly data if the selected data period is 'today'
+if($period == 1)
+{
+   $patientId = array(); //array which stores information about each patient and further is passed to the pdmst_dashboard
+   $patientNumberofCallsData = array(); //associative array which stores the number of calls made by each patient 
+   $curdate = date("Y-m-d");
+   
+   for($i=0;$i<=23;$i++)
+   {
+       
+       $time = "";
+        if($i < 10)
+        {
+            $time = "0";
+        }
+        $time .= $i;
+       
+       $query1 = mysql_query("select distinct(patient) from consults where datetime between '".$curdate." ".$time.":00:00' and '".$curdate." ".$time.":59:59'");
+       $result1 = mysql_fetch_array($query1);
+       
+       
+       while($result1 = mysql_fetch_array($query1))
+       {
+         if(in_array($patientId,$result1['patient']))
+            {
+              $array_key = array_search($result1['patient'],$patientId);
+              $patientId[$array_key] = $result1['patient'];
+            }
+        else
+            {
+             array_push($patientId,$result1['patient']);
+            }
+       }
+       
+        
+   }
+    
+    foreach($patientId as $userId)
+            {
+              $i = 0;
+                
+              $query = mysql_query("select identif,name,surname,signUpDate,typeOfPlan,numberOfPhoneCalls from usuarios where identif = ". $userId." order by ".$sortField." ".$sortOrder." limit ".$offset.",".$rowsPerPage."");
+              $result = mysql_fetch_array($query);
+              
+              
+              array_push($customerData,$result);
+            }
+     echo json_encode(array("customers" => $customerData));  
+}
+//End of getting the hourly data if the selected data period is 'today'
+
+
+    
+//start of getting the weekly data if the selected data period is 'week'
+elseif($period == 2)
+{
+    $patientId = array();
+    $patientNumberofCallsData = array();
+    $dateOfLastSunday = date('Y-m-d',strtotime('last sunday'));
+    $todayDate = date("Y-m-d");
+    
+    $current_date = "";
+    $count = 0;
+   
+    
+     while(strcmp($current_date, $todayDate) != 0)
+       {
+
+            $current_date = date("Y-m-d", strtotime("+".$count." day", strtotime($dateOfLastSunday)));
+
+            $query1 = mysql_query("select distinct(patient) from consults where datetime between '".$current_date." 00:00:00' and '".$current_date." 23:59:59'");
+            $result1 = mysql_num_rows($query1);
+            array_push($weeklyUserData,$result1);
+            $count++;
+
+
+
+            while($result1 = mysql_fetch_array($query1))
+               {
+                 if(in_array($patientId,$result1['patient']))
+                    {
+                      $array_key = array_search($result1['patient'],$patientId);
+                      $patientId[$array_key] = $result1['patient'];
+                    }
+                else
+                    {
+                     array_push($patientId,$result1['patient']);
+                    }
+
+
+                }
+         
+         
+
+         }
+
+        foreach($patientId as $userId)
+            {
+              $i = 0;
+                
+              $query = mysql_query("select identif,name,surname,signUpDate,plan,numberOfPhoneCalls from usuarios where identif = ". $userId." order by ".$sortField." ".$sortOrder." limit ".$offset.",".$rowsPerPage."");
+              $result = mysql_fetch_array($query);
+              
+              
+              array_push($customerData,$result);
+            }
+     
+        echo json_encode(array("customers" => $customerData));  
+
+
+
+} //End of getting the weekly data if the selected data period is 'week'
+
+//start of getting the monthy data if the selected data period is 'month'
+elseif($period == 3)
+{
+    
+    $patientId = array();
+    $patientNumberofCallsData = array();
+    $firstDateOfMonth = date('Y-m-01');
+    $todayDate = date("Y-m-d");
+    $current_date = "";
+    $count = 0;
+    
+    while(strcmp($current_date, $todayDate) != 0)
+    {
+        $current_date = date("Y-m-d", strtotime("+".$count." day", strtotime($firstDateOfMonth)));
+        
+        $query1 = mysql_query("select distinct(patient) from consults where datetime between '".$current_date." 00:00:00' and '".$current_date." 23:59:59'");
+        $result1 = mysql_num_rows($query1);
+        array_push($monthlyUserData,$result1);
+        $count++;
+    
+    
+        while($result1 = mysql_fetch_array($query1))
+           {
+             if(in_array($patientId,$result1['patient']))
+                {
+                  $array_key = array_search($result1['patient'],$patientId);
+                  $patientId[$array_key] = $result1['patient'];
+                }
+            else
+                {
+                 array_push($patientId,$result1['patient']);
+                }
+           } 
+        
+      
+     }  
+    
+    foreach($patientId as $userId)
+            {
+              $i = 0;
+                
+              $query = mysql_query("select identif,name,surname,signUpDate,plan,numberOfPhoneCalls from usuarios where identif = ". $userId." order by ".$sortField." ".$sortOrder." limit ".$offset.",".$rowsPerPage."");
+              $result = mysql_fetch_array($query);
+              
+              array_push($customerData,$result);
+            }
+    
+    echo json_encode(array("customers" => $customerData));  
+}
+//end of getting the monthly data if the selected data period is 'month'
+
+//Start of getting the yearly data if the selected data period is 'year'              
+elseif($period == 4)
+{
+    $patientId = array();
+    $patientNumberofCallsData = array();
+    $firstDateOfYear = date('Y-01-01');
+    $todayDate = date("Y-m-01");
+    $current_date = "";
+    $count = 0;
+    
+    while(strcmp($current_date, $todayDate) != 0)
+    {
+        $current_date = date("Y-m-d", strtotime("+".$count." month", strtotime($firstDateOfYear)));
+        $compare_str = explode("-", $current_date);
+        $compare_str = $compare_str[0]."-".$compare_str[1];
+        
+        
+        $query1 = mysql_query("select distinct(patient) from consults where datetime like '".$compare_str."%'");
+        $result1 = mysql_num_rows($query1);
+        array_push($yearlyUserData,$result1);
+        $count++;
+        
+        while($result1 = mysql_fetch_array($query1))
+           {
+             if(in_array($patientId,$result1['patient']))
+                {
+                  $array_key = array_search($result1['patient'],$patientId);
+                  $patientId[$array_key] = $result1['patient'];
+                }
+            else
+                {
+                 array_push($patientId,$result1['patient']);
+                }
+           } 
+        
+        
+    }
+    
+    foreach($patientId as $userId)
+            {
+              $i = 0;
+                
+              $query = mysql_query("select identif,name,surname,signUpDate,plan,numberOfPhoneCalls from usuarios where identif = ". $userId." order by ".$sortField." ".$sortOrder." limit ".$offset.",".$rowsPerPage."");
+              $result = mysql_fetch_array($query);
+              
+              
+              array_push($customerData,$result);
+            }
+    
+    echo json_encode(array("customers" => $customerData));  
+}
+//end of getting the yearly data if the selected data period is 'year'
+}//End of getting the global data
+
+
+?>

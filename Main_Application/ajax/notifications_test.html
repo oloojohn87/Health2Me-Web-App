@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>Notifications</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/moment-with-locales.js"></script>
+    <script src="js/h2m_notifications.js"></script>
+    
+    <link rel='stylesheet' href='font-awesome/css/font-awesome.min.css'>
+</head>
+    
+<body>
+
+    <h2 style="text-align: center; font-family: sans-serif; color: #555;">Doctor: 2543</h2>
+    <div id="notifications" style="width: 800px; margin: auto; margin-bottom: 100px;">
+    
+    </div>
+    
+    <h2 style="text-align: center; font-family: sans-serif; color: #555;">Patient: 2093</h2>
+    <div id="notifications2" style="width: 800px; margin: auto;">
+    </div>
+    <script>
+        $("#notifications").h2m_notifications({type: 'DOC', doctor: 2543});
+        $("#notifications2").h2m_notifications({type: 'PAT', patient: 2093});
+    </script>
+</body>
+
+</html>

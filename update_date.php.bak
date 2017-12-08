@@ -1,0 +1,46 @@
+<?php
+session_start();
+require("environment_detail.php");
+//require "logger.php";
+
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+ 
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$idpin = $_GET['idpin'];
+$fecha = $_GET['fecha'];
+$tipo  = $_GET['tipo'];
+$idusu = $_GET['user'];
+
+/*
+$month = strtok($fecha,"/");
+$day = strtok("/");
+$year = strtok("/");
+
+$fecha = $year.'-'.$month.'-'.$day;
+*/
+
+$query = "update lifepin set fecha='".$fecha."',tipo=".$tipo." ,vs=1 where idpin = ".$idpin;
+mysql_query($query) or die('error');
+
+
+	//Log that report has been verified
+	$IdPin=$idpin;
+	$content = "Report Verified";
+	$VIEWIdUser=$idusu;
+	$VIEWIdMed=$_SESSION['MEDID'];
+	$ip=$_SERVER['REMOTE_ADDR'];
+	$MEDIO=0;
+	$q = mysql_query("INSERT INTO bpinview  SET  IDPIN ='$IdPin', Content='$content', DateTimeSTAMP = NOW(), VIEWIdUser = '$VIEWIdUser', VIEWIdMed = '$VIEWIdMed', VIEWIP = '$ip', MEDIO = '$MEDIO' ");
+	//LogBLOCKAMP ($IdPin, $content, $VIEWIdUser, $VIEWIdMed, $ip, $MEDIO);
+	
+
+echo 'success';
+
+
+?>

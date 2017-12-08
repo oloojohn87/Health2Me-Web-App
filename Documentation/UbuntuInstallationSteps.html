@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Health2Me Technical Documentation</title>
+
+    <!-- Core CSS - Include with every page -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="font-awesome/css/font-awesome.css" rel="stylesheet">-->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Page-Level Plugin CSS - Dashboard -->
+    <link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="css/plugins/timeline/timeline.css" rel="stylesheet">
+
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+         <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Health2Me Technical Documentation</a>
+            </div>
+            <!-- /.navbar-header -->
+
+  
+
+            <div class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li>
+                            <a href="index.html"><i class="fa fa-book fa-fw"></i> Manual</a>
+                        </li>
+                        <li>
+                            <a><i class="fa fa-database fa-fw"></i> Database Structure<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a href="GoldenRules.html">Golden Rules of Report Access</a>
+		                                </li>
+		                               <li>
+		                                    <a>Important Tables<span class="fa arrow"></span></a>
+                                             <ul class="nav nav-second-level">
+		                                       <li>
+		                                          <a href="Database.html">Usuarios</a>
+		                                        </li>
+                                     
+								              </ul>
+		                                </li>
+		                               
+								 </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Documents<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                     <a href="Probes.html">Probes</a>
+                                </li>
+                                <li>
+                                    <a href="GithubCommit.html">GitHub Commit Procedure</a>
+                                </li>
+                                <li>
+                                    <a href="PhoneNumbers.html">Important Note for Phone Numbers</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                            <li>
+                                 <a href="Probes.html"><i class="fa fa-gears fa-fw"></i> Startup Procedure<span class="fa arrow"></span></a>
+								 <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a href="Processes.html">Processes</a>
+		                                </li>
+		                               <li>
+		                                    <a href="PhoneNumbers.html">Apache</a>
+		                                </li>
+		                               <li>
+		                                    <a href="PhoneNumbers.html">MySQL</a>
+		                                </li>
+		                               <li>
+		                                    <a href="PhoneNumbers.html">FTP Server</a>
+		                                </li>
+		                               
+								 </ul>	 
+                            </li>
+                            <li>
+                                 <a href="Channels.html"><i class="fa fa-arrows-alt fa-fw"></i> Channels</a>
+                            </li>
+							<li>
+                             	 <a href="Database.html"><i class="fa fa-medkit fa-fw"></i> DICOM viewer</a>
+							</li>
+                            <li>
+                             	 <a href="UbuntuInstallationSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Ubuntu Installation</a>
+							</li>
+                        <li>
+                             	 <a href="TurnServerInstallationSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Turn Server Installation</a>
+							</li>
+                        
+                        <li>
+                             	 <a href="UbuntuUpdateSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Server Restart and Package Update</a>
+				        </li>
+                        <li>
+                             	 <a href="SessionHashing.html"><i class="fa fa-cog fa-fw"></i>Session Hashing</a>
+							</li>    
+                        <li>
+                             	 <a><i class="fa fa-book fa-fw"></i> Libraries<span class="fa arrow"></span></a>
+                                 <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a>External Libraries<span class="fa arrow"></span></a>
+                                               <ul class="nav nav-second-level">
+                                                   <li>
+		                                              <a href="timebar.html">Timebar</a>
+		                                           </li>
+                                                   <li>
+		                                              <a href="Libraries.html">Moment.js</a>
+		                                           </li>
+                                               </ul>
+		                                </li>
+		                               <li>
+		                                    <a>Internal Libraries<span class="fa arrow"></span></a>
+		                                </li>
+		                              
+								 </ul>	
+							</li>
+                            <li>
+                             	 <a href="H2MAPIs.html"><i class="fa fa-cog fa-fw"></i> Health2Me APIs</a>
+							</li>
+                   </ul>
+                    <!-- /#side-menu -->
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">Ubuntu Installation</h2>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                
+
+
+<h4 class="text-primary">1.- Step 0 (Creating Ubuntu instance on Amazon Webservices(AWS)) <span style="margin-left:20px;"></span></h4>
+<p><br>->The first step of creating an Ubuntu server is creating an ubuntu instance on AWS. For that we need to login to the AWS console, create an ubuntu instance and follow the steps.</br>
+<br>->The default username for the ubuntu instance is ubuntu. Important information is the .pem permissions file and the ip/hostname of the instance which we will require in later ssh login to the ubuntu server from the terminal.</br></p>
+<h4 class="text-primary">1.- Step 1 (Logging into Remote Ubuntu Server) <span style="margin-left:20px;"></span></h4>
+<p><br>->We will need a .pem permission file to login to remote ubuntu server.</br>
+<br>->Change the permissions of the .pem file by typing and running, sudo chmod 400 {.pem filename} to make it more secure.</br>
+    <br>->Open a terminal and type the command ssh -i PATH_FOR_PERMISSIONS_FILE/{permisions file name} username@{ip of remote server/hostname}
+Eg: ssh -i Downloads/H2MProduction.pem ubuntu@54.210.193.167</br></p>
+
+<h4 class="text-primary">2.- Step 2(Installation of PHP) <span style="margin-left:20px;"></span></h4>
+<p><br>-> Prior to installing php on ubuntu, we need to update packages on ubuntu and install apache on ubuntu.</br>
+<br>-> For updating packages on ubuntu, type and run the command, sudo apt-get update</br>
+<br>-> For installing apache, type and run the command, sudo apt-get install apache2. If apache already installed skip this step.</br>
+<br>-> Once apache has been installed, type and run the command, sudo apt-get install php5 to install php.</br>
+<br-> For setting up the PHP5 module for apache 2 webserver, we need to install linapache2-mod-php5 package. For this we need typ and run the command, sudo apt-get install libapache2-mod-php5</br>
+<br>-> Once PHP has been installed, we need to check whether PHP installation has been correct or not. For this, we need to create a file naming info.php by typing and running the command, sudo nano /var/www/html/info.php.</br><br> This will open a blank file. We want to put the following text which is valid PHP code in the blank file. <?php phpinfo(); ?>. When finished save and close the file. For testing our web server we need to type in the browser http://our_Server_IP_address/info.php. </br><br>A PHP version page should come with details of system, build date, server API, information on path about php.ini file etc. If this output comes then the php installation has been correct.</br>
+<br>-> Once PHP has been installed, we need to restart the apache server to take up the latest changes. For this, type and run the command, sudo /etc/init.d/apache2 restart</br>
+<br>-> For installing phpmyqdmin which is the free and open soruce tool written in PHP to handle the administration of MYSQL with the use of a web browser, type and run the command, sudo apt-get install phpmyadmin. We need information for login and password. Set user as 'root' and password 'outflank'</br></p>
+
+<h4 class="text-primary">3.- Step 3(Installation of MYSQL) <span style="margin-left:20px;"></span></h4>
+<p><br>-> For installation of MYSQL, type and run the commands, sudo apt-get install mysql-server mysql-client</br>
+<br>-> sudo mysql_install_db </br>
+<br>-> Set username and password for the database as 'monimed' and 'ardiLLA98'</br>
+<br>-> Copy MYSQL connector adaptors by placing mysql-connector*.jar to /usr//lib/jvm/java-7-openjdk-amd64/jre/lib/ext/</br></p>
+
+<h4 class="text-primary">4.- Step 4(Installation of FTP server)<span style="margin-left:20px;"></span></h4>
+<p><br>-> We need to setup a FTP server for remotely receiving files through FTP from local machines. The FTP server can be set up by typing and running the command, sudo apt-get install vsftpd</br>
+<br>-> First we need to create the ITGroup user. Type and run the command, sudo adduser ITGroup. It will prompt for a password. Give it a password </br>
+<br>->Once the ftp server is installed, we need to make change to the configuration file, vsftpd.conf. The biggest change is to switch anonymous_enable from YES to NO. Prior to this change, vsfptd allowed anonymous, unidentified users to access the server's files. Type and run the command, sudo nano /etc/vsftpd.conf and make anonymous_enable = NO </br>
+<br>->Restart the service by typing and running, sudo service vsftpd restart </br>
+</p>
+
+<h4 class="text-primary">5.- Step 5(Setting up cron jobs) <span style="margin-left:20px;"></span></h4>
+<p><br>-> We need to setup various cron jobs for the application to be up and running. </br>
+<br>-> Type and run the command, sudo crontab -e. Add the following lines to the cron </br>
+<br>*/1 * * * * php /var/www/vhost1/newmbADAP.php</br>
+<br>*/1 * * * * php /var/www/vhost1/newmbPARSEBLOCKS.php</br>
+<br>*/2 * * * * php /var/www/vhost1/CloudChannelUpdate.php</br>
+<br>*/2 * * * * php /var/www/vhost1/CloudChannelPARSEBLOCKS.php</br>
+<br>*/1 * * * * php /var/www/vhost1/doctor-notifications.php</br>
+<br>*/5 * * * * java /var/www/vhost1/sessions/ Session</br>
+</p>
+
+<h4 class="text-primary">6.- Step 6(SSL Encryption) <span style="margin-left:20px;"></span></h4>
+<p><br>-> Once apache web server has been installed we need to setup the SSL certificates for secure connection.</br>
+<br>-> First, generate the RSA and CSR(Signing request). For this type and run the following command</br>
+<br>-> cd /etc/httpd/conf/ssl.key</br>
+<br>-> Generate the RSA without passphrase, type and run the command, sudo openssl genrsa -out yourdomain.key 1024</br>
+<br>-> Generate the CSR using the RSA private key, type and run the following command</br>
+<br>-> sudo openssl req -new -key yourdomain.key -out yourdomain.csr</br>
+<br>-> sudo mv yourdomain.csr ../ssl.csr</br>
+<br>-> You will be asked to enter your common name, organization,organization unit, city or locality, state or province and country</br>
+<br>-> Now we will have /etc/httpd/conf/ssl.key/yourodmain.key and /etc/httpd/conf/ssl.key/yourdomain.csr</br>
+<br>-> Now we need to submit the CSR to the certificate provider and they will mail the certificate</br>
+<br>-> Once we receive the certificate, we need to install the certificate for Apache. Type and run the following command </br>
+<br>cd /etc/httpd/conf/ssl.crt</br>
+<br>->Copy the certificate that they mailed us to yourdomain.crt. Open httpd.conf file and place the following to the virtualhost <VirtualHost 209.123.546.123:443> other config details are as follows: SSLEngine  on
+SSLCertificateFile /etc/httpd/conf/ssl.crt/yourdomain.crt
+SSLCertificateKeyFile /etc/httpd/conf/ssl.key/yourdomain.key </Virtualhost></br>
+<br>->Restart apache by typing and running the command</br>
+<br>-> sudo /etc/rc.d/init.d/httpd restart</br>
+</p>
+<h4 class="text-primary">7.- Step 7(Setting up domains on apache web server) <span style="margin-left:20px;"></span></h4>
+<p><br>-> Get the apache configuration files from either of our beta or production from the directories sites-enabled and sites-available. Need to use contents from these configuration files for domain configuration</br>
+<br>-> </br>
+<br>-> </br>
+</p>
+<h4 class="text-primary">8.- Step 8(Setting up the .htaccess file) <span style="margin-left:20px;"></span></h4>
+<p><br>-> To prevent external users from accessing our temp folders on the server. we need to setup .htaccess file in our root directory /var/www/vhost1 </br>
+<br>-> Create a file by typing and running sudo nano /var/www/vhosts1/.htaccess</br>
+<br>-> Place the below contents to the above .htaccess </br>
+<br>-> Files ~ temp/.(ini|pdf|png|jpeg|jpg|txt|doc|docx|config|mpg|mp3)$>
+  Order allow,deny
+  Deny from all
+Files </br>
+</p>
+<h4 class="text-primary">9.- Step 9(Node.js Setup) <span style="margin-left:20px;"></span></h4>
+<p><br>-> For installing Node.js, we need to install nodejs and Node.js package manager, npm</br>
+<br>-> Type and run the command the following commands</br>
+<br>-> sudo apt-get update</br>
+<br>-> sudo apt-get install nodejs</br>
+<br>-> sudo apt-get install npm</br>
+</p>
+<h4 class="text-primary">9.- Step 10(Setting up Node.js server) <span style="margin-left:20px;"></span></h4>
+<p><br>-> Nodejs server needs to be setup for monitoring member appointments with doctors and telemedicine video conferencing. We can setup the appointment nodejs server by typing and running the following command.</br>
+<br>-> Got the root directory where all files are contained, therein we have the file appointment_manager.js. It can run by typing, sudo nodejs appointment_manager.js </br>
+<br>-> The appointment manager depends on MYSQL and Twilio node modules. To install them type and run the following commands in the same directory as appointment_manager.js </br>
+<br>-> sudo npm install mysql</br>
+<br>-> sudo npm install twilio</br>
+<br>-> For setting up the telemedicine video conferencing node manager, type and run the following command</br>
+<br>-> sudo nodejs js/SimpleWebRTC/server.js</br>
+</p>
+
+<h4 class="text-primary">9.- Step 11(Installaing external libraries) <span style="margin-left:20px;"></span></h4>
+<p><br>-> After the Ubuntu server is setup, we need to install certain libraries for smooth functioning of the application. Following are the steps to install the libraries</br>
+<br>-><Strong>ImageMagick</strong> - This package can be installed in the following ways </br>
+<br>-> sudo apt-get install imagemagick </br>
+<br>-> Usually, the Ubuntu server comes with the imagemagick itself. If we do not install imagemagick, thumbnails during member report upload or drop files will not be generated. In the Health repository report stream their will be broken images.</br>
+
+</p>
+
+</br>
+<p><i class="fa fa-wrench fa-fw" style="margin-right:10px;"></i><span>This page created by <span class="text-primary">Pallab Hazarika</span> on <span class="text-info">September 8, 2014</span></span></p>
+<!--<p><i class="fa fa-edit fa-fw" style="margin-right:10px;"></i><span>This page last edited by <span class="text-primary">Javier Vinals</span> on <span class="text-info">June 26, 2014</span></span></p> -->
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Core Scripts - Include with every page -->
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <!-- Page-Level Plugin Scripts - Dashboard -->
+    <script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="js/plugins/morris/morris.js"></script>
+
+    <!-- SB Admin Scripts - Include with every page -->
+    <script src="js/sb-admin.js"></script>
+
+    <!-- Page-Level Demo Scripts - Dashboard - Use for reference -->
+    <script src="js/demo/dashboard-demo.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,394 @@
+<html>
+<head>      
+    <title>Doctor List for Referral</title>
+    <script type="text/javascript">
+        var initial_language = 'en';
+    </script>
+    <!-- take these away later: possible duplicate -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+        <script src='../js/sweet-alert.min.js'></script>
+    <link rel='stylesheet' type='text/css' href='../css/sweet-alert.css'>
+      <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+      <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css" />
+        <link rel="stylesheet" href="../css/toggle.css" />
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- take these away later -->
+    <link rel='stylesheet' type='text/css' href='doctor_style_mars.css'>
+    <script src="../js/countries.js"></script>
+    <style>
+         #doctor_directory_container{
+            width: 600px;
+            height: 460px;
+            border: 1px solid #CCC;
+            border-radius: 5px;
+            font-family: Helvetica, sans-serif;
+        }
+        .toggle_container {
+            margin-top: 15px;
+            float: left;
+        }
+        #doctor_rows { 
+            width: 90%; 
+            margin: 15px 15px 15px 35px; 
+            height: 330px;
+            overflow: scroll;
+            border-bottom: 1px solid #CCC;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+    </style>
+    
+</head>
+<body>
+    
+    <div id="doctor_directory_container">
+           <div id="search_doctor_toolbar" style="width: 100%; height: 30px; margin-left: 15px;"> 
+                <div style="float:left; margin-bottom:-25px; margin-top:10px;">
+                    <button class="sort_button" id="name_button" style="border-top-left-radius: 5px; border-bottom-left-radius: 5px;" lang="en">
+                       Name
+                        <i class="icon-caret-up" style="margin-left: 3px;"></i>
+                    </button>
+                    <button class="sort_button" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px;" id="rating_button" lang="en">
+                       Rating
+                        <i class="" style="margin-left: 3px;"></i>
+                    </button>
+                </div>
+            
+            
+                <div style="width:420px; margin:10px 0 -10px 15px; float:left;">      
+                    <div class="controls" style="width:360px; float:left;">
+                        <!--<div class="input-append">-->
+                            <input class="span7" id="search_bar" style="float:left; width: 270px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; margin-top:5px;" size="16" type="text">
+                            <button class="search_bar_button" style="float: left;" id="search_bar_button" lang="en">Search</button>
+                        <!--</div>-->
+                    </div>
+                    <br><br>                   
+                </div>
+               <div class="toggle_container">
+                   <div style="float:left; width:140px;">
+                        <div class="search_toggle" style="width: 140px;" lang="en">
+                            <button id="telemedicine_toggle_button" class="search_toggle_button" style="background-color: #22AEFF;" data-on="true" ></button>
+                            Telemedicine
+                        </div>
+                    </div>
+                   <div style="float: left; width:100px; margin-left: 20px;">
+                        <div class="search_toggle" lang="en">
+                            <button id="available_toggle_button" class="search_toggle_button" data-on="false" ></button>
+                            Available
+                        </div>
+                    </div>
+                    <div style="float: left; width:30px; margin-left: 20px; font-size: 20px;">
+                        <button id="advanced_toggle_button" class="doctor_search_advanced_toggle_button" >
+                            <i class="fa fa-cog" ></i>
+                        </button>
+                    </div>    
+                </div>
+            </div>
+            <div id="doctor_search_advanced" style="width: 100%; margin-top: 50px; display: none;">
+                <div style="width: 360px; height: 50px; margin: auto;">
+
+                    <div style="width: 100%; height; 25px; padding-top: 5px; color: #767676; text-align: center;">
+                        Speciality: 
+                    </div>
+                    <select name="search_speciality" id="search_speciality" style="float: left; width: 360px;">
+                        <option value="Any" selected>Any</option>
+                        <option value="Allergy and Immunology">Allergist / Immunologist</option>
+                        <option value="Anaesthetics">Aesthetician</option>
+                        <option value="Cardiology">Cardiologist</option>
+                        <option value="Cardiothoracic Surgery">Cardiothoracic Surgeon</option>
+                        <option value="Child & Adolescent Psychiatry">Child & Adolescent Psychiatrist</option>
+                        <option value="Clinical Neurophysiology">Clinical Neurophysiologist</option>
+                        <option value="Dermato-Venereology">Dermato-Venereologist</option>
+                        <option value="Dermatology">Dermatologist</option>
+                        <option value="-Emergency Medicine">Emergency Medicine Specialist</option>
+                        <option value="Endocrinology">Endocrinologist</option>
+                        <option value="Gastroenterology">Gastroenterologist</option>
+                        <option value="General Practice">General Practicioner</option>
+                        <option value="General Surgery">General Surgeon</option>
+                        <option value="Geriatrics">Geriatrician</option>
+                        <option value="Gynaecology and Obstetrics">Gynaecologist / Obstetrician</option>
+                        <option value="Health Informatics">Health Informatics Specialist</option>
+                        <option value="Infectious Diseases">Infectious Disease Specialist</option>
+                        <option value="Internal Medicine">Internal Medicine Specialist</option>
+                        <option value="Interventional Radiology">Interventional Radiologist</option>
+                        <option value="Microbiology">Microbiologist</option>
+                        <option value="Neonatology">Neonatologist</option>
+                        <option value="Nephrology">Nephrologist</option>
+                        <option value="Neurology">Neurologist</option>
+                        <option value="Neuroradiology">Neuroradiologist</option>
+                        <option value="Neurosurgery">Neurosurgeon</option>
+                        <option value="Nuclear Medicine">Nuclear Medicine Specialist</option>
+                        <option value="Occupational Medicine">Occupational Medicine Specialist</option>
+                        <option value="Oncology">Oncologist</option>
+                        <option value="Ophthalmology">Ophthalmologist</option>
+                        <option value="Oral and Maxillofacial Surgery">Oral and Maxillofacial Surgeon</option>
+                        <option value="Orthopaedics">Orthopedician</option>
+                        <option value="Otorhinolaryngology">Otorhinolaryngologist</option>
+                        <option value="Paediatric Cardiology">Paediatric Cardiologist</option>
+                        <option value="Paediatric Surgery">Paediatric Surgeon</option>
+                        <option value="Paediatrics">Paediatrician</option>
+                        <option value="Pathology">Pathologist</option>
+                        <option value="Physical Medicine and Rehabilitation">Physical Medicine and Rehabilitation Specialist</option>
+                        <option value="Plastic, Reconstructive and Aesthetic Surgery">Plastic, Reconstructive and Aesthetic Surgeon</option>
+                        <option value="Pneumology">Pulmonologist</option>
+                        <option value="Psychiatry">Psychiatrist</option>
+                        <option value="Public Health">Public Health Specialist</option>
+                        <option value="Radiology">Radiologist</option>
+                        <option value="Radiotherapy">Radiotherapist</option>
+                        <option value="Stomatology">Stomatologist</option>
+                        <option value="Vascular Medicine">Vascular Medicine Specialist</option>
+                        <option value="Vascular Surgery">Vascular Surgeon</option>
+                        <option value="Urology">Urologist</option>
+                    </select>
+                </div>
+                <div style="width: 360px; margin: auto; height: 50px; margin-top: 25px;">
+
+                    <div style="width: 100%; height; 25px; padding-top: 5px; color: #767676; text-align: center;" lang="en">
+                        Country: 
+                    </div>
+                    <select id="country_search" name ="country_search" style="width: 360px;"></select>
+                </div>
+                <div style="width: 360px; margin: auto; height: 50px; margin-top: 25px;">
+
+                    <div style="width: 100%; height; 25px; padding-top: 5px; color: #767676; text-align: center;" lang="en">
+                        Region: 
+                    </div>
+                    <select id="region_search" name ="region_search" style="width: 360px;"></select>
+                </div>
+                <div style="width: 330px; margin: auto; margin-top: 30px;">
+                    <button class="doctor_search_advanced_button" lang="en">Search</button>
+                    <button class="doctor_search_advanced_button" style="margin-left: 15px;" lang="en">Reset</button>
+                    <button class="doctor_search_advanced_button" style="margin-left: 15px;" lang="en">Back</button>
+                </div>
+                <script language="javascript">
+                    populateCountries("country_search", "region_search");
+                </script>
+            </div>
+        <div style="clear:both;"></div>
+            <div class="doctor_row header"><div class="doc_infos" style="width:160px;">Doctor Name</div><div class="doc_infos" style="width:100px;">Speciality</div><div class="doc_infos" style="width:130px;">Hospital Name</div><div class="doc_infos" style="width:100px;">Email</div></div>
+            <div id="doctor_rows">
+                
+            </div>
+                <!--div class="doctor_row"><div class="doc_infos doctor_name">Marsy Kim</div><div class="doc_infos doctor_speciality">Obstetrics Gynecology</div><div class="doc_infos doctor_hospital_name">La clinica marciana en la tierra</div><div class="doc_infos doctor_email">hkim@inmers.us</div></div-->
+            </div>
+            <button id="personal_doctors_cancel_change" style="float: right; background-color: #D84840; margin-top: 25px; margin-right: 20px; display: none;">Cancel</button>
+            <div id="doctors_search_page_buttons" style="width: 80px; height: 50px; margin-top: 25px; margin-left: auto; margin-right: auto; display: none;">
+                <button id="doctors_page_button_left" class="doctors_page_button" disabled>
+                    <i class="fa fa-arrow-left"></i>
+                </button>
+                <button id="doctors_page_button_right" class="doctors_page_button" style="margin-left: 20px" disabled>
+                    <i class="fa fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    <!--script src="dropzone.js"></script-->
+</body>
+<script>
+    var patient = 2660;
+    var search_term = $('#search_bar').val();
+    
+    function get_doctors()
+    {
+        var online_only = 0;
+        if($("#available_toggle_button").attr("data-on") == "true")
+        {
+            online_only = 1;
+        }
+        var grant_access = '';
+        if($("#filter-catapult").attr("data-on") == "true")
+        {
+            grant_access = 'CATA';
+        }
+        var telemed_only = 0;
+        if($("#telemedicine_toggle_button").attr("data-on") == "true")
+        {
+            telemed_only = 1;
+        }
+        var loc = "";
+        if($("#country_search").val() != -1)
+        {
+            loc = $("#country_search").val();
+        }
+        if($("#region_search").val() != -1 && $("#region_search").children("option").length > 0)
+        {
+            if($("#region_search").val().length > 0)
+            {
+                loc = $("#region_search").val() + ", " + loc;
+            }
+        }
+        var sp = "";
+        if($("#search_speciality").val() != "Any")
+        {
+            sp = $("#search_speciality").val();
+        }
+        
+        $.post('ref_doc_search.php', {query: search_term}, function(data, status) {
+            var obj = JSON.parse(data); 
+            var bgcolor = 'white';
+            var doctor_row, div_doc_name, div_doc_speciality, div_doc_hospital_name, div_doc_email;
+
+            $.each(obj, function(index, row) {
+                bgcolor = 'white';
+                if(index % 2 == 0) bgcolor = '#EBF5FF';
+
+                div_doc_name = $('<div>').addClass('doc_infos doctor_name').text(row['name']);
+                div_doc_speciality = $('<div>').addClass('doc_infos doctor_speciality').text(row['speciality']);
+                div_doc_hospital_name = $('<div>').addClass('doc_infos doctor_hospital_name').text(row['hospital_name']);
+                div_doc_email = $('<div>').addClass('doc_infos doctor_email').text(row['email']);
+
+                doctor_row = $('<div>').addClass('doctor_row').css('background-color', bgcolor).append(div_doc_name, div_doc_speciality, div_doc_hospital_name, div_doc_email);
+                $('#doctor_rows').append(doctor_row);
+                //console.log(row);
+            });
+        });
+    }
+    
+    $("#telemedicine_toggle_button").on('click', function()
+    {
+        if($(this).attr("data-on") == "true")
+        {
+            $(this).attr("data-on", "false");
+            $(this).css("background-color", "#FFF");
+            if($("#available_toggle_button").attr("data-on") == "true")
+            {
+                $("#available_toggle_button").attr("data-on", "false");
+                $("#available_toggle_button").css("background-color", "#FFF");
+            }
+        }
+        else
+        {
+            $(this).attr("data-on", "true");
+            $(this).css("background-color", "#22AEFF");
+        }
+        doctors_page_memory.length = 0;
+        doctors_last_result = 0;
+        doctors_next_result = 0;
+        get_doctors();
+    });
+    
+    $("#advanced_toggle_button").on('click', function()
+    {
+        if($(this).hasClass("doctor_search_advanced_toggle_button_selected"))
+        {
+            $(this).removeClass("doctor_search_advanced_toggle_button_selected").addClass("doctor_search_advanced_toggle_button");
+            $("#doctor_rows").css("display", "block");
+            $("#doctors_search_page_buttons").css("display", "block");
+            $("#doctor_search_advanced").css("display", "none");
+            doctor_advanced_search = false;
+            if(doctor_advanced_search_changed == true)
+            {
+                doctors_page_memory.length = 0;
+                doctors_last_result = 0;
+                doctors_next_result = 0;
+                get_doctors();
+            }
+        }
+        else
+        {
+            $(this).removeClass("doctor_search_advanced_toggle_button").addClass("doctor_search_advanced_toggle_button_selected");
+            $("#doctor_rows").css("display", "none");
+            $("#doctors_search_page_buttons").css("display", "none");
+            $("#doctor_search_advanced").css("display", "block");
+            doctor_advanced_search = true;
+            doctor_advanced_search_changed = false;
+        }
+    });
+    
+    $(".doctor_search_advanced_button").on('click', function()
+    {
+        if($(this).text() == "Reset")
+        {
+            if($('#search_speciality').val() != "Any" || $('#country_search').val() != "-1" || ($('#region_search').val() != "-1" && $('#region_search').val() != null))
+            {
+                doctor_advanced_search_changed = true;
+            }
+            $('#search_speciality').val("Any");
+            $('#country_search').val("-1");
+            $('#region_search').val("-1");
+            $('#region_search').html('');
+        }
+        else if($(this).text() == "Search")
+        {
+            doctors_page_memory.length = 0;
+            doctors_last_result = 0;
+            doctors_next_result = 0;
+            get_doctors();
+            $("#doctor_rows").css("display", "block");
+            $("#doctors_search_page_buttons").css("display", "block");
+            $("#doctor_search_advanced").css("display", "none");
+            $("#advanced_toggle_button").removeClass("doctor_search_advanced_toggle_button_selected").addClass("doctor_search_advanced_toggle_button");
+        }
+        else
+        {
+            $("#advanced_toggle_button").trigger('click');
+        }
+    });
+    
+    $(".sort_button").on('click', function()
+    {
+        if($(this).attr("id") == "name_button")
+        {
+            order_column = 0;
+        }
+        else if($(this).attr("id") == "rating_button")
+        {
+            order_column = 1;
+        }
+        if($(this).children().eq(0).hasClass("icon-caret-up"))
+        {
+            $(this).children().eq(0).removeClass("icon-caret-up").addClass("icon-caret-down");
+            order_direction = 0;
+
+        }
+        else if($(this).children().eq(0).hasClass("icon-caret-down"))
+        {
+            $(this).children().eq(0).removeClass("icon-caret-down").addClass("icon-caret-up");
+            order_direction = 1;
+        }
+        else
+        {
+            $('.sort_button').each(function(index)
+            {
+                $(this).children().eq(0).removeClass("icon-caret-down");
+                $(this).children().eq(0).removeClass("icon-caret-up");
+            });
+            $(this).children().eq(0).addClass("icon-caret-up");
+            order_direction = 1;
+        }
+        doctors_page_memory.length = 0;
+        doctors_last_result = 0;
+        doctors_next_result = 0;
+        get_doctors();
+    });
+    
+    $("#search_bar_button").on('click', function()
+    {
+        if(last_search_term != $("#search_bar").val())
+        {
+            last_search_term = $("#search_bar").val();
+            doctors_page_memory.length = 0;
+            doctors_last_result = 0;
+            doctors_next_result = 0;
+            get_doctors();
+        }
+    });
+    
+    $("#search_speciality").on('change', function()
+    {
+        doctor_advanced_search_changed = true;
+    });
+    $("#country_search").on('change', function()
+    {
+        doctor_advanced_search_changed = true;
+    });
+    $("#region_search").on('change', function()
+    {
+        doctor_advanced_search_changed = true;
+    });
+    get_doctors();
+    
+    
+</script>
+</html>

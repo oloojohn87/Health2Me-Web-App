@@ -1,0 +1,28 @@
+<?php
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+
+$tbl_name="doctors"; // Table name
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass") or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$result2 = mysql_query("SELECT DISTINCT userid FROM session_log WHERE DATEDIFF(NOW(), fecha) <=  90 AND usertype IS NULL ORDER BY fecha DESC");   
+$count = 0;
+$count=mysql_num_rows($result2);
+
+$cadena = '';
+//$cadena.=',';    
+$cadena.='
+    {
+        "Users":"'.$count.'"
+    }';    
+    
+$encode = json_encode($cadena);
+echo '{"items":['.($cadena).']}'; 
+
+?>

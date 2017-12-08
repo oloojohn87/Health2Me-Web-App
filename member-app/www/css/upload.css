@@ -1,0 +1,111 @@
+/*This file used in 
+	upload.html
+*/
+#history-container {
+    height:180px; 
+    font-size: 10px;
+} 
+#outer1 {
+	height:170px;
+}	
+#outer2{
+	height:70%	
+}
+@media screen and (orientation:landscape) {
+        /* Landscape styles */
+	
+	
+}	
+#upload-container {
+  height:auto;
+} 
+#row1,#row2 {
+    display:block;  
+    width:100%;
+}    
+.h-box {
+    width:25%;
+    height:85px;
+    display:inline-block;
+    color: white;
+    line-height:3;
+    text-align:center;
+    margin:auto;
+}
+#wrapper {
+    height:100%;   
+}    
+.h-box img {
+    display:block;
+    padding:5px;
+    margin:0 auto;
+    margin-top:20px;
+    width:30px;
+    position:relative;
+}    
+#box-1 {
+    background-color:#037e00;
+    float:left;
+}  
+#box-2 {
+    background-color:#dfb408;
+    float:left;
+} 
+#box-3 {
+    background-color:#48a25a;
+    float:left;
+} 
+#box-4 {
+    background-color:#ffa500;
+   float:left;
+} 
+#box-5 {
+    background-color:#19b0ff;
+    float:left;
+} 
+#box-6 {
+    background-color:#696969;
+    float:left;
+} 
+#box-7 {
+    background-color:#5f9ea0;
+    float:left;
+} 
+#box-8 {
+    background-color:#801082;
+    float:left;
+} 
+#upload-container {
+    position:relative;
+}  
+#cam {
+    width: 50%;
+    margin: 0 auto;
+    background-color:#e5e5e5;
+    padding-left: 10px;
+    padding-right: 10px;
+}    
+#cam img{
+    width:40px;
+    margin-top:15px; 
+}  
+#smallImage{
+	display: none;
+	width: 100%;
+	height: auto;
+	margin: 0 auto;
+}
+#upload-icon {
+    position:relative;
+    top: 10px;
+    padding: 10px;
+    width: 50%;
+    margin: 0 auto;
+    background-color:#c7c7c7;
+    border-color:#717171;
+    display:block;
+}    
+#upload_button{
+    background-color:rgb(34,174,255);
+    //background-image:url("../img/upload_white.svg")
+}    

@@ -1,0 +1,16 @@
+{
+  "path": {
+    "input": "/var/www/html/Document_Processing/docs/",
+    "output": "/var/www/html/Document_Processing/pdf/",
+    "image_magic":"/usr/lib/x86_64-linux-gnu/ImageMagick-6.7.7",
+    "home":"/var/www/html/Document_Processing/"
+  },
+  "extension": [
+    "docx",
+    "doc"
+  ],
+  "command":{
+    "convertPDFToPng": "/var/www/html/Document_Processing/convertPDFToPng.sh",
+    "convertDocToPdf":"/var/www/html/Document_Processing/convertDocToPdf.sh"
+  }
+}

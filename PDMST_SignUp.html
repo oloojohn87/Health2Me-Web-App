@@ -1,0 +1,252 @@
+<?php
+require("environment_detail.php");
+
+?>
+<!DOCTYPE html>
+ 
+<html>
+        <head>
+               <title>H2M Template BASIC</title>
+                <meta charset="utf-8">
+ 
+                <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+   
+        </head>
+ 
+        <body>
+
+
+			<div style="width:100%; text-align:center; float:left;">
+            	<div style="width:1030px; height:270px; text-align:center; margin:0 auto; border: 1px solid #cacaca; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;">
+	            	<div style="width:100%; margin-top:15px;">
+		                
+		                <span id="MyRadar" style="left: 0px; margin-left: 20px; margin-top: 20px; margin-bottom: 5px; font-size: 16px; background-color: #22aeff; padding: 1px 4px 2px; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; font-size: 22px; font-weight: bold; line-height: 22px; color: #ffffff; white-space: nowrap; vertical-align: baseline; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;"> PDMS-T CONSOLE</span>
+	            	</div>
+	            	
+	    <p style="font-size:18px; ">
+		  <span id="Live" style="color:red;">SYSTEM OFF-LINE</span>
+		</p>
+		<p style="font-size:16px; ">
+			Start at <span id="HoraIni">00:00 AM</span>
+		</p>
+		<p style="font-size:16px; ">
+			Actual: <span id="HoraNow">00:00 AM</span>
+		</p>
+		<p style="font-size:14px; ">
+			Number of rounds: <span id="NumRounds"> xxx </span>
+		</p>
+		<input type=button value="Start" id="START" style="height:50px; width:100px; margin-top:30px;">
+		<input type=button value="Stop" id="STOP" style="height:50px; width:100px; margin-left:40%; margin-top:30px;">
+
+            	</div>
+
+				<div class="grid span4">
+					
+				</div>
+
+            	<div style="width:1030px; height:600px; text-align:center; margin:0 auto; border: 1px solid #cacaca; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px;">
+            				<div style="height:590px; width:95%; background-color:black; overflow:scroll; color:white; margin-top:10px; margin-left:20px; float:left;">
+								<p id="Consola" style="margin-left:10%; margin-top:; font-size:14px; text-align:left;"></p>
+					     	</div>
+            	</div>	
+
+
+			</div>    
+ 
+ 
+        </body>
+
+
+</html>
+      </body>
+      
+<script type="text/javascript" >
+
+$(document).ready(function() {
+	
+      var activo = 0;
+      var rounds = 0;
+      var rounds2 = 0;
+      
+      $('#START').click(function () {
+      		var d = new Date();
+      		var time = d.toLocaleTimeString();
+	  		activo = 1;			
+	  		$('#Live').css("color","green");
+	  		$('#Live').html("SYSTEM ACTIVE");
+	  		$('#HoraIni').html(time);
+	  		$('#NumEmails').html("");
+	  		$('#NumValids').html("");
+	  		$('#NumRounds').html("");
+	  		
+	  		
+	  		
+	      });
+	      
+      $('#STOP').click(function () {
+      		var d = new Date();
+      		var time = d.toLocaleTimeString();
+	  		activo = 0;			
+	  		$('#Live').css("color","red");
+	  		$('#Live').html("SYSTEM OFF-LINE");
+	  		});			 
+	 
+	 setInterval(function() {
+		 	if (activo==1){
+			 	d2 = new Date();
+			 	time2 = d2.toLocaleTimeString();
+			 	$('#HoraNow').html(time2);
+		  		$('#NumRounds').html(rounds);
+		 	}
+		 }, 1000);      
+
+
+	setInterval(function() {
+		if (activo==1){
+			rounds++;
+			// Check and Retrieve Candidates 
+			ConnData='';
+			CheckExternal();
+		
+			var d = new Date();
+			var time = d.toLocaleTimeString();
+			var users = ConnData.length;
+			var n = 0;
+			var AddUsers = 0;
+			while (n < users)
+			{
+				if (ConnData[n].ADD == 0) AddUsers++;
+				n++;
+			}
+		
+		
+			$('#Consola').append("<strong>Checked External Data at: "+time+"</strong>"); 
+			$('#Consola').append("<br>");
+			$('#Consola').append("There are "+users+" users in external database"); 
+			$('#Consola').append("<br>");
+
+
+			// Add Users to Database
+			if (AddUsers > 0 ) 
+			{
+				$('#Consola').append("FOUND :  "+AddUsers+" NEW"); 
+				$('#Consola').append("<br>");
+				var m = 0;
+				while (m < users)
+				{
+					if (ConnData[m].ADD == 0)
+					{
+						$('#Consola').append(ConnData[m].name);
+						$('#Consola').append('\t '+ConnData[m].surname);
+						$('#Consola').append('   ---   ');
+						$('#Consola').append('\t '+ConnData[m].PASS);
+						$('#Consola').append('   ---   ');
+						$('#Consola').append('\t '+ConnData[m].PIN);
+						$('#Consola').append('   ---   ');
+						$('#Consola').append(ConnData[m].email);
+						$('#Consola').append('   ---   ');
+						$('#Consola').append(ConnData[m].phone);
+						$('#Consola').append("<br>");
+						var Result = 	AddUser(ConnData[m].name,ConnData[m].surname,ConnData[m].dob,ConnData[m].gender,ConnData[m].email,ConnData[m].phone,ConnData[m].IdUSFIXED,ConnData[m].IdUSFIXEDNAME,ConnData[m].IdUSRESERV,ConnData[m].salt,ConnData[m].pin_hash,ConnData[m].PASS,ConnData[m].PIN);
+						var gth = 9;
+						//alert (Result);	
+						$('#Consola').append("Result= "+Result);
+						$('#Consola').append("<br>");
+
+					}
+					m++;
+				}
+			}
+			else $('#Consola').append("no new users found");;
+			$('#Consola').append("<br>");
+			$('#Consola').append("<strong>------------------------- ------------------------- ------------------------- ------------------------- </strong><br>");
+			$('#Consola').append("<br>");
+			
+		
+			
+			// Send Email and TEXT
+		}
+	
+  	}, 10000);      
+
+	
+	
+	
+	var a = 1;
+	 
+});
+
+
+function CheckExternal(){
+
+	ConnData='';
+	var queUrl = 'checkExternalUserDB.php'; //?User='+UserID;
+	$.ajax(
+	{
+		url: queUrl,
+		dataType: "json",
+		async: false,
+		success: function(data)
+		{
+			//alert('Data Fetched');
+			ConnData = data.items;
+		}
+	});
+	//alert (ConnData);
+	/*
+	var n = 0;
+	while (n < ConnData.length)
+	{
+		toADD = ConnData[n].ADD;
+		SimName = ConnData[n].SimName;
+		SimCode = ConnData[n].SimDOB;
+		name = ConnData[n].name;
+		surname = ConnData[n].surname;
+		DOB = ConnData[n].dob;
+		gender = ConnData[n].dob;
+		IdUsFIXED = ConnData[n].IdUSFIXED;
+		IdUsFIXEDNAME = ConnData[n].IdUSFIXEDNAME;
+		PASS = ConnData[n].PASS;
+		PIN = ConnData[n].PIN;
+		IdUsRESERV = ConnData[n].IdUSRESERV;
+		salt = ConnData[n].salt;
+		pin_hash = ConnData[n].pin_hash;
+		email = ConnData[n].email;
+		phone = ConnData[n].phone;
+
+		n++;
+
+	}
+	*/
+}
+
+function AddUser(name,surname,dob,gender,email,phone,IdUsFIXED,IdUsFIXEDNAME,IdUsRESERV,salt,pin_hash,pass,pin)	{
+
+	var queUrl = 'AddUserEXTERNALDB.php?name='+name+'&surname='+surname+'&dob='+dob+'&gender='+gender+'&email='+email+'&phone='+phone+'&IdUsFIXED='+IdUsFIXED+'&IdUsFIXEDNAME='+IdUsFIXEDNAME+'&IdUsRESERV='+IdUsRESERV+'&salt='+salt+'&pin_hash='+pin_hash+'&pass='+pass+'&pin='+pin;
+	//alert (queUrl);
+	var Resultado='empty';
+	$.ajax(
+	{
+		url: queUrl,
+		dataType: "html",
+		async: false,
+        complete: function(){ //alert('Completed');
+                },
+        success: function(data) {
+                if (typeof data == "string") {
+							Resultado = data;
+                            //alert(Resultado);
+                            }
+                 }
+
+	});
+	
+	
+return (Resultado);	
+	
+}
+
+	
+</script>      
+      
+</html>

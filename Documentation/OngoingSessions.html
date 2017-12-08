@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Health2Me Technical Documentation</title>
+
+    <!-- Core CSS - Include with every page -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="font-awesome/css/font-awesome.css" rel="stylesheet">-->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Page-Level Plugin CSS - Dashboard -->
+    <link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="css/plugins/timeline/timeline.css" rel="stylesheet">
+
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Health2Me Technical Documentation</a>
+            </div>
+            <!-- /.navbar-header -->
+
+  
+
+            <div class="navbar-default navbar-static-side" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <li class="sidebar-search">
+                            <div class="input-group custom-search-form">
+                                <input type="text" class="form-control" placeholder="Search...">
+                                <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                            <!-- /input-group -->
+                        </li>
+                        <li>
+                            <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Manual</a>
+                        </li>
+                        <li>
+                            <a><i class="fa fa-database fa-fw"></i> Database Structure<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a href="GoldenRules.html">Golden Rules of Report Access</a>
+		                                </li>
+		                               <li>
+		                                    <a>Important Tables<span class="fa arrow"></span></a>
+                                             <ul class="nav nav-second-level">
+		                                       <li>
+		                                          <a href="Database.html">Usuarios</a>
+		                                        </li>
+                                     
+								              </ul>
+		                                </li>
+		                               
+								 </ul>
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Documents<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="Probes.html">Probes</a>
+                                </li>
+                                <li>
+                                    <a href="GithubCommit.html">GitHub Commit Procedure</a>
+                                </li>
+                                <li>
+                                    <a href="PhoneNumbers.html">Important Note for Phone Numbers</a>
+                                </li>
+                            </ul>
+                           <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                                 <a href="Probes.html"><i class="fa fa-gears fa-fw"></i> Startup Procedure<span class="fa arrow"></span></a>
+								 <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a href="Processes.html">Processes</a>
+		                                </li>
+		                               <li>
+		                                    <a href="Apache.html">Apache</a>
+		                                </li>
+		                               <li>
+		                                    <a href="PhoneNumbers.html">MySQL</a>
+		                                </li>
+		                               <li>
+		                                    <a href="PhoneNumbers.html">FTP Server</a>
+		                                </li>
+                                        
+								 </ul>	 
+                            </li>
+                        
+                        <li>
+                                 <a href="Channels.html"><i class="fa fa-arrows-alt fa-fw"></i> Channels</a>
+                         </li>
+				         <li>
+                             	 <a href="Database.html"><i class="fa fa-medkit fa-fw"></i> DICOM viewer</a>
+				        </li>
+                         <li>
+                             	 <a href="UbuntuInstallationSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Ubuntu Installation</a>
+							</li>
+                        <li>
+                             	 <a href="TurnServerInstallationSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Turn Server Installation</a>
+							</li>
+                        
+                        <li>
+                             	 <a href="UbuntuUpdateSteps.html"><i class="fa fa-cloud-download fa-fw"></i> Server Restart and Package Update</a>
+				        </li>
+                            
+                        <li>
+                             	 <a href="SessionHashing.html"><i class="fa fa-cog fa-fw"></i>Session Hashing</a>
+							</li>
+                        <li>
+                             	 <a><i class="fa fa-book fa-fw"></i> Libraries<span class="fa arrow"></span></a>
+                                 <ul class="nav nav-second-level">
+		                               <li>
+		                                    <a>External Libraries<span class="fa arrow"></span></a>
+                                               <ul class="nav nav-second-level">
+                                                   <li>
+		                                              <a href="timebar.html">Timebar</a>
+		                                           </li>
+                                                   <li>
+		                                              <a href="Libraries.html">Moment.js</a>
+		                                           </li>
+                                               </ul>
+		                                </li>
+		                               <li>
+		                                    <a>Internal Libraries<span class="fa arrow"></span></a>
+		                                </li>
+		                              
+								 </ul>	
+							</li>
+                            <li>
+                             	 <a href="H2MAPIs.html"><i class="fa fa-cog fa-fw"></i> Health2Me APIs</a>
+							</li>
+                    </ul>
+                    <!-- /#side-menu -->
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2 class="page-header">Database Structure</h2>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                
+
+<p>
+
+<h4><p class="text-primary">TABLE: ONGOIN_SESSIONS</p></h4> 
+
+<p>
+
+</p>
+
+
+
+
+<p>
+<p>The primary key of the table is Identif. There is no foreign key associated with other tables.</p>
+
+<p>Some of the important columns are as follows:</p>
+<ul>
+<li></li>
+<li></li>
+<li></li>
+<li></li>
+<li></li>
+<li></li>
+</ul>
+</p>
+
+                           <!-- Button trigger modal -->
+                            <button class="btn btn-primary " data-toggle="modal" data-target="#myModal">
+                                Database Dump
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel">Database Table Dump</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                           # ************************************************************
+# Sequel Pro SQL dump
+# Version 4096
+#
+# http://www.sequelpro.com/
+# http://code.google.com/p/sequel-pro/
+#
+# Host: dev.health2.me (MySQL 5.5.8)
+# Database: monimed
+# Generation Time: 2014-05-24 16:46:38 +0000
+# ************************************************************
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+# Dump of table usuarios
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `usuarios`;
+
+CREATE TABLE `usuarios` (
+  `Identif` int(11) NOT NULL AUTO_INCREMENT,
+  `IdCreator` int(11) DEFAULT NULL,
+  `IdInvite` int(11) DEFAULT NULL,
+  `Sexo` tinyint(1) DEFAULT NULL,
+  `Orden` int(11) DEFAULT NULL,
+  `Alias` varchar(35) CHARACTER SET latin1 DEFAULT NULL,
+  `NombreUsu` varchar(35) CHARACTER SET latin1 DEFAULT NULL,
+  `Password` varchar(12) CHARACTER SET latin1 DEFAULT NULL,
+  `TempoPass` varchar(12) COLLATE latin1_spanish_ci DEFAULT NULL,
+  `Cloud` varchar(35) CHARACTER SET latin1 DEFAULT NULL,
+  `UsuDropbox` varchar(35) CHARACTER SET latin1 DEFAULT NULL,
+  `PasDropbox` varchar(35) CHARACTER SET latin1 DEFAULT NULL,
+  `twitter` varchar(25) CHARACTER SET latin1 DEFAULT NULL,
+  `FNac` char(25) CHARACTER SET latin1 DEFAULT NULL,
+  `MedRequest` int(11) DEFAULT NULL,
+  `email` varchar(35) CHARACTER SET latin1 NOT NULL,
+  `notify_email` int(1) DEFAULT NULL,
+  `telefono` varchar(35) CHARACTER SET latin1 DEFAULT NULL,
+  `urlimagen` varchar(80) CHARACTER SET latin1 NOT NULL,
+  `confirmcode` varchar(65) CHARACTER SET latin1 NOT NULL,
+  `Verificado` varchar(1) CHARACTER SET latin1 NOT NULL,
+  `Terms` varchar(5) CHARACTER SET latin1 DEFAULT NULL,
+  `GrantAccess` varchar(5) CHARACTER SET latin1 DEFAULT NULL,
+  `TieneVALID` int(11) DEFAULT NULL,
+  `TieneCLASS` int(11) DEFAULT NULL,
+  `TieneBACKU` int(11) DEFAULT NULL,
+  `TieneSTORA` int(11) DEFAULT NULL,
+  `CardHH` int(11) DEFAULT NULL,
+  `PassCard` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
+  `IdUsFIXED` bigint(11) DEFAULT NULL,
+  `IdUsFIXEDNAME` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
+  `IdUsRESERV` varchar(100) COLLATE latin1_spanish_ci DEFAULT NULL,
+  `Name` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
+  `Surname` varchar(50) CHARACTER SET latin1 NOT NULL DEFAULT '',
+  `FechaVer` datetime DEFAULT NULL,
+  `IPVALID` varchar(50) COLLATE latin1_spanish_ci DEFAULT NULL,
+  `salt` varchar(50) COLLATE latin1_spanish_ci NOT NULL,
+  `mi` char(1) COLLATE latin1_spanish_ci DEFAULT NULL,
+  `pin_hash` text COLLATE latin1_spanish_ci,
+  `most_recent_doc` text COLLATE latin1_spanish_ci,
+  PRIMARY KEY (`Identif`),
+  KEY `id_index` (`Identif`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_spanish_ci;
+
+
+
+
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+                                        </div>
+                                    </div>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
+                            <!-- /.modal -->
+ 
+</p>
+
+</br>
+<p><i class="fa fa-wrench fa-fw" style="margin-right:10px;"></i><span>This page created by <span class="text-primary">Pallab Hazarika</span> on <span class="text-info">May 22, 2014</span></span></p><p><i class="fa fa-wrench fa-fw" style="margin-right:10px;"></i><span>This page last edited by <span class="text-primary">Pallab Hazarika</span> on <span class="text-info">OCt 21, 2014</span></span></p>
+
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Core Scripts - Include with every page -->
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+    <!-- Page-Level Plugin Scripts - Dashboard -->
+    <script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="js/plugins/morris/morris.js"></script>
+
+    <!-- SB Admin Scripts - Include with every page -->
+    <script src="js/sb-admin.js"></script>
+
+    <!-- Page-Level Demo Scripts - Dashboard - Use for reference -->
+    <script src="js/demo/dashboard-demo.js"></script>
+
+</body>
+
+</html>

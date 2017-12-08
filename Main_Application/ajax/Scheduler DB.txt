@@ -1,0 +1,144 @@
+create table user_time_config
+(
+	id int(11) auto_increment,
+	userid int(11) not null,
+	title varchar(255) not null,
+	day_start int(1) not null,
+	day_end int(1) not null,
+	start time not null,
+	end time not null,
+	type int(1) not null,
+	primary key(id)
+);
+
+create table user_event_config
+(
+	id int(11) auto_increment,
+	userid int(11) not null,
+	title varchar(255) not null,
+	hours int(2) default 0,
+	minutes int(2) default 1,
+	primary key(id)
+
+);
+
+
+create table parent_event
+(
+	parent_id int(11) auto_increment,
+	userid int(11) not null,
+	title varchar(255) not null,
+	weekday int(1) not null,
+	startdate date not null,
+	starttime time not null,
+	endtime time not null,
+	repeats int(1) default 0,
+	repeat_freq int(1) default 0,
+	primary key(parent_id)
+);
+
+DROP TRIGGER IF EXISTS insert_parent_event ;
+DELIMITER $$
+CREATE TRIGGER insert_parent_event AFTER INSERT ON user_time_config
+FOR EACH ROW
+BEGIN
+	declare dayofweek int ;
+	declare startdate date;
+	declare offset int;
+	declare day int;
+	select dayofweek(now()) into dayofweek;
+	
+	IF dayofweek=NEW.day_start THEN
+		select date(now()) into startdate;
+	ELSE 
+		IF dayofweek < NEW.day_start THEN
+			set offset = NEW.day_start - dayofweek ; 
+			select date_add(now(),INTERVAL offset DAY) into startdate;
+		ELSE
+			set offset = (7 - dayofweek) + NEW.day_start ; 
+			select date_add(now(),INTERVAL offset DAY) into startdate;
+		END IF;
+	END IF;
+	
+	IF NEW.type=1 THEN
+		IF NEW.start='00:00:00' and NEW.end='23:59:59' THEN
+			insert into parent_event(userid,title,weekday,startdate,starttime,endtime,repeats,repeat_freq)
+			values (NEW.userid,'Non-Working Hours',NEW.day_start,startdate,'00:00:00','23:59:59',1,7);
+		ELSE
+			insert into parent_event(userid,title,weekday,startdate,starttime,endtime,repeats,repeat_freq)
+			values (NEW.userid,'Non-Working Hours',NEW.day_start,startdate,'00:00:00',NEW.start,1,7);
+		
+			insert into parent_event(userid,title,weekday,startdate,starttime,endtime,repeats,repeat_freq)
+			values (NEW.userid,'Non-Working Hours',NEW.day_start,startdate,NEW.end,'23:59:59',1,7);
+		END IF;
+	ELSE 
+		IF NEW.type=2 THEN
+			IF(NEW.day_start = NEW.day_end) THEN
+				insert into parent_event(userid,title,weekday,startdate,starttime,endtime,repeats,repeat_freq)
+				values (NEW.userid,NEW.title,NEW.day_start,startdate,NEW.start,NEW.end,1,7);
+			ELSE
+				set day = NEW.day_start;
+				while day < NEW.day_end+1 do
+					insert into parent_event(userid,title,weekday,startdate,starttime,endtime,repeats,repeat_freq)
+					values (NEW.userid,NEW.title,day,startdate,NEW.start,NEW.end,1,7);
+				
+					select date_add(startdate,INTERVAL 1 DAY) into startdate;
+					set day = day + 1;
+				end while;
+			END IF;
+		END IF;
+	END IF;
+END $$
+DELIMITER ;
+
+
+
+DROP TRIGGER IF EXISTS insert_events;
+DELIMITER $$
+CREATE TRIGGER insert_events AFTER INSERT ON parent_event
+FOR EACH ROW
+BEGIN
+	declare lim int;
+	declare limit_cnt int;
+	declare startdate date;
+		
+	set limit_cnt = 0;
+	
+	
+	set lim = 365 / NEW.repeat_freq;
+	set startdate = NEW.startdate;
+	while limit_cnt < lim do
+		if NEW.starttime = '00:00:00' and NEW.endtime = '23:59:59' then
+			insert into events(title,start,end,allday,userid,parentid) 
+			values(NEW.title,concat(startdate,' ',NEW.starttime),concat(startdate,' ',NEW.endtime),'true',NEW.userid,NEW.parent_id);
+		
+		else
+			insert into events(title,start,end,allday,userid,parentid) 
+			values(NEW.title,concat(startdate,' ',NEW.starttime),concat(startdate,' ',NEW.endtime),'false',NEW.userid,NEW.parent_id);
+		
+		end if;
+		
+		select date_add(startdate,INTERVAL 7 DAY) into startdate;
+		
+		set limit_cnt = limit_cnt + 1;	
+	end while;
+END $$
+DELIMITER ;
+
+
+
+
+//Query to detect overlapping events
+
+select * from events where
+(timestampdiff(MINUTE,end,'2013-08-17 13:10:00')<0 and timestampdiff(MINUTE,'2013-08-17 13:10:00',start)<0) 
+OR
+(timestampdiff(MINUTE,'2013-08-17 15:00:00',start)<0 and timestampdiff(MINUTE,end,'2013-08-17 15:00:00')<0)
+OR
+(timestampdiff(MINUTE,end,'2013-08-17 15:00:00')<0 and timestampdiff(MINUTE,'2013-08-17 13:10:00',start)<0)
+OR
+(timestampdiff(MINUTE,end,'2013-08-17 13:10:00')<0 and timestampdiff(MINUTE,'2013-08-17 15:00:00',start)<0) 
+and userid=28;
+
+
+

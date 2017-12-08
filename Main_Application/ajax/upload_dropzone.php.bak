@@ -1,0 +1,189 @@
+<?php
+session_start();
+set_time_limit(600);
+error_reporting(E_ERROR | E_PARSE);
+//require "logger.php";
+require "environment_detail.php";
+$dbhost = $env_var_db['dbhost'];
+$dbname = $env_var_db['dbname'];
+$dbuser = $env_var_db['dbuser'];
+$dbpass = $env_var_db['dbpass'];
+		
+		
+$path_for_ffmpeg = "ffmpeg\\bin\\";
+		
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+	
+	
+$userid = $_SESSION['MEDID'];
+//$userid = 28;	
+//$fecha = $_POST["repdate"];
+$id = $_POST["id"];
+$idusu = $_POST["idus"];
+$tipo = $_POST["tipo"];
+//file_put_contents("ip.txt", 'Received from '.$tipo, FILE_APPEND);
+$ds = DIRECTORY_SEPARATOR;  //1
+
+if (!file_exists('dropzone_uploads'.$ds.$userid)) 
+{
+    mkdir('dropzone_uploads'.$ds.$userid, 0777, true);
+	mkdir('dropzone_uploads'.$ds.$userid.$ds.'Thumbnail', 0777, true);
+	
+}
+
+$enc_result = mysql_query("select pass from encryption_pass where id = (select max(id) from encryption_pass)");
+			$row_enc = mysql_fetch_array($enc_result);
+			$enc_pass=$row_enc['pass'];
+
+
+
+ 
+//$month = strtok($fecha,"/");
+//$day = strtok("/");
+//$year = strtok("/");
+
+//$fecha = $year.'-'.$month.'-'.$day;
+
+$storeFolder = 'dropzone_uploads'.$ds.$userid.$ds;
+
+
+if (!empty($_FILES)) {
+     
+    $tempFile = $_FILES['file']['tmp_name'];          //3
+	
+      
+    $targetPath = dirname( __FILE__ ) . $ds. $storeFolder ;  //4
+     
+    $targetFile =  $targetPath. $_FILES['file']['name'];  //5
+ 
+    move_uploaded_file($tempFile,$targetFile); //6
+	
+	$checksum=md5_file($filepath);
+	//1. Find patients idusfixed
+	$query = "select idusfixed,idusfixedname from usuarios where identif = ".$idusu;
+	$result=mysql_query($query);
+	$row = mysql_fetch_array($result);
+	$IdUsFIXED=$row['idusfixed'];
+	$idusfixedname=$row['idusfixedname'];
+	
+	//2.Get file Extension
+	$extension = substr($_FILES['file']['name'],strlen($_FILES['file']['name'])-3,3);
+	//$path_info = pathinfo($_FILES['file']['name']);
+	//$extension = $path_info['extension'];
+/*	
+	if($userid==28 && $extension!="pdf")
+	{
+		header("error message",replace,404);return;
+	}
+*/
+	
+	
+	//3.Create a new file name
+	$confcode = $IdUsFIXED.md5(date('Ymdgisu'));
+	$new_image_name = 'eML'.$confcode.'.'.$extension;			
+	
+	//shell_exec('mkdir '.$new_image_name);
+	
+	$filepath = $targetFile;
+	
+	$locFile = "Packages_Encrypted";  //Changed from PAckages to PAckages_Encrypted by Ankit
+	copy($filepath, $locFile.$ds.$new_image_name);
+	copy($filepath, 'temp'.$ds.$userid.$ds.'Packages_Encrypted'.$ds.$new_image_name);
+	
+	$checksum=md5_file($locFile.$ds.$new_image_name);
+	
+	$locFileTH = "PackagesTH_Encrypted";    //Changed from PackagesTH to PackagesTH_Encrypted
+	//$path="C:\\PROGRA~2\\ImageMagick-6.8.1-Q16\\";
+						
+	//Changes for handling jpg files
+	if($extension!="jpg") 
+	{
+		$new_image_nameTH = 'eML'.$confcode.'.png';	
+	}else 
+	{
+		$new_image_nameTH = 'eML'.$confcode.'.jpg';
+	}
+	
+/*	
+	//echo $extension;
+	$office_file_types = array("doc", "docx", "rtf", "xls","xlsx","ppt","pptx");
+	if (in_array(strtolower($extension), $office_file_types))
+	{
+		echo "Office File";
+		$PDFcommand='Doc2PDF.bat '.$locFile.$ds.$new_image_name.' '.$locFile.$ds.'eML'.$confcode.'.pdf';
+		echo "<br>".$PDFcommand."<br>";
+		$output=shell_exec($PDFcommand);
+		if($output!="success")
+		{
+		
+			echo "failed to create PDF : ".$output;
+		}
+		else
+		{
+			echo "PDF created";
+			$new_image_name='eML'.$confcode.'.pdf';
+		}
+		return;
+	}
+*/
+	
+	
+	
+				
+	if($extension=="MOV") //for video use this command
+	{
+		$path = $path_for_ffmpeg;  //path of ffmpeg
+		$cadenaConvert = $path.'ffmpeg.exe -i '.$locFile.$ds.$new_image_name.' -f image2 -t 0.001 -ss 3 '. $locFileTH.$ds.$new_image_nameTH;
+	}
+	else   //use this command for other file types
+	{
+		$path="C:\\PROGRA~2\\ImageMagick-6.8.1-Q16\\";  //path of ImageMagick
+	    $cadenaConvert = $path.'convert "'.$locFile.$ds.$new_image_name.'[0]" -colorspace RGB -geometry 200 "'.$locFileTH.$ds.$new_image_nameTH.'" 2>&1';
+	}													
+	file_put_contents("ip.txt", $cadenaConvert, FILE_APPEND);													
+														
+														
+	//$cadenaConvert = $path.'convert "'.$locFile.$ds.$new_image_name.'[0]" -colorspace RGB -geometry 200 "'.$locFileTH.$ds.$new_image_nameTH.'" 2>&1';
+																																	
+	$output = shell_exec($cadenaConvert);  
+	
+	copy($locFileTH.$ds.$new_image_nameTH, 'temp'.$ds.$userid.$ds.'PackagesTH_Encrypted'.$ds.$new_image_nameTH);
+	
+	shell_exec('Encrypt.bat PackagesTH_Encrypted '.$new_image_nameTH.' '.$enc_pass);          				//Encrypt the thumbnail(added by ankit)
+	
+	
+	shell_exec('Encrypt.bat Packages_Encrypted '.$new_image_name.' '.$enc_pass);          //Encrypt the report (ankit)
+	
+
+	//$query = "insert into lifepin(idusu,rawimage,fecha,fechainput,tipo,canal,needaction,idusfixed,idusfixedname,idmed,idcreator,creatortype,vs,checksum,orig_filename) values(".$idusu.",'".$new_image_name."','".$fecha."',now(),".$tipo.",8,0,".$IdUsFIXED.",'".$idusfixedname."',".$userid.','.$userid.",1,1,'".$checksum."','".$_FILES['file']['name']."')";
+	$query = "insert into lifepin(idusu,rawimage,fechainput,tipo,canal,needaction,idusfixed,idusfixedname,idmed,idcreator,creatortype,fs,a_s,vs,checksum,orig_filename) values(".$idusu.",'".$new_image_name."',now(),".$tipo.",8,0,".$IdUsFIXED.",'".$idusfixedname."',".$userid.','.$userid.",1,1,1,0,'".$checksum."','".$_FILES['file']['name']."')";
+	//file_put_contents("ip.txt", $query, FILE_APPEND);
+	mysql_query($query);
+
+	
+	
+	
+	
+	
+	$query = "select max(idpin) as idpin from lifepin";
+	$result = mysql_query($query);
+	$row =  mysql_fetch_array($result);
+	
+	//Log that report has been uploaded
+	$IdPin=$row['idpin'];
+	$content = "Report Uploaded";
+	$VIEWIdUser=$idusu;
+	$VIEWIdMed=$userid;
+	$ip=$_SERVER['REMOTE_ADDR'];
+	$MEDIO=0;
+	$q = mysql_query("INSERT INTO bpinview  SET  IDPIN ='$IdPin', Content='$content', DateTimeSTAMP = NOW(), VIEWIdUser = '$VIEWIdUser', VIEWIdMed = '$VIEWIdMed', VIEWIP = '$ip', MEDIO = '$MEDIO' ");
+	//LogBLOCKAMP ($IdPin, $content, $VIEWIdUser, $VIEWIdMed, $ip, $MEDIO);
+	
+	
+	
+	echo $id.';'.$row['idpin'].';'.$new_image_name.';'.$tipo;
+	
+
+}
+?>    

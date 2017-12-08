@@ -1,0 +1,54 @@
+<?php
+ session_start();
+require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$rawimage = $_GET['rawimage'];
+$queMed = $_GET['queMed'];
+$pass = $_SESSION['decrypt'];
+
+	$ImageRaiz = substr($rawimage,0,strlen($rawimage)-4);
+	$extensionR = substr($rawimage,strlen($rawimage)-3,3);
+	
+	$filename = 'temp/'.$queMed.'/Packages_Encrypted/'.$rawimage;
+	if (file_exists($filename)) 
+	{
+		//do nothing
+		//echo "The file $filename exists";
+	}
+	else 
+	{
+		shell_exec('Decrypt.bat Packages_Encrypted '.$rawimage.' '.$queMed .' '.$pass.' 2>&1');
+		//echo 'Decrypt.bat Packages_Encrypted '.$rawimage.' '.$queMed .' '.$pass.' 2>&1';	
+	}
+	
+	if($extensionR=='jpg')
+	{
+		//die("Found JPG Extension");
+		$extension='jpg';
+		//return;
+	}
+	else
+	{
+		$extension='png';
+	}
+	$filename = 'temp/'.$queMed.'/PackagesTH_Encrypted/'.$ImageRaiz.'.'.$extension;	
+	//echo $filename;
+	if (file_exists($filename)) 
+	{
+		//do nothing
+		//echo "The file $filename exists";	
+	}
+	else 
+	{
+		shell_exec('Decrypt.bat PackagesTH_Encrypted '.$ImageRaiz.'.'.$extension.' '.$queMed.' '.$pass);
+		//echo "Thumbnail Generated";
+	}
+
+	
+
+
+?>

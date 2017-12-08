@@ -1,0 +1,44 @@
+<?php
+echo "<br>Triggered";
+require "environment_detail.php";
+require "push_server.php";
+
+$dbhost = $env_var_db['dbhost'];
+$dbname = $env_var_db['dbname'];
+$dbuser = $env_var_db['dbuser'];
+$dbpass = $env_var_db['dbpass'];
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+
+$patient_message = 'This is a reminder about your appointment with ';
+
+
+$query = "select * from events where date(start) = date(now())";
+$result = mysql_query($query);
+$num_rows = mysql_num_rows($result);
+echo $num_rows . ' reminders to be sent';
+
+while ($row = mysql_fetch_array($result)) 
+{
+	$q = "select name,surname from doctors where id = ".$row['userid'];
+	$res = mysql_query($q);
+	$r = mysql_fetch_array($res);
+	$doctor_name = 'Dr.'.$r['name'].' '.$r['surname'];
+	
+	$patient_id = $row['patient'];
+	$msg_to_send = $patient_message.$doctor_name;
+	$msg_to_send = $msg_to_send . '<p> <b>Appointment Details : </b></p>';
+	$msg_to_send = $msg_to_send . '<p> Type : '.$row['title'] .'</p>';
+	$msg_to_send = $msg_to_send . '<p> Time : '.date('h:i a', strtotime($row['start'])).' - '. date('h:i a', strtotime($row['end'])) .'</p>';
+	//echo $msg_to_send;
+	
+	Push_Patient_Email($patient_id,$msg_to_send);
+	
+	echo '<br>Message sent to '.$patient_id;
+}
+
+
+
+?>

@@ -1,0 +1,10 @@
+and
+or
+not
+sex
+male
+female
+dob
+work
+home
+name

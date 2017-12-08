@@ -1,0 +1,163 @@
+<?php
+//Test comment
+require("environment_detail.php");
+$dbhost = $env_var_db['dbhost'];
+$dbname = $env_var_db['dbname'];
+$dbuser = $env_var_db['dbuser'];
+$dbpass = $env_var_db['dbpass'];
+$hardcode = $env_var_db['hardcode'];
+
+
+
+//$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+
+$name = $_GET['name'];
+$surname = $_GET['surname'];
+$dob =  $_GET['dob'];
+$gender = $_GET['gender'];
+$email = $_GET['email'];
+$phone = str_replace('+','',$_POST['phone']);
+$IdUsFIXED = $_GET['IdUsFIXED'];
+$IdUsFIXEDNAME = $_GET['IdUsFIXEDNAME'];
+$IdUsRESERV = $_GET['IdUsRESERV'];
+$salt = $_GET['salt'];
+$pin_hash =  $_GET['pin_hash'];
+$pass = $_GET['pass'];
+$pin = $_GET['pin'];
+
+
+$id = -1;
+$logvalue='';
+$proceed = 0;
+
+$qA = mysql_query("SELECT * FROM usuarios WHERE telefono='$phone'");
+$num_rows = mysql_num_rows($qA);
+if ($num_rows > 0) {
+	$proceed = 1;
+	$logvalue = 'Addition not possible:  PHONE NUMBER ALREADY EXISTS IN H2M DATABASE';
+	$value = 'Phone duplicated'; 
+}
+
+$qB = mysql_query("SELECT * FROM usuarios WHERE email='$email'");
+$num_rows = mysql_num_rows($qB);
+if ($num_rows > 0) {
+	$proceed = 1;
+	$logvalue = 'Addition not possible:  E-MAIL ALREADY EXISTS IN H2M DATABASE';
+	$value = 'E-Mail duplicated'; 
+}
+
+if ($proceed == 0)
+{
+	$q = mysql_query("INSERT INTO usuarios SET Name = '$name', Surname = '$surname', FNac = '$dob', Sexo = '$gender', email = '$email', telefono = '$phone', IdUsFIXED = '$IdUsFIXED', IdUsFIXEDNAME = '$IdUsFIXEDNAME', Alias = '$IdUsFIXEDNAME', IdUsRESERV = '$IdUsRESERV', salt = '$salt', pin_hash='$pin_hash' , GrantAccess='HTI', Password='$pass' "); //, Password='$pass'     
+		
+	if ($q){
+		$value = 'OK'; 	
+		$id = mysql_insert_id();
+		$logvalue='User added correctly'.'  P='.$pass.'  PIN='.$pin.' Reserv:'.$IdUsRESERV;
+		//SEND SMS TEXT MESSAGE
+		require "Services/Twilio.php";		     
+		$AccountSid = "AC109c7554cf28cdfe596e4811c03495bd";
+		$AuthToken = "26b187fb3258d199a6d6edeb7256ecc1";
+		// Instantiate a new Twilio Rest Client
+		$client = new Services_Twilio($AccountSid, $AuthToken);
+		/* Your Twilio Number or Outgoing Caller ID */
+		$from = '+19034018888'; 
+		$to= '+'.$phone; 
+		$body = 'Bienvenido a Llama al Doctor, '.$name.'. Su usuario es: '.$email.' (Password:'.$pass.' ). Su PIN de seguridad es: '.$pin;
+		$client->account->sms_messages->create($from, $to, $body);
+		//echo "Sent message to $name";
+		//SEND SMS TEXT MESSAGE
+
+		// SEND EMAIL TO NEW USER:
+		require_once 'lib/swift_required.php';
+		
+		$NamePatient = $name.' '.$surname;
+		  
+		$aQuien = $email;
+		$Sobre = 'Bienvenido a LLama Al Doctor';
+		
+		$FromText = 'Llama Al Doctor';
+
+		$ContenidoAdic='';
+		
+		$Content = file_get_contents($hardcode.'templates/ExternalAdd.html');
+		
+		$Var1 = $name.' '.$surname;
+		$Var2 = '';
+		$Var3 = $pin;
+		$Var4 = $pass;
+		$Var5 = $email;
+		$Var6 = $domain;
+		$Var7 = '';
+		$Var8 = '';
+		$Var9 = '';
+		$Var10 = '';
+		$Var11 = '';
+		$Var12 = '';
+		$Var13 = '';
+		$Var14 = '';
+		$Var15 = '';
+		$Content = str_replace("**Var1**",$Var1,$Content);
+		$Content = str_replace("**Var2**",$Var2,$Content);
+		$Content = str_replace("**Var3**",$Var3,$Content);
+		$Content = str_replace("**Var4**",$Var4,$Content);
+		$Content = str_replace("**Var5**",$Var5,$Content);
+		$Content = str_replace("**Var6**",$Var6,$Content);
+		$Content = str_replace("**Var7**",$Var7,$Content);
+		$Content = str_replace("**Var8**",$Var8,$Content);
+		$Content = str_replace("**Var9**",$Var9,$Content);
+		$Content = str_replace("**Var10**",$Var10,$Content);
+		$Content = str_replace("**Var11**",$Var11,$Content);
+		$Content = str_replace("**Var12**",$Var12,$Content);
+		$Content = str_replace("**Var13**",$Var13,$Content);
+		$Content = str_replace("**Var14**",$Var14,$Content);
+		$Content = str_replace("**Var15**",$Var15,$Content);
+		    
+		$Body = $Content.$ContenidoAdic;
+        
+        $domain = 'http://'.strval($dbhost);
+		 
+		$transporter = Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
+		  ->setUsername($domain.'@gmail.com')
+		  ->setPassword('health2me');
+		
+		$mailer = Swift_Mailer::newInstance($transporter);
+		
+		// Create the message
+		$message = Swift_Message::newInstance()
+		  
+		  // Give the message a subject
+		  ->setSubject($Sobre)
+		
+		  // Set the From address with an associative array
+		
+		  ->setFrom(array('hub@inmers.us' => $FromText))
+		
+		  // Set the To addresses with an associative array
+		  ->setTo(array($aQuien))
+		
+		  ->setBody($Body, 'text/html')
+		
+		  ;
+		
+		$result = $mailer->send($message);
+		// SEND EMAIL TO NEW USER ******************************
+
+
+		
+	} else{
+		$value = 'ERROR';
+		$logvalue='MySQL insertion error';
+	}
+}
+
+$q2 = mysql_query("INSERT INTO ext_signup_log SET userid = '$id',code = '$value', date = NOW(), logvalue='$logvalue', username='$IdUsFIXEDNAME',salt='$salt', reserv='$IdUsRESERV',pin_hash='$pin_hash'  ");   
+
+
+echo $value;
+
+
+
+?>

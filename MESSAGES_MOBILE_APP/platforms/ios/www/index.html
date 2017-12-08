@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html class="ui-mobile"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><!--<base href="#signin_page">--><base href=".">
+        <meta charset="utf-8">
+        <meta name="format-detection" content="telephone=no">
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="stylesheet" href="js/jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.css">
+        <style>
+            .successMessage{
+                padding: 5px; 
+                background-color: #CBFFC5; 
+                -webkit-border-radius: 10px; 
+                -moz-border-radius: 10px; 
+                border-radius: 10px; 
+                text-align: center; 
+                width: 97%; 
+                margin-right: auto; 
+                margin-left: auto;
+            }
+            .errorMessage{
+                padding: 5px; 
+                background-color: #FFC5BD; 
+                -webkit-border-radius: 10px; 
+                -moz-border-radius: 10px; 
+                border-radius: 10px; 
+                text-align: center; 
+                width: 97%; 
+                margin-right: auto; 
+                margin-left: auto;
+            }
+            .custom-corners .ui-bar {
+                -webkit-border-top-left-radius: inherit;
+                border-top-left-radius: inherit;
+                -webkit-border-top-right-radius: inherit;
+                border-top-right-radius: inherit;
+            }
+            .custom-corners .ui-body {
+                border-top-width: 0;
+                -webkit-border-bottom-left-radius: inherit;
+                border-bottom-left-radius: inherit;
+                -webkit-border-bottom-right-radius: inherit;
+                border-bottom-right-radius: inherit;
+            }
+        </style>
+        <title>Docalk</title>
+    </head>
+    <body style="text-transform: none;">
+        
+        <input type="hidden" id="userid" value="-1" />
+        <input type="hidden" id="rememberMe" value="0" />
+        <div>
+            
+            
+            <div data-role="page" id="signin_page" data-url="signin_page">
+                <div data-role="header" data-position="fixed"><h2 style="text-align: center;" class="ui-title" role="heading" aria-level="1">Docalk</h2></div>
+                <div role="main" class="ui-content">
+                    <br/>
+                    <div class="errorMessage" style="display: none;" id="login_em">
+                        <p>
+                            Login failed. Please try again.
+                        </p>
+                    </div>
+                    <br/>
+                    <form method="post" action="#" id="login_form">
+                        <input type="text" name="text-basic" id="user" value="" placeholder="Username or Email">
+                        <input type="password" name="text-basic" id="password" value="" placeholder="Password">
+                        <fieldset data-role="controlgroup" data-iconpos="right">
+                            <input type="checkbox" name="remomber_me" id="remember_me">
+                            <label for="remember_me">Remember Me</label>
+                        </fieldset>
+                        <input type="submit" value="Sign In">
+                    </form>
+                </div>
+                <div data-role="footer" data-position="fixed">
+                    <div data-role="navbar" class="ui-navbar" role="navigation">
+                        <ul class="ui-grid-a">
+                            <li class="ui-block-a"><a href="#signup_page" class="ui-link ui-btn" id="signup_button">Sign Up</a></li>
+                            <!--<li class="ui-block-b"><a href="#forgot_page" class="ui-link ui-btn">Forgot Password</a></li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
+            
+            <div data-role="page" id="signup_page" data-url="signup_page">
+                <div data-role="header" data-position="fixed">
+                    <a id="signup_back_button" href="#signin_page" data-role="button" data-icon="delete" data-iconpos="notext">Back</a>
+                    <h2 style="text-align: center;">Docalk </h2>
+                </div>
+                <div role="main" class="ui-content">
+                    <br/>
+                    <div class="errorMessage" style="display: none;" id="signup_em1">
+                        <p>
+                            An error occured. Please make sure all fields are filled in and try again.
+                        </p>
+                    </div>
+                    <div class="errorMessage" style="display: none;" id="signup_em2">
+                        <p>
+                            An error occured. Please make sure all fields are filled in and try again.
+                        </p>
+                    </div>
+                    <form method="post" action="#" id="signup_form">
+                        <input type="text" name="text-basic" id="first" value="" placeholder="First Name">
+                        <input type="text" name="text-basic" id="last" value="" placeholder="Last Name">
+                        <input type="email" name="text-basic" id="email" value="" placeholder="Email">
+                        <!--<input type="tel" name="text-basic" id="tele" value="" placeholder="Phone Number">-->
+                        <input type="text" id="dob" placeholder="Date of Birth"><!--"2013-01-25"-->
+                        <input type="password" name="text-basic" id="signup_password" value="" placeholder="Password">
+                        <select name="select-native-1" id="gender">
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                        
+                        <input type="submit" value="Sign Up">
+                    </form>
+                </div>
+                <div data-role="footer" data-position="fixed">
+                    <h2></h2>
+                </div>
+            </div>
+            
+            <div data-role="page" id="forgot_page">
+                <div data-role="header" data-position="fixed" role="banner" class="ui-header ui-bar-inherit ui-header-fixed slidedown">
+                    <a id="signup_back_button" href="#signin_page" data-role="button" data-icon="arrow-l" data-iconpos="notext" class="ui-link ui-btn-left ui-btn ui-icon-arrow-l ui-btn-icon-notext ui-shadow ui-corner-all" role="button">Back</a>
+                    <h2 style="text-align: center;" class="ui-title" role="heading" aria-level="1">Docalk</h2>
+                </div>
+                <div role="main" class="ui-content">
+                    <div class="errorMessage">
+                        <p>
+                            Username not found, please try again.
+                        </p>
+                    </div>
+                    <br><br>
+                    <form method="post" action="#" id="form">
+                        <input type="text" name="text-basic" id="user" value="" placeholder="Enter Username">
+                        <input type="submit" value="Proceed">
+                    </form>
+                </div>
+                <div data-role="footer" data-position="fixed">
+                    <h2></h2>
+                </div>
+            </div>
+            
+            <div data-role="page" id="forgot_page2" data-url="forgot_page2">
+                <div data-role="header" data-position="fixed"><h2 style="text-align: center;">Docalk</h2></div>
+                <div role="main" class="ui-content">
+                    <div class="successMessage">
+                        <p>
+                            A reset code has been sent to your email address. <br>Please type the reset code along with your new password below to continue.
+                        </p>
+                    </div>
+                    <div class="errorMessage">
+                        <p>
+                            Passwords did not match up. Please try again.
+                        </p>
+                    </div>
+                    <div class="errorMessage">
+                        <p>
+                            Reset code incorrect, please try again.
+                        </p>
+                    </div>
+                    <br>
+                    <form method="post" action="#" id="form">
+                        <input type="password" name="text-basic" id="new_password" value="" placeholder="New Password">
+                        <input type="password" name="text-basic" id="new_password2" value="" placeholder="Retype New Password">
+                        <input type="text" name="text-basic" id="code" value="" placeholder="Reset Code">
+                        <input type="submit" value="Reset Password">
+                    </form>
+                </div>
+                <div data-role="footer" data-position="fixed">
+                    <h2></h2>
+                </div>
+            </div>
+            
+            
+            
+            
+            
+            <div data-role="page" id="main_page" data-url="main_page">
+                <div data-role="header" data-position="fixed">
+                    <a id="logout_button" href="#signin_page" data-direction="reverse" data-transition="slide" data-role="button">Sign Out</a>
+                    <h2 style="text-align: center;">Docalk</h2>
+                </div>
+                <div role="main" class="ui-content">
+                    <ul data-role="listview" data-inset="true" id="main_list">
+                    </ul>
+                </div>
+                <div data-role="footer" data-position="fixed">
+                    <div data-role="navbar"><ul>
+                            <li><a href="#compose_page" class="ui-btn" id="send_button">Create New Message</a></li>
+                        </ul></div>
+                </div>
+            </div>
+            
+            
+            
+            
+            
+            <div data-role="page" id="message_page" data-url="message_page">
+                <div data-role="header" data-position="fixed">
+                    <a id="message_home_button" href="#main_page" data-direction="reverse" data-transition="slide" data-role="button" data-icon="home" data-iconpos="notext">Delete</a>
+                    <h2 style="text-align: center;">Docalk</h2>
+                </div>
+                <div role="main" class="ui-content" id="conversation_container">
+                    <div id="conversation_spinner" style="display: none;"><br/><br/><br/><br/><br/><br/><br/><div style="width: 33px; height: 33px; margin: auto;"><img src="img/35.gif" height="33" width="33" /></div></div>
+                    <div id="conversation">
+                    </div>
+                </div>
+                <style>
+                .controlgroup-textinput{
+                    padding-top:.22em;
+                    padding-bottom:.22em;
+                
+                }
+                
+                </style>
+                <div data-role="footer" data-position="fixed">
+                    <div class="ui-grid-a" style="padding-left: 7px; padding-right: 7px;">
+                        <div class="ui-block-a" style="width: 85%;">
+                            <input type="text" id="message_textbox" placeholder="type message..." />
+                        </div>
+                        <div class="ui-block-b" style="width: 12%; margin-left: 3%">
+                            <a id="send_message_button" href="#" data-role="button" data-icon="carat-r" data-iconpos="notext" class="ui-link ui-btn-right ui-btn ui-icon-carat-r ui-btn-icon-notext ui-shadow ui-corner-all" role="button">Send</a>
+                        </div>
+                    </div>
+
+                    
+                    
+                </div>
+            </div>
+            
+            
+            
+            
+            
+            <div data-role="page" id="compose_page" data-url="compose_page">
+                <div data-role="header" data-position="fixed">
+                    <a id="signup_back_button" href="#main_page" data-role="button" data-icon="delete" data-iconpos="notext" class="ui-link ui-btn-left ui-btn ui-icon-delete ui-btn-icon-notext ui-shadow ui-corner-all" role="button">Back</a>
+                    <h2 style="text-align: center;">Docalk</h2>
+                </div>
+                <div role="main" class="ui-content">
+                    <div class="errorMessage" id="compose_em1" style="display: none;">
+                        <p>
+                            User was not found. Please try again.
+                        </p>
+                    </div>
+                    <br/>
+                    <form class="ui-filterable">
+                        <label>TO: </label>
+                        <input type="text" id="doctor_search" placeholder="Name, email, or phone number...">
+                    </form>
+                    <ul data-role="listview" data-inset="true" data-filter="true" data-filter-reveal="true" data-input="#doctor_search" id="doctors_list">
+                    </ul>
+                    <form class="ui-filterable">
+                        <label>MESSAGE: </label>
+                        <textarea id="new_message_content"></textarea>
+                    </form>
+                </div>
+                <div data-role="footer" data-position="fixed">
+                        <div data-role="navbar"><ul>
+                            <li><a href="#compose_page" class="ui-btn" id="send_new_message_button">Send</a></li>
+                        </ul></div>
+                </div>
+            </div>
+            
+            
+            <div data-role="page" id="no_internet_page" data-url="no_internet_page">
+                <div data-role="header" data-position="fixed"><h2 style="text-align: center;" class="ui-title" role="heading" aria-level="1">Docalk</h2></div>
+                <div role="main" class="ui-content">
+                    <br/><br/><br/>
+                    <h3 style="text-align: center;">No Network Connection</h3>
+                    <p style="text-align: center;">Please make sure you have a network connection in order to use Docalk.</p>
+                    
+                </div>
+                <div data-role="footer" data-position="fixed">
+                    <h2></h2>
+                </div>
+            </div>
+            </div>
+        <div class="ui-loader ui-corner-all ui-body-a ui-loader-default"><span class="ui-icon-loading"></span><h1>loading</h1></div></div>
+        <script type="text/javascript" src="js/phonegap.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery.mobile-1.4.2/jquery.mobile-1.4.2.min.js"></script>
+        <script src="./Health2Me_files/jquery.ui.datepicker.js"></script>
+        <script id="mobile-datepicker" src="./Health2Me_files/jquery.mobile.datepicker.js"></script>
+        <link rel="stylesheet" href="https://rawgithub.com/arschmitz/jquery-mobile-datepicker-wrapper/v0.1.1/jquery.mobile.datepicker.css">
+        <script src="https://d3dy5gmtp8yhk7.cloudfront.net/2.1/pusher.min.js"></script>
+        <script type="text/javascript">
+            app.initialize();
+            
+            //document.addEventListener("deviceready", onDeviceReady, false);
+            
+            $(document).ready(function()
+            {
+                var userID = -1;
+                var userName;
+                var userEmail;
+                var doctors = new Array();
+                var current_contact = -1;
+                var textbox = document.getElementById('dob');
+                var messages = new Array();
+                textbox.onfocus = function (event) {this.type = 'date'; this.focus();}
+                var pusher = new Pusher('d869a07d8f17a76448ed');
+                var channel;
+                
+                
+                if(window.localStorage.getItem("user") != null && window.localStorage.getItem("pass") != null)
+                {
+                    $.post("https://www.health2.me/mobile/loginDoctor.php",{Nombre: window.localStorage.getItem("user"), Password: window.localStorage.getItem("pass")}, function(data,status)
+                    {
+                        
+                        var res = JSON.parse(data);
+                       if (res.success == 1)
+                       {
+                            userID = res.docID;
+                           $("#userid").val(userID);
+                           $("#rememberMe").val("1");
+                           userName = res.docName;
+                           userEmail = res.docEmail;
+                           channel = pusher.subscribe(userID.toString());
+                           channel.bind('notification', function(data) {loadContacts(); if(current_contact > 0){loadMessages(1);}});
+                           loadContacts();
+                           $("#login_em").css("display", "none");
+                            $.mobile.changePage( "#main_page", { transition: "slide", changeHash: true });
+                       }
+                       else
+                       {
+                            $("#login_em").css("display", "block");
+                       }
+                    });
+                }
+                
+                
+                $.post("https://www.health2.me/mobile/getAllDoctors.php",{test: "test"}, function(data,status)
+                {
+                    var res = JSON.parse(data);
+                    var num = res.length;
+                    doctors.length = 0;
+                    for(var i = 0; i < num; i++)
+                    {
+                        doctors.push(res[i]);
+                        $("#doctors_list").append("<li>"+res[i]+"</li>");
+                    }
+                    $("#doctors_list").listview('refresh');
+                    alert($("#doctors_list").html());
+                    
+                });
+                
+                
+                function loadContacts()
+                {
+                    $("#main_list").empty();
+                    messages.length = 0;
+                      $.post("https://www.health2.me/mobile/getMessageDoctors.php", {User_ID: userID}, function(data, status)
+                     {
+                         var res = JSON.parse(data);
+                         var num = res.length;
+                             
+                         for(var i = 0; i < num; i++)
+                         {
+                             //var msg = {"Sender": res[i].NAME_sender, "Subject": res[i].SUBJECT, "Content": res[i].CONTENT, "ID_sender": res[i].ID_sender};
+                             //messages[res[i].ID] = msg;
+                             if(res[i].New > 0)
+                             {
+                                $("#main_list").append("<li id=\""+res[i].Doctor_ID+"\" ><a href=\"#\"><h2>"+res[i].Doctor_Name.toUpperCase()+"<span class=\"ui-li-count\" style=\"background-color: #FFE146;\">"+res[i].New+"</span></h2></a></li>");
+                             }
+                             else
+                             {
+                                 $("#main_list").append("<li id=\""+res[i].Doctor_ID+"\" ><a href=\"#\"><h2>"+res[i].Doctor_Name.toUpperCase()+"</h2></a></li>");
+                             }
+                             
+                         }
+                        $("#main_list").listview('refresh');
+                         
+                     });
+                }
+                function loadMessages(update)
+                {
+                    $("#conversation").empty();
+                    $("#conversation_spinner").css("display", "block");
+                    $.post("https://www.health2.me/mobile/getInboxMessage.php", {User_ID: userID, CONTACT_ID: current_contact, UPDATE: update}, function(data, status)
+                     {
+                         var res = JSON.parse(data);
+                         var num = res.length;
+                         $("#conversation_spinner").css("display", "none");
+                         for(var i = 0; i < num; i++)
+                         {
+                             var d = res[i].DATE;
+                             var yy = d.substring(0, 4);
+                             var mm = d.substring(5, 7);
+                             var dd = d.substring(8, 10);
+                             var hh = parseInt(d.substring(11, 13));
+                             var min = d.substring(14, 16);
+                             var month = getMonth(parseInt(mm));
+                             var ddd = "am";
+                             if(hh > 12)
+                             {
+                                 hh = hh - 12;
+                                 ddd = "pm";
+                             }
+                             else if (hh == 0)
+                             {
+                                 hh = 12;
+                                 ddd = "am";
+                             }
+                             else if(hh == 12)
+                             {
+                                 ddd = "pm";
+                             }
+                             var date_str = month + " " + dd + ", " + yy + " " + hh + ":" + min + " " + ddd;
+                             if(res[i].TYPE == 'to')
+                             {
+                                $("#conversation").append('<div class="ui-corner-all custom-corners"><div class="ui-bar ui-bar-a"><h3 style="float: left; font-size: 13px;">'+res[i].NAME_sender.toUpperCase()+'</h3><span style="float: right; font-size: 10px; color: #333333">'+date_str+'</span></div><div class="ui-body ui-body-a"><p>'+res[i].CONTENT+'</p></div></div><br/>');
+                             }
+                             else
+                             {
+                                 $("#conversation").append('<div class="ui-corner-all custom-corners"><div class="ui-bar ui-bar-a" style="background-color: #AECFFF;"><h3 style="float: left; font-size: 13px;">'+res[i].NAME_sender.toUpperCase()+'</h3><span style="float: right; font-size: 10px; color: #333333">'+date_str+'</span></div><div class="ui-body ui-body-a"><p>'+res[i].CONTENT+'</p></div></div><br/>');
+                             }
+                         }
+                         $("#conversation").listview('refresh');
+                         
+                    });
+                    $.mobile.changePage( "#message_page", { transition: "slide", changeHash: true});
+                    setTimeout(function(){$.mobile.silentScroll(100000);}, 1000);
+                }
+                function getMonth(num)
+                {
+                    switch(num)
+                    {
+                        case 1:
+                            return "Jan";
+                            break;
+                        case 2:
+                            return "Feb";
+                            break;
+                        case 3:
+                            return "Mar";
+                            break;
+                        case 4:
+                            return "Apr";
+                            break;
+                        case 5:
+                            return "May";
+                            break;
+                        case 6:
+                            return "Jun";
+                            break;
+                        case 7:
+                            return "Jul";
+                            break;
+                        case 8:
+                            return "Aug";
+                            break;
+                        case 9:
+                            return "Sep";
+                            break;
+                        case 10:
+                            return "Oct";
+                            break;
+                        case 11:
+                            return "Nov";
+                            break
+                        case 12:
+                            return "Dec";
+                            break;
+                    };
+                }
+                $("#doctor_search").focus(function() 
+                {
+                    $("#doctors_list").css("display", "block");
+                });
+                $("#doctor_search").focusout(function() 
+                {
+                    setTimeout(function(){$("#doctors_list").css("display", "none");}, 200);
+                    
+                });
+                $("#doctors_list").on("click", "li", function(e)
+                {
+                    e.preventDefault();
+                    $("#doctor_search").val($(this).text());
+                    $("#doctor_search").focusout();
+                    
+                });
+                $("#message_home_button").on("click", function(e)
+                 {
+                     loadContacts();
+                 });
+                $("#main_list").on("click", "li", function()
+                {
+                    current_contact = this.id;
+                    loadMessages(1);
+                    
+                });
+                $("#send_button").on("click", function(event)
+                {
+                    $("#new_message_content").val(''); 
+                    $("#doctor_search").val('');
+                    $("#compose_em1").css("display", "none");
+                });
+                
+                
+                $("#logout_button").on("click", function(event)
+                {
+                    $.post("https://www.health2.me/mobile/logout.php",{}, function(data,status)
+                       {
+                            $("#user").val(''); 
+                            $("#password").val('');
+                           window.localStorage.removeItem("user");
+                           window.localStorage.removeItem("pass");
+                           $('#remember_me').attr('checked', false).checkboxradio("refresh");
+                           userID = -1;
+                           $("#userid").val(userID);
+                           $("#rememberMe").val("0");
+                       });
+                });
+                $("#signup_button").on("click", function(event)
+                {
+                    
+                    $("#signup_em1").css("display", "none");
+                    $("#signup_em2").css("display", "none");
+                });
+                
+                $("#reply_button").on("click", function(event)
+                {
+                    
+                    $("#reply_to").text("To: " + messages[current_mes].Sender);
+                    $("#reply_subject").text("Subject: RE: " + messages[current_mes].Subject);
+                });
+                
+                $("#send_new_message_button").on("click", function(event)
+                {
+                    event.preventDefault();
+                    if($("#new_message_content").val().length > 0 && $("#doctor_search").val().length)
+                    {
+                        $.post("https://www.health2.me/mobile/sendNewMessage.php",{IdMED: userID, scenario: 'doctor', SUBJECT: "Mobile Message", MESSAGE: $("#new_message_content").val(), RECEIVER: $("#doctor_search").val()}, function(data,status)
+                       {
+                           var id = parseInt(data);
+                           if(id > 0)
+                           {
+                               current_contact = id;
+                               loadContacts();
+                               loadMessages(1);
+                               
+                           }
+                           else
+                           {
+                               $("#compose_em1").css("display", "block");
+                           }
+                       });
+                    }
+                });
+                
+                $("#send_message_button").on("click", function(event)
+                {
+                    event.preventDefault();
+                    if($("#message_textbox").val().length > 0)
+                    {
+                        $.post("https://www.health2.me/mobile/sendMessages.php",{IdMED: userID, scenario: 'doctor', SUBJECT: "Mobile Message", MESSAGE: $("#message_textbox").val(), IdRECEIVER: current_contact}, function(data,status)
+                       {
+                           loadMessages(1);
+                       });
+                    }
+                    else
+                    {
+                        //alert("No content");
+                    }
+                    //$.mobile.changePage( "#message_page", { transition: "slide", direction: "reverse", changeHash: true });
+                });
+                
+                $('#login_form').submit(function(event)
+                {
+                    event.preventDefault();
+                    if($("#remember_me").is(":checked"))
+                    {
+                        window.localStorage.setItem("user", $("#user").val());
+                        window.localStorage.setItem("pass", $("#password").val());
+                    }
+                    $.post("https://www.health2.me/mobile/loginDoctor.php",{Nombre: $("#user").val(), Password: $("#password").val()}, function(data,status)
+                    {
+                        
+                        var res = JSON.parse(data);
+                       if (res.success == 1)
+                       {
+                            userID = res.docID;
+                           $("#userid").val(userID);
+                           if($("#remember_me").is(":checked"))
+                            {
+                               $("#rememberMe").val("1");
+                            }
+                           else{
+                               $("#rememberMe").val("0");
+                           }
+                           userName = res.docName;
+                           userEmail = res.docEmail;
+                           channel = pusher.subscribe(userID.toString());
+                           channel.bind('notification', function(data) {loadContacts(); if(current_contact > 0){loadMessages(1);}});
+                           loadContacts();
+                           $("#login_em").css("display", "none");
+                            $.mobile.changePage( "#main_page", { transition: "slide", changeHash: true });
+                       }
+                       else
+                       {
+                            $("#login_em").css("display", "block");
+                       }
+                    });
+                });
+                
+                $('#signup_form').submit(function(event)
+                {
+                    event.preventDefault();
+                    var valid = true;
+                    if($("#first").val().length == 0)
+                    {
+                        valid = false;
+                    }
+                    if($("#last").val().length == 0)
+                    {
+                        valid = false;
+                    }
+                    if($("#email").val().length > 0)
+                    {
+                        var atpos=$("#email").val().indexOf("@");
+                        var dotpos=$("#email").val().lastIndexOf(".");
+                        if (atpos<1 || dotpos<atpos+2 || dotpos+1>=$("#email").val().length)
+                        {
+                            valid = false;
+                        }
+                    }
+                    else
+                    {
+                        valid = false;
+                    }
+                    /*if($("#tele").val().length == 0)
+                    {
+                        valid = false;
+                    }*/
+                    if($("#dob").val().length == 0)
+                    {
+                        valid = false;
+                    }
+                    if($("#signup_password").val().length == 0)
+                    {
+                        valid = false;
+                    }
+                    if(valid)
+                    {
+                        $.post("https://www.health2.me/mobile/SignUpDoctor.php",{name: $("#first").val(), surname: $("#last").val(), email: $("#email").val(), /*phone: $("#tele").val(),*/ dob: $("#dob").val(), password: $("#signup_password").val(), gender: $("#gender").val()}, function(data,status)
+                        {
+                            var res = JSON.parse(data);
+                            
+                           if (res.success == 1)
+                           {
+                                $.mobile.changePage( "#signin_page", { transition: "slide", direction: "reverse", changeHash: true });
+                           }
+                           else
+                           {
+                                $("#signup_em1").css("display", "block");
+                           }
+                        });
+                    }
+                    else
+                    {
+                        $("#signup_em2").css("display", "block");
+                    }
+                    
+                });
+            });
+        </script>
+
+</body></html>

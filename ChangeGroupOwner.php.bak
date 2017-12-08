@@ -1,0 +1,30 @@
+<?php
+ //   echo '<table><tr><td>TEST</td></tr></table>';
+//require "identicon.php";
+ 
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="messages"; // Table name
+
+	
+
+$groupid=$_GET['groupid'];
+$docid=$_GET['docid'];
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");
+
+$count=0;
+$result=mysql_query("update groups set owner='$docid' where id='$groupid'");
+$count=mysql_num_rows($result);
+
+//mysql_query("delete from doctorslinkdoctors where id='$id'");
+//mysql_query("delete from referral_stage where referral_id='$id'");
+//mysql_query("delete from message_infrasture where connection_id='$id'");
+//echo 'success';
+
+?>

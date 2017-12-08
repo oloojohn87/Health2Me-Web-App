@@ -1,0 +1,16 @@
+{
+    "port": 4226,
+    "secure": false,
+    "env": "dev",
+    "ssl": {
+        "key": "/etc/ssl/key/comodokey.key",
+        "cert": "/etc/ssl/key/comodocrt.crt",
+        "ca": ["/etc/ssl/key/ca1.crt", "/etc/ssl/key/ca1.crt"]
+    },
+    "database": {
+        "host":       "dev.health2.me",
+        "user":       "monimed",
+        "password":   "ardiLLA98",
+        "database":   "monimed"
+    }
+}

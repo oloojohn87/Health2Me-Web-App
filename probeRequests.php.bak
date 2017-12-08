@@ -1,0 +1,130 @@
+<?php
+session_start();
+require("environment_detail.php");
+require ("push_server.php");
+
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+mysql_select_db("$dbname")or die("cannot select DB");	
+
+$minutes=0;
+
+$query = "select * FROM pendingprobes where date(requestTime)=date(now()) and timestampdiff(MINUTE,now(),requestTime)=".$minutes;
+$result = mysql_query($query);
+while($row = mysql_fetch_array($result))
+{
+	$probeID = $row['probeID'];
+	
+	//Fetch data of the Probe
+	$query1 = "select * from probe where probeID=".$probeID;
+	$result1=mysql_query($query1);
+	$row1 = mysql_fetch_array($result1);
+	
+	//If both doctor and patient have given permission for probes
+	if($row1['doctorPermission']==1 && $row1['patientPermission']==1)
+	{
+		//Get DoctorName
+		$doctorNameQuery = "select name,surname from doctors where id=".$row1['doctorID'];
+		$res = mysql_query($doctorNameQuery);
+		$row2 = mysql_fetch_array($res);
+		$dn = $row2['name'];
+		$ds = $row2['surname'];
+		$doctorname = $dn.' '.$ds;
+	
+		//Get patient Email and Phone
+		$patientContactQuery = "select name,surname,email,telefono from usuarios where identif=".$row1['patientID'];
+		//echo $patientContactQuery;
+		$res = mysql_query($patientContactQuery);
+		$row2 = mysql_fetch_array($res);
+		$patientemail = $row2['email'];
+		$patientphone = $row2['telefono'];
+		$patientname = $row2['name'];
+		$patientsurname = $row2['surname'];
+	
+		$flag=0;
+	
+		//send email to recipient if allowed
+		if($row1['emailRequest']==1)
+		{
+			echo 'Sent E-Mail to '.$patientemail.' at '.Date('Y-m-d H:m') ;
+			Push_Probe_Email($doctorname,$patientemail,$probeID,0);
+			$flag=1;
+			
+				
+			//create log
+			//logRequest($probeID,1);
+		}
+		else if($row1['phoneRequest']==1)
+		{
+			//call recipient if allowed
+			
+			echo 'Called '.$patientname.' '.$patientsurname.' on '.$patientphone;
+			Health_Feedback_Call($dn,$ds,$patientname,$patientsurname,$patientphone,$probeID,0);
+			$flag=1;
+			//logRequest($probeID,2);
+		}
+		else if($row1['smsRequest']==1)
+		{
+			//Send SMS if allowed
+			echo 'Sent SMS to '.$patientname.' '.$patientsurname.' on '.$patientphone;
+			Send_Feedback_SMS($ds,$patientname.' '.$patientsurname,$patientphone,$probeID,0);
+			$flag=1;
+			//logRequest($probeID,3);
+		}
+	
+		
+	
+	
+		
+		//update the entry in pendingProbe for next reminder
+		$incrementInterval = $row1['probeInterval'];
+		//$setNewProbeQuery = "UPDATE pendingprobes SET requestTime = DATE_ADD(requestTime,INTERVAL $incrementInterval DAY) WHERE probeID = $probeID";	
+		$setNewProbeQuery = "UPDATE pendingprobes SET requestTime = concat(date(DATE_ADD(requestTime,INTERVAL $incrementInterval DAY)),' ',time(requestTime)) WHERE probeID = $probeID";
+		mysql_query($setNewProbeQuery);
+	
+	
+		
+
+	
+	
+	
+	
+	}
+	else
+	{
+		//delete entry FROM pendingprobes because it no longer has permission from doctor AND/OR  patient
+		$deletePendingProbeQuery = "delete FROM pendingprobes where probeID=$probeID";
+		mysql_query($deletePendingProbeQuery);
+	}
+		
+	
+
+}
+
+
+function logRequest($probeID,$method)
+{
+	require("environment_detail.php");
+ 
+	 $dbhost = $env_var_db['dbhost'];
+	 $dbname = $env_var_db['dbname'];
+	 $dbuser = $env_var_db['dbuser'];
+	 $dbpass = $env_var_db['dbpass'];
+
+	 
+
+	$link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+	mysql_select_db("$dbname")or die("cannot select DB");	
+
+	$query = "insert INTO sentprobelog(probeID,method,requestTime) values($probeID,$method,now())";
+	mysql_query($query);
+	
+}	
+
+
+
+?>

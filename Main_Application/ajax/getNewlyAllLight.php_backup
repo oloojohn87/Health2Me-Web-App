@@ -1,0 +1,613 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+<script src="jquery-lang-js-master/js/jquery-cookie.js" charset="utf-8" type="text/javascript"></script>
+<script src="jquery-lang-js-master/js/jquery-lang.js" charset="utf-8" type="text/javascript"></script>
+<script type="text/javascript">
+	var lang = new Lang('en');
+	window.lang.dynamic('th', 'jquery-lang-js-master/js/langpack/th.json');
+
+
+//alert($.cookie('lang'));
+
+var langType = $.cookie('lang');
+
+if(langType == 'th'){
+window.lang.change('th');
+//alert('th');
+}
+
+if(langType == 'en'){
+window.lang.change('en');
+//alert('en');
+}
+	
+
+</script>
+<?php
+ ini_set("display_errors", 0);
+ require("environment_detail.php");
+ $dbhost = $env_var_db['dbhost'];
+ $dbname = $env_var_db['dbname'];
+ $dbuser = $env_var_db['dbuser'];
+ $dbpass = $env_var_db['dbpass'];
+
+$tbl_name="doctors"; // Table name
+
+$con = new PDO('mysql:host='.$dbhost.';dbname='.$dbname.';charset=utf8', ''.$dbuser.'', ''.$dbpass.'', array(PDO::ATTR_EMULATE_PREPARES => false, 
+                                                                                                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+
+if (!$con)
+  {
+  die('Could not connect: ' . mysql_error());
+  }	
+
+  $link = mysql_connect("$dbhost", "$dbuser", "$dbpass")or die("cannot connect");
+  mysql_select_db("$dbname")or die("cannot select DB");
+  
+  function cleanquery($string)
+{
+  if (get_magic_quotes_gpc())
+  {
+  $string = stripslashes($string);
+  }
+  $string = mysql_real_escape_string($string);
+  return $string;
+}
+  
+$queUsu = cleanquery($_POST['Doctor']);
+$NReports = cleanquery($_POST['NReports']);
+$daysExplore=empty(cleanquery($_GET['days'])) ? 30: (cleanquery($_GET['days']));
+$withGroup = 0;
+if (isset($_POST['Group']))
+{
+    $withGroup = cleanquery($_POST['Group']);
+}
+
+
+$cadena = '';
+$cadena_added = 0;
+// First create an array with all Patient Ids that have activity (report created, messages, stages)
+// This is "MyPatients" array: A) Patients created by me, plus B) Patients referred to me, plus C) Patients created by other members of my group
+$result = '';
+if ($withGroup == 1)
+{
+    
+    /*
+     *  Query Documentation
+     *
+     *  1st Line:       Gets all users from usuarios that were created by this doctor
+     *  2nd Line:       Gets all users that were referred to this doctor and appends them to the result set (Using UNION)
+     *  3rd Line:       Gets all users that this doctor has direct access to (DLU) and appends them to the result set
+     *  4th - 6th Line: Gets all users that were created by a doctor that this doctor is in a group with and appends them to the result set
+     *  5th Line:       Gets all doctors that this doctor is in a group with by joining the doctorsgroups table to itself with conditions on IdGroup and IdDoctor
+     *
+     */
+    
+    $query_str = "
+                    (SELECT DISTINCT U.Identif,U.Name,U.Surname,U.email FROM usuarios U WHERE U.IdCreator = ?) 
+                        UNION (SELECT DISTINCT U.Identif,U.Name,U.Surname,U.email FROM usuarios U INNER JOIN doctorslinkdoctors DLD ON DLD.IdPac = U.Identif AND DLD.IdMED2 = ?)
+                        UNION (SELECT DISTINCT U.Identif,U.Name,U.Surname,U.email FROM usuarios U INNER JOIN doctorslinkusers DLU ON DLU.IdUs = U.Identif AND DLU.IdMED = ?)
+                        UNION (SELECT DISTINCT U.Identif,U.Name,U.Surname,U.email FROM usuarios U INNER JOIN 
+                                (SELECT DISTINCT DG_1.IdDoctor FROM doctorsgroups DG_1 INNER JOIN doctorsgroups DG_2 ON DG_2.IdDoctor = ? AND DG_1.IdGroup = DG_2.IdGroup) G
+                            ON U.IdCreator = G.IdDoctor) 
+                    ORDER BY Surname ASC
+                 ";
+    $query = $con->prepare($query_str);
+                            
+	$query->bindValue(1, $queUsu, PDO::PARAM_INT);
+	$query->bindValue(2, $queUsu, PDO::PARAM_INT);
+	$query->bindValue(3, $queUsu, PDO::PARAM_INT);
+	$query->bindValue(4, $queUsu, PDO::PARAM_INT);
+}
+else
+{
+
+    /*
+     *  Query Documentation
+     *
+     *  1st Line:       Gets all users from usuarios that were created by this doctor
+     *  2nd Line:       Gets all users that were referred to this doctor and appends them to the result set (Using UNION)
+     *  3rd Line:       Gets all users that this doctor has direct access to (DLU) and appends them to the result set
+     *
+     */
+    
+    $query_str = "
+                    (SELECT DISTINCT U.Identif,U.Name,U.Surname,U.email FROM usuarios U WHERE U.IdCreator = ?) 
+                        UNION (SELECT DISTINCT U.Identif,U.Name,U.Surname,U.email FROM usuarios U INNER JOIN doctorslinkdoctors DLD ON DLD.IdPac = U.Identif AND DLD.IdMED2 = ?)
+                        UNION (SELECT DISTINCT U.Identif,U.Name,U.Surname,U.email FROM usuarios U INNER JOIN doctorslinkusers DLU ON DLU.IdUs = U.Identif AND DLU.IdMED = ?) 
+                    ORDER BY Surname ASC
+                 ";
+    $query = $con->prepare($query_str);
+                            
+	$query->bindValue(1, $queUsu, PDO::PARAM_INT);
+	$query->bindValue(2, $queUsu, PDO::PARAM_INT);
+	$query->bindValue(3, $queUsu, PDO::PARAM_INT);
+}
+
+$result = $query->execute();
+$count = $query->rowCount();
+$counter1 = 0;
+$counter2 = 0;
+while ($row2 = $query->fetch(PDO::FETCH_ASSOC)) 
+{
+    if(strlen($row2['Identif']) > 0)
+    {
+        $current_encoding = mb_detect_encoding($row2['Surname'], 'auto');
+        $show_text = iconv($current_encoding, 'ISO-8859-1', $row2['Surname']);
+
+        $current_encoding = mb_detect_encoding($row2['Name'], 'auto');
+        $show_text2 = iconv($current_encoding, 'ISO-8859-1', $row2['Name']);
+
+        $UsIds[$counter1] = $row2['Identif'];
+        $UsName[$counter1] = $show_text2;
+        $UsSurname[$counter1] = $show_text;
+        $UsEmail[$counter1] = (htmlspecialchars($row2['email']));
+        $grabber = $con->prepare("SELECT * FROM doctorslinkusers WHERE IdUs = ? AND IdMED = ?");
+        $grabber->bindValue(1, $row2['Identif'], PDO::PARAM_INT);
+        $grabber->bindValue(2, $queUsu, PDO::PARAM_INT);
+        $result4 = $grabber->execute();
+        $row4 = $grabber->fetch(PDO::FETCH_ASSOC);
+        $DLU_Date[$counter1] = $row4['Fecha'];
+        //echo $DLU_Date;
+
+        //echo $UsSurname[$counter1]." ".$counter2."</br>";
+        $counter1++;
+        $counter2++;
+    }
+}
+////////////////////////////////////////////
+
+$query_str = "";
+if ($withGroup == 1)
+{
+    /* 
+     *  Query Documentation
+     * 
+     *   this query gets all of the doctors that this doctor is in a group with (2nd line) 
+     *   and gets entries from the consults table (1st line) based on those doctors and other conditions (3rd line)
+     *
+     */
+    $query_str = "(SELECT DISTINCT C.Patient, C.Doctor FROM consults C INNER JOIN 
+                        (SELECT DISTINCT DG_1.IdDoctor FROM doctorsgroups DG_1 INNER JOIN doctorsgroups DG_2 ON DG_2.IdDoctor = ? AND DG_1.IdGroup = DG_2.IdGroup) G
+                        ON C.Doctor = G.IdDoctor AND DATEDIFF(NOW(), C.DateTime) <= ".$daysExplore." AND C.Patient IS NOT NULL )";
+}
+else
+{
+    $query_str = "SELECT DISTINCT Patient, Doctor FROM consults WHERE Doctor = ? AND DATEDIFF(NOW(), DateTime) <= ".$daysExplore." AND Patient IS NOT NULL ";
+}
+
+
+//$query9 = $con->prepare("SELECT DISTINCT(Patient) FROM consults WHERE Doctor = ? AND DATEDIFF(NOW(), DateTime) <= ".$daysExplore." AND Patient IS NOT NULL ");
+$query9 = $con->prepare($query_str);
+$query9->bindValue(1, $queUsu, PDO::PARAM_INT);
+
+$result2 = $query9->execute();
+$count2 = $query9->rowCount();
+
+
+while ($row2 = $query9->fetch(PDO::FETCH_ASSOC)) 
+{
+    
+    //IT DISTINGUISHES THE TD BG_COLOR BY WHETHER IT'S IN GROUP
+    if($row2['Doctor'] == $queUsu) $tr_bgcolor[$counter1] = "white;";
+    else $tr_bgcolor[$counter1] = "#F1FBF1;";
+    
+    $query5 = $con->prepare("SELECT * FROM usuarios WHERE Identif=?");
+    $query5->bindValue(1, $row2['Patient'], PDO::PARAM_INT);
+    $result5 = $query5->execute();
+    $row5 = $query5->fetch(PDO::FETCH_ASSOC);
+
+    $UsIds[$counter1] = $row5['Identif'];
+    $UsName[$counter1] = (htmlspecialchars($row5['Name']));
+    $UsSurname[$counter1] = (htmlspecialchars($row5['Surname']));
+    $UsEmail[$counter1] = (htmlspecialchars($row5['email']));
+    //echo $UsSurname[$counter1]." ".$counter1."<p>";
+    $counter1++;
+}
+//echo "</br></br>".$counter1."</br>".$counter2;
+///////////////////////////////////////////
+
+
+$numberpatients = $counter1;
+$n=0;
+
+//echo $numberpatients;
+//echo $query; 
+$cadena = array();
+
+
+
+//Below html variable commented by Pallab
+/*
+$html = '<div style="'.$height.$overflow.';"><table style="background-color:white; width:100%;"><tr style="border-bottom:1px solid #cacaca; height:25px; background-color:#cacaca; color:white;"><td style="width:20px; padding-left:15px;"><p style="margin-bottom:0px;"><span style="font-size:14px;" lang="en">item</span></p></td><td style="width:100px; padding-left:15px;"><p style="margin-bottom:0px;"><span style="font-size:14px;" lang="en">Member NAME</span></p></td><td style="width:10px;" lang="en">Rep</td><td style="width:5px;"></td><td style="width:10px;" lang="en">Msg</td><td style="width:40px;" lang="en">Time</td></tr>';	//Removed width = 100% from div and added height = 495px and added scroll
+*/
+
+//////////////////////////////////////////////////////////////////
+$query_str = "SELECT Content,DateTimeSTAMP,VIEWIdMed,VIEWIdUser FROM bpinview USE INDEX(I1) WHERE VIEWIdUser IN (".implode(",", $UsIds).") AND DATEDIFF(NOW(), DateTimeSTAMP) <= ".$daysExplore." AND VIEWIdUser IS NOT NULL AND VIEWIdMed IS NOT NULL ORDER BY DateTimeSTAMP DESC";
+//echo $query_str;
+/*for($i = 0; $i < $counter1; $i++)
+{
+    if($i != 0)
+    {
+        $query_str .= " OR ";
+    }
+    $query_str .= "VIEWIdUser=".$UsIds[$i];
+}
+$bpin_arr = array();
+$query_str .= ") AND DATEDIFF(NOW(), DateTimeSTAMP) <= '$daysExplore' ORDER BY DateTimeSTAMP DESC";*/
+$bpin_arr = array();
+$resultREPS = mysql_query($query_str);
+if(mysql_num_rows($resultREPS) > 0){
+    while ($rowREPS = mysql_fetch_array($resultREPS)) 
+    {
+        $arr = array("Content" => $rowREPS["Content"], "DateTimeSTAMP" => $rowREPS["DateTimeSTAMP"],
+                     "VIEWIdMed" => $rowREPS["VIEWIdMed"], "VIEWIdUser" => $rowREPS["VIEWIdUser"]);
+        array_push($bpin_arr, $arr);
+    }
+}
+/////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+/*
+for($i = $counter2; $i < $counter1; $i++)
+{
+$query_str = "SELECT * FROM consults WHERE Patient = '".$UsIds[$i]."' LIMIT 1";
+
+
+$resultREPS = mysql_query($query_str);
+if($resultREPS){
+$rowREPS = mysql_fetch_array($resultREPS);
+
+    $arr = array("Content" => $rowREPS["Status"], "DateTimeSTAMP" => $rowREPS["DateTime"],
+                 "VIEWIdMed" => $rowREPS["Doctor"], "VIEWIdUser" => $rowREPS["Patient"]);
+    array_push($bpin_arr, $arr);
+
+}
+}
+
+*/
+
+
+$IdPatient;
+/////////////////////////////////////////////////////////////////////////////////////
+
+// obtain all doctors that are in the same group as this doctor
+$group_docs = array();
+$query_str = "SELECT DISTINCT DG_1.IdDoctor FROM doctorsgroups DG_1 INNER JOIN doctorsgroups DG_2 ON DG_2.IdDoctor = ? AND DG_1.IdGroup = DG_2.IdGroup";
+$group = $con->prepare($query_str);
+$group->bindValue(1, $queUsu, PDO::PARAM_INT);
+$group->execute();
+while($row = $group->fetch(PDO::FETCH_ASSOC))
+{
+    array_push($group_docs, $row['IdDoctor']);
+}
+
+
+//echo json_encode($bpin_arr);
+while ($n < $numberpatients)
+{
+	
+    $IdPatient = $UsIds[$n];
+	
+    if($withGroup == 0)
+    {
+	    $query_str = "SELECT * FROM consults WHERE Patient = '".$IdPatient."' AND Doctor = '".$queUsu."' AND Status = 'Completed' ORDER BY consultationId DESC LIMIT 1";
+        
+    
+    }
+    else
+    {
+        /* 
+         *  Query Documentation
+         * 
+         *   this query gets all of the doctors that this doctor is in a group with (2nd line) 
+         *   and gets entries from the consults table (1st line) based on those doctors and other conditions (3rd line)
+         *
+         */
+        $query_str = "(SELECT DISTINCT C.* FROM consults C INNER JOIN 
+                        (SELECT DISTINCT DG_1.IdDoctor FROM doctorsgroups DG_1 INNER JOIN doctorsgroups DG_2 ON DG_2.IdDoctor = '".$queUsu."' AND DG_1.IdGroup = DG_2.IdGroup) G
+                        ON C.Doctor = G.IdDoctor AND C.Patient = '".$IdPatient."' AND C.Status = 'Completed' ORDER BY C.consultationId DESC LIMIT 1)";
+        
+    }
+
+
+    $resultREPS = mysql_query($query_str);
+    if($resultREPS)
+    {
+        $rowREPS = mysql_fetch_array($resultREPS);
+        //echo $rowREPS['patientSurname']."<p>";
+    }
+
+	// Check if any of this patients has new reports
+	$UpReports=0;
+	$UpReportsOTHER=0;
+	$NewestReport='';
+	$NewestReportOTHER='';
+	for ($k = 0 ; $k < count($bpin_arr); $k++)
+    {
+        if ($bpin_arr[$k]["VIEWIdUser"] == $IdPatient)
+        {
+            // Check NEW reports
+            if ($bpin_arr[$k]['Content'] == 'Report Uploaded' || $bpin_arr[$k]['Content'] == 'Report Uploaded (EMR)') 
+            {
+                $UpReports++;
+                if (($withGroup == 0 && $bpin_arr[$k]['VIEWIdMed'] !=  $queUsu) || ($withGroup == 1 && in_array($bpin_arr[$k]['VIEWIdMed'], $group_docs))) 
+                {
+                    $UpReportsOTHER++; 
+                    $NewestReportOTHER = $bpin_arr[$k]['DateTimeSTAMP'];
+                    
+                    //IT DISTINGUISHES THE TD BG_COLOR BY WHETHER IT'S IN GROUP
+                    if($bpin_arr[$k]['VIEWIdMed'] == $queUsu) $tr_bgcolor = "white;";
+                    else $tr_bgcolor = "#F1FBF1;";
+                }                         
+                else
+                {
+                    $NewestReport = $bpin_arr[$k]['DateTimeSTAMP'];
+                }
+            }
+        }
+	}
+	
+	if($n > $counter2){
+	   $NewestReport = $rowREPS['DateTime'];
+	}
+	
+	if(isset($DLU_Date[$n])){
+	$NewestReport = $DLU_Date[$n];
+	}
+	//echo "</br></br>".$rowREPS['patientName']." ".$UsSurname[$n]." ".$NewestReport;
+
+	// Check if any of this patients has new MESSAGES from DOCTORS
+
+	$resultMES = $con->prepare("SELECT sender_id,receiver_id,fecha,attachments,status FROM message_infrastructureuser WHERE patient_id = ? AND DATEDIFF(NOW(), fecha) <= ? ORDER BY fecha DESC"); //Changed the table from message_infrasture to message_infrasrtuctureuser by Pallab as because to check for messages for patients we need to refer message_infrastructureuser table(this table stores communication between doctors and patients) rather than message_infrasture(this table stores communication between doctors)
+	$resultMES->bindValue(1, $IdPatient, PDO::PARAM_INT);
+	$resultMES->bindValue(2, $daysExplore, PDO::PARAM_STR);
+	$resultMES->execute();
+	
+	$MessagesReceived=0;
+	$MessagesReceivedNEW=0;
+	$NewestdateMessage=0;
+	while ($rowMES = $resultMES->fetch(PDO::FETCH_ASSOC)) 
+    {
+		if ($rowMES['status'] == 'new') 
+        { 
+            $MessagesReceivedNEW++; 
+            $NewestdateMessage = $rowMES['fecha'];
+        }
+        $MessagesReceived++;
+    }
+    
+    
+
+
+	// ADD DATA TO THE JSON ARRAY
+    if ($n > $counter2 || $UpReports > 0 || $MessagesReceivedNEW > 0)
+    {
+        $now = time(); // or your date as well
+        $DateRep = '';//strtotime($referral_date);
+        $DateRep0 = '';
+        $DateMes = '';
+        
+        if (SanDate($NewestReport) > '')
+        {
+            $DateRep = strtotime($NewestReport); 
+        }
+        else 
+        {
+            $DateRep = strtotime('01-01-2000');
+        }
+        $TimeDifRep = ($now - $DateRep)/3600;
+        if (SanDate($NewestReportOTHER) > '') 
+        {
+            $DateRepO = strtotime($NewestReportOTHER);  
+        }
+        else 
+        {
+            $DateRepO = strtotime('01-01-2000');
+        }
+        $TimeDifRepO = ($now - $DateRepO)/3600;
+        if (SanDate($NewestdateMessage) > '') 
+        {
+            $DateMes = strtotime($NewestdateMessage); 
+        }
+        else
+        {
+            $DateMes = strtotime('01-01-2000');
+        }
+        $TimeDifMes = ($now - $DateMes)/3600;
+        
+        $WhatLabel = '';
+        $validDif = '';
+        if ($TimeDifRep >= $TimeDifMes && $TimeDifRepO >= $TimeDifMes) 
+        {
+            if ($TimeDifMes < 24) 
+            {
+                $WhatLabel = 'hours';
+                $validDif = floor($TimeDifMes);
+                
+            }
+            else
+            {
+                $WhatLabel = 'days';
+                $validDif = floor($TimeDifMes/24);
+            }
+            
+        }
+        else if ($TimeDifRep >= $TimeDifRepO && $TimeDifMes >= $TimeDifRepO) 
+        {
+            if ($TimeDifRepO < 24) 
+            {
+                $WhatLabel = 'hours';
+                $validDif = floor($TimeDifRepO);
+                
+            }
+            else
+            {
+                $WhatLabel = 'days';
+                $validDif = floor($TimeDifRepO/24);
+            }
+            
+        }
+        else 
+        {
+            if ($TimeDifRep < 24)
+            {
+                $WhatLabel = 'hours';
+                $validDif = floor($TimeDifRep);
+            }
+            else
+            {
+                $WhatLabel = 'days';
+                $validDif = floor($TimeDifRep/24);
+            }
+        }
+        
+        if($validDif <= 100)
+        {
+        
+            $cadena_added++;
+            $arr = array(   
+                    "id" => $IdPatient,
+                    "name" => $UsName[$n],
+                    "surname" => $UsSurname[$n],
+                    "email" => $UsEmail[$n],
+                    "UpReports" => $UpReports,
+                    "NewestReport" => SanDate($NewestReport),
+                    "UpReportsOTHER" => $UpReportsOTHER,
+                    "NewestReportOTHER" => SanDate($NewestReportOTHER),
+                    "MessagesReceived" => $MessagesReceived,
+                    "MessagesReceivedNEW" => $MessagesReceivedNEW,
+                    "NewestdateMessage" => SanDate($NewestdateMessage),
+                    "validDif" => $validDif,
+                    "WhatLabel" => $WhatLabel,
+                    "background" => $tr_bgcolor
+                    );    
+            array_push($cadena, $arr);
+        }
+    }
+
+    
+ 
+    
+	$n++;
+}
+
+
+// sort $cadena array here
+if(count($cadena) > 0)
+{
+    for($x = 0; $x < count($cadena) - 1; $x++) 
+    {
+        for($y = $x + 1; $y < count($cadena); $y++) 
+        {
+            if((($cadena[$x]["WhatLabel"] == "days" && $cadena[$y]["WhatLabel"] == "hours") || ($cadena[$x]["WhatLabel"] == $cadena[$y]["WhatLabel"] && ($cadena[$x]["validDif"] > $cadena[$y]["validDif"]))))
+            {
+                $temp_val = $cadena[$x];
+                $cadena[$x] = $cadena[$y];
+                $cadena[$y] = $temp_val;
+            }
+        }
+    }
+}
+
+$cadena_count = 0;
+
+//Variable added by Pallab
+$numberOfItemsInRecentActivity = count($cadena);
+
+//Added the two new variables height and overflow by Pallab based on Henri recent activity issue
+$height;
+$overflow;
+
+
+//Start of new code added by Pallab
+$height = 45*$numberOfItemsInRecentActivity + 22;
+
+     if($height > 495)
+     {
+         $height = 'height:495px;';
+         $overflow = 'overflow:scroll;';
+     }
+     else
+         $height = "height:".$height."px;";
+         
+
+//End of new code added by Pallab
+
+$html = '<div style="'.$height.$overflow.'"><table style="background-color:white; width:100%;"><tr style="border-bottom:1px solid #cacaca; height:25px; background-color:#cacaca; color:white;"><td style="width:20px; padding-left:15px;"><p style="margin-bottom:0px;"><span style="font-size:14px;" lang="en">item</span></p></td><td style="width:100px; padding-left:15px;"><p style="margin-bottom:0px;"><span style="font-size:14px;" lang="en">Member NAME</span></p></td><td style="width:10px;" lang="en">Rep</td><td style="width:5px;"></td><td style="width:10px;" lang="en">Msg</td><td style="width:40px; text-align: center;" lang="en">Time</td></tr>';
+
+for($i = 0; $i < count($cadena); $i++)
+{
+    $cadena_count++;
+    $WhatColor = '';
+    switch(true)
+    {
+        case ($cadena[$i]["validDif"] >= 0 && $cadena[$i]["validDif"] <= 2): 	
+            $WhatColor = 'black';
+            break;
+        case ($cadena[$i]["validDif"] > 2 && $cadena[$i]["validDif"] <= 7): 	
+            $WhatColor = 'grey';
+            break;
+        case ($cadena[$i]["validDif"] > 7 && $cadena[$i]["validDif"] < 30): 	
+            $WhatColor = '#cacaca';
+            break;
+        case ($cadena[$i]["validDif"] >= 30): 					
+            $WhatColor = '#e9e9e9';
+            break;
+        default:								
+            $WhatColor = 'blue';
+            break;
+    }
+    $iconRepColor = '';
+    if ($cadena[$i]["UpReports"] > 0 || $cadena[$i]["UpReportsOTHER"] > 0) 
+    {
+        $iconRepColor = '#22aeff'; 
+    }
+    else 
+    {
+        $iconRepColor = '#e9e9e9';
+    }
+    if ($cadena[$i]["MessagesReceived"] > 0 ) 
+    {
+        $iconMesColor = '#22aeff';
+    }
+    else 
+    {
+        $iconMesColor = '#e9e9e9';
+    }
+    
+    if ($i < (count($cadena)-1)) 
+    {
+        $style .= "height:30px; border-bottom:1px solid #cacaca;";
+    }
+    else 
+    {
+        $style .="height:30px; border:none;";
+    }
+    
+    $html .= '<tr style="'.$style.'background:'.$cadena[$i]["background"].'">';
+    $html .= '<td style=" width:20px; color:#22aeff; font-size:12px;" title="Type of activity">';
+    $html .= '<div style="width:100%; text-align:center; font-size:14px; color:'.$iconMesColor.';"><icon class="icon-envelope " title="BLUE means there are NEW MESSAGES"></icon></div>';
+    $html .= '<div style="width:100%; text-align:center; margin-top:-5px; font-size:14px; color:'.$iconRepColor.';"><icon class="icon-folder-open" title="BLUE means there are NEW REPORTS"></icon></div></td>';
+    $html .= '<td style="padding:6px;"><a href="patientdetailMED-new.php?IdUsu='.$cadena[$i]["id"].'" style="text-decoration:none;"><div class="truncate" style="line-height:1; color: #54bc00; font-size:12px;">'.$cadena[$i]["name"].'</div><div class="truncate" style="color: #54bc00; font-size:14px; margin-top:0px;"> '.strtoupper($cadena[$i]["surname"]).'</div></a></td>';						
+    $html .= '<td style="width:10px; color:#22aeff; font-size:12px; " title="sdf">';
+    $html .= $cadena[$i]["UpReports"].'/'.$cadena[$i]["UpReportsOTHER"].'</td>';
+    $html .= '<td style="width:5px;"></td>';
+
+    $html .= '<td style="width:10px; color:#22aeff; font-size:12px; " title="sdf">';
+    $html .= $cadena[$i]["MessagesReceived"].'/'.$cadena[$i]["MessagesReceivedNEW"].'</td>';
+    
+    $html .= '<td style="width:40px; text-align:center; color: white; background-color:'.$WhatColor.'; "><div style="width:100%; font-size:18px;" title="Time since last recorded activity for this patient">'.$cadena[$i]["validDif"].'</div><div style="width:100%; font-size:10px; margin-top:-5px;">'.$cadena[$i]["WhatLabel"].'</div></td></tr>';
+}
+
+$html .= '</table></div>';
+
+//$encode = json_encode($cadena);
+//echo $encode; 
+echo $html;
+
+function SanDate($entrydate)
+{
+	$newDate = date("m/d/Y H:i:s", strtotime($entrydate));
+	return $newDate;
+}
+
+?>
